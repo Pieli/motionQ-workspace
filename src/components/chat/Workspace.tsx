@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { ModeToggle } from "@/components/mode-toggle";
 import {
   FadeInOutTransition,
   fadeInOutSchema,
@@ -22,18 +21,9 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Navbar } from "@/components/Navbar";
 
 
 interface CompostitionConfig {
@@ -91,42 +81,6 @@ const SequenceBuilder: React.FC<{ comps: CompostitionConfig[] }> = ({
 };
 
 
-const Navbar = () => {
-    return (
-        <div className="flex items-center justify-between p-4 border-b m-0 text-secondary-foreground">
-            <DropdownMenu>
-                <DropdownMenuTrigger> 
-                    <span className="text-xl font-bold">Imagine</span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuLabel>My Projects</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Files</DropdownMenuItem>
-                    <DropdownMenuItem>Exports</DropdownMenuItem>
-                    <DropdownMenuItem>Recents</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <div className="flex items-center gap-4">
-                <ModeToggle />
-                <DropdownMenu>
-                    <DropdownMenuTrigger> 
-                    <Avatar>
-                        <AvatarFallback>PG</AvatarFallback>
-                    </Avatar>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Billing</DropdownMenuItem>
-                        <DropdownMenuItem>Team</DropdownMenuItem>
-                        <DropdownMenuItem>Subscription</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                </div>
-        </div>
-    );
-}
 
 
 const Workspace = () => {
@@ -159,13 +113,6 @@ const Workspace = () => {
 
   return (
     <>
-        {/*
-      <h1 style={{ fontSize: 40, paddingLeft: 20 }}>Imagine</h1>
-      <ModeToggle />
-      <Avatar>
-        <AvatarFallback>PG</AvatarFallback> 
-      </Avatar>
-      */}
       <Navbar />
 
       <ResizablePanelGroup direction="horizontal" className="min-h-[calc(100vh-60px)]">
