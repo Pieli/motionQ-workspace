@@ -11,12 +11,18 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.2",
+    "@remotion/cli": "4.0.302",
+    "@remotion/google-fonts": "4.0.302",
+    "@remotion/media-utils": "4.0.302",
+    "@remotion/player": "4.0.302",
+    "@remotion/zod-types": "4.0.302",
     "@tailwindcss/vite": "^4.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.510.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "remotion": "4.0.302",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.6"
   },
