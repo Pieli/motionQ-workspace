@@ -11,9 +11,9 @@ import {
   slideInSchema,
 } from "@/remotion-lib/TextFades/SlideInText";
 
-import { Series } from "remotion";
 import { Player } from "@remotion/player";
 import { createElement } from "react";
+import { Series } from "remotion";
 import { z } from "zod";
 
 import {
@@ -21,6 +21,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
 
 interface CompostitionConfig {
   id: string;
@@ -87,6 +92,9 @@ const Workspace = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+
+  const [history, setHistory] = useState<string[]>([]);
+
   const totalDuration = (comps: CompostitionConfig[]) =>
     comps.reduce((acc, comp) => {
       const { duration } = comp;
@@ -94,6 +102,8 @@ const Workspace = () => {
     }, 0);
 
   const generate = async () => {
+    setHistory((prev) => [...prev, prompt]);
+    setPrompt("");
     setLoading(true);
     setGeneratedComp(components);
     setLoading(false);
@@ -103,46 +113,64 @@ const Workspace = () => {
     <>
       <h1 style={{ fontSize: 40, paddingLeft: 20 }}>Imagine</h1>
       <ModeToggle />
+      <Avatar>
+        <AvatarFallback>PG</AvatarFallback> 
+      </Avatar>
 
-      <ResizablePanelGroup direction="horizontal">
+      <ResizablePanelGroup direction="horizontal" className="min-h-[calc(100vh-120px)]">
         <ResizablePanel defaultSize={25}>
-          <div style={{ display: "flex", height: "100vh" }}>
-            <div
-              style={{
-                width: "100%",
-                padding: 24,
-                background: "#f4f4f4",
-                color: "black",
-              }}
-            >
-              <h2>Animation Prompt</h2>
-              <textarea
-                style={{ width: "100%", height: 200, color: "black" }}
-                placeholder="Describe your animation..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-              />
-              <button
-                onClick={generate}
-                style={{
-                  marginTop: 16,
-                  padding: "8px 16px",
-                  color: "black",
-                  borderColor: "black",
-                  border: "2px solid black",
-                  borderRadius: 4,
-                  backgroundColor: "white",
-                }}
-                disabled={loading || !prompt}
-              >
-                {loading ? "Generating..." : "Generate Animation"}
-              </button>
+          <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+            <div className="flex-1">
+            { history.length > 0 ? (
+                <ul className="overflow-auto">
+                    {history.map((item, index) => (
+                    <li key={index} className="text-left p-2 border-b">
+                        {item}
+                    </li>
+                    ))}
+                </ul>
+                ) : (
+                <div style={{ color: "#888", padding: 20 }}>
+                    No history available
+                </div>
+                )
+            }
+            </div>
+            <div className="pt-4 px-4">
+              <div className="relative">
+                <Textarea
+                  className="min-h-[60px] w-full pr-12 resize-none rounded-xl"
+                  placeholder="Describe your animation..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  rows={1}
+                  style={{
+                    minHeight: '60px',
+                    maxHeight: '200px',
+                  }}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = 'auto';
+                    target.style.height = `${target.scrollHeight}px`;
+                  }}
+                />
+                <Button
+                  className="absolute right-2 bottom-2"
+                  size="sm"
+                  onClick={generate}
+                  disabled={loading || !prompt}
+                >
+                    <span style={{fontWeight: 900, fontSize: 12}}>{">"}</span>
+                </Button>
+              </div>
             </div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={75}>
-          <div style={{ flex: 1, background: "#222", padding: 20 }}>
+        <div className="flex-1 px-4 h-full">
+          <div className="flex-1 p-20 h-full rounded-xl" style={{background: "#222"}}>
+          {/*style={{ flex: 1, background: "#222", padding: 20, height: "100%"}}>*/}
             {GeneratedComp ? (
               <Player
                 component={SequenceBuilder}
@@ -164,6 +192,7 @@ const Workspace = () => {
             {loading && <div style={{ color: "#fff" }}>Loading…</div>}
             {error && <div style={{ color: "salmon" }}>{error}</div>}
           </div>
+        </div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </>
