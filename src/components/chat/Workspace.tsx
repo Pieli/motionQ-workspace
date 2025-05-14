@@ -81,6 +81,20 @@ const SequenceBuilder: React.FC<{ comps: CompostitionConfig[] }> = ({
   return <Series>{innerComp}</Series>;
 };
 
+
+const Navbar = () => {
+    return (
+        <div className="flex items-center justify-between p-4 border-b m-0 text-secondary-foreground">
+        <h1 className="text-xl font-bold">Imagine</h1>
+        <ModeToggle />
+        <Avatar>
+            <AvatarFallback>PG</AvatarFallback>
+        </Avatar>
+        </div>
+    );
+}
+
+
 const Workspace = () => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
@@ -111,30 +125,39 @@ const Workspace = () => {
 
   return (
     <>
+        {/*
       <h1 style={{ fontSize: 40, paddingLeft: 20 }}>Imagine</h1>
       <ModeToggle />
       <Avatar>
         <AvatarFallback>PG</AvatarFallback> 
       </Avatar>
+      */}
+      <Navbar />
 
-      <ResizablePanelGroup direction="horizontal" className="min-h-[calc(100vh-120px)]">
+      <ResizablePanelGroup direction="horizontal" className="min-h-[calc(100vh-60px)]">
         <ResizablePanel defaultSize={25}>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <div className="flex-1">
-            { history.length > 0 ? (
-                <ul className="overflow-auto">
-                    {history.map((item, index) => (
-                    <li key={index} className="text-left p-2 border-b">
+              {history.length > 0 ? (
+                <ul className="overflow-auto p-4 space-y-4">
+                  {history.map((item, index) => (
+                    <li 
+                      key={index} 
+                      className="flex justify-end"
+                    >
+                      <div 
+                        className="max-w-[80%] rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words text-left"
+                      >
                         {item}
+                      </div>
                     </li>
-                    ))}
+                  ))}
                 </ul>
-                ) : (
-                <div style={{ color: "#888", padding: 20 }}>
-                    No history available
+              ) : (
+                <div className="text-muted-foreground p-4 text-center">
+                  No history available
                 </div>
-                )
-            }
+              )}
             </div>
             <div className="pt-4 px-4">
               <div className="relative">
@@ -169,8 +192,7 @@ const Workspace = () => {
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={75}>
         <div className="flex-1 px-4 h-full">
-          <div className="flex-1 p-20 h-full rounded-xl" style={{background: "#222"}}>
-          {/*style={{ flex: 1, background: "#222", padding: 20, height: "100%"}}>*/}
+          <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
             {GeneratedComp ? (
               <Player
                 component={SequenceBuilder}
