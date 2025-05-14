@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+import { ModeToggle } from "@/components/mode-toggle";
 import {
   FadeInOutTransition,
   fadeInOutSchema,
@@ -13,6 +15,12 @@ import { Series } from "remotion";
 import { Player } from "@remotion/player";
 import { createElement } from "react";
 import { z } from "zod";
+
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 interface CompostitionConfig {
   id: string;
@@ -94,61 +102,70 @@ const Workspace = () => {
   return (
     <>
       <h1 style={{ fontSize: 40, paddingLeft: 20 }}>Imagine</h1>
-      <div style={{ display: "flex", height: "100vh" }}>
-        <div
-          style={{
-            width: "30%",
-            padding: 24,
-            background: "#f4f4f4",
-            color: "black",
-          }}
-        >
-          <h2>Animation Prompt</h2>
-          <textarea
-            style={{ width: "100%", height: 200, color: "black" }}
-            placeholder="Describe your animation..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-          />
-          <button
-            onClick={generate}
-            style={{
-              marginTop: 16,
-              padding: "8px 16px",
-              color: "black",
-              borderColor: "black",
-              border: "2px solid black",
-              borderRadius: 4,
-              backgroundColor: "white",
-            }}
-            disabled={loading || !prompt}
-          >
-            {loading ? "Generating..." : "Generate Animation"}
-          </button>
-        </div>
-        <div style={{ flex: 1, background: "#222", padding: 20 }}>
-          {GeneratedComp ? (
-            <Player
-              component={SequenceBuilder}
-              durationInFrames={totalDuration(GeneratedComp)}
-              fps={30}
-              compositionWidth={compositionWidth}
-              compositionHeight={compositionHeight}
-              inputProps={{ comps: GeneratedComp }}
-              style={{ width: "100%" }}
-              autoPlay
-              controls
-              loop
-            />
-          ) : (
-            <div style={{ color: "#888" }}>
-              Animation Preview will be shown here
+      <ModeToggle />
+
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel defaultSize={25}>
+          <div style={{ display: "flex", height: "100vh" }}>
+            <div
+              style={{
+                width: "100%",
+                padding: 24,
+                background: "#f4f4f4",
+                color: "black",
+              }}
+            >
+              <h2>Animation Prompt</h2>
+              <textarea
+                style={{ width: "100%", height: 200, color: "black" }}
+                placeholder="Describe your animation..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              />
+              <button
+                onClick={generate}
+                style={{
+                  marginTop: 16,
+                  padding: "8px 16px",
+                  color: "black",
+                  borderColor: "black",
+                  border: "2px solid black",
+                  borderRadius: 4,
+                  backgroundColor: "white",
+                }}
+                disabled={loading || !prompt}
+              >
+                {loading ? "Generating..." : "Generate Animation"}
+              </button>
             </div>
-          )}
-          {loading && <div style={{ color: "#fff" }}>Loading…</div>}
-          {error && <div style={{ color: "salmon" }}>{error}</div>}
-        </div>
-      </div>
+          </div>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={75}>
+          <div style={{ flex: 1, background: "#222", padding: 20 }}>
+            {GeneratedComp ? (
+              <Player
+                component={SequenceBuilder}
+                durationInFrames={totalDuration(GeneratedComp)}
+                fps={30}
+                compositionWidth={compositionWidth}
+                compositionHeight={compositionHeight}
+                inputProps={{ comps: GeneratedComp }}
+                style={{ width: "100%" }}
+                autoPlay
+                controls
+                loop
+              />
+            ) : (
+              <div style={{ color: "#888" }}>
+                Animation Preview will be shown here
+              </div>
+            )}
+            {loading && <div style={{ color: "#fff" }}>Loading…</div>}
+            {error && <div style={{ color: "salmon" }}>{error}</div>}
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </>
   );
 };
