@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import {
   FadeInOutTransition,
@@ -24,9 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/Navbar";
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface CompostitionConfig {
   id: string;
@@ -82,9 +81,6 @@ const SequenceBuilder: React.FC<{ comps: CompostitionConfig[] }> = ({
   return <Series>{innerComp}</Series>;
 };
 
-
-
-
 const Workspace = () => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
@@ -94,16 +90,17 @@ const Workspace = () => {
     CompostitionConfig[] | null
   >(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
 
   const [history, setHistory] = useState<string[]>([]);
 
-  const totalDuration = (comps: CompostitionConfig[]) =>
-    comps.reduce((acc, comp) => {
-      const { duration } = comp;
-      return acc + duration;
-    }, 0);
+  const totalDuration = useMemo(
+    () =>
+      GeneratedComp?.reduce((acc, comp) => {
+        const { duration } = comp;
+        return acc + duration;
+      }, 0),
+    [GeneratedComp],
+  );
 
   const generate = async () => {
     setHistory((prev) => [...prev, prompt]);
@@ -116,20 +113,20 @@ const Workspace = () => {
   return (
     <>
       <Navbar />
-      <ResizablePanelGroup direction="horizontal" className="min-h-[calc(100vh-60px)]">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="min-h-[calc(100vh-60px)]"
+      >
         <ResizablePanel defaultSize={25}>
-          <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", height: "100%" }}
+          >
             <div className="flex-1">
               {history.length > 0 ? (
                 <ul className="overflow-auto p-4 space-y-4">
                   {history.map((item, index) => (
-                    <li 
-                      key={index} 
-                      className="flex justify-end"
-                    >
-                      <div 
-                        className="max-w-[80%] rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words text-left"
-                      >
+                    <li key={index} className="flex justify-end">
+                      <div className="max-w-[80%] rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words text-left">
                         {item}
                       </div>
                     </li>
@@ -150,12 +147,12 @@ const Workspace = () => {
                   onChange={(e) => setPrompt(e.target.value)}
                   rows={1}
                   style={{
-                    minHeight: '60px',
-                    maxHeight: '200px',
+                    minHeight: "60px",
+                    maxHeight: "200px",
                   }}
                   onInput={(e) => {
                     const target = e.target as HTMLTextAreaElement;
-                    target.style.height = 'auto';
+                    target.style.height = "auto";
                     target.style.height = `${target.scrollHeight}px`;
                   }}
                 />
@@ -165,15 +162,15 @@ const Workspace = () => {
                   onClick={generate}
                   disabled={loading || !prompt}
                 >
-                    <span style={{fontWeight: 900, fontSize: 12}}>{">"}</span>
+                  <span style={{ fontWeight: 900, fontSize: 12 }}>{">"}</span>
                 </Button>
               </div>
             </div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={75}>
-        <div className="flex-1 px-4 h-full">
+        <ResizablePanel defaultSize={50}>
+          <div className="flex-1 px-4 h-full">
             {/*<Tabs defaultValue="account" className="w-[400px]">
               <TabsList>
                 <TabsTrigger value="editor">Editor</TabsTrigger>
@@ -183,29 +180,31 @@ const Workspace = () => {
               <TabsContent value="preview"></TabsContent>
             </Tabs>
         */}
-          <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
-            {GeneratedComp ? (
-              <Player
-                component={SequenceBuilder}
-                durationInFrames={totalDuration(GeneratedComp)}
-                fps={30}
-                compositionWidth={compositionWidth}
-                compositionHeight={compositionHeight}
-                inputProps={{ comps: GeneratedComp }}
-                style={{ width: "100%" }}
-                autoPlay
-                controls
-                loop
-              />
-            ) : (
-              <div style={{ color: "#888" }}>
-                Animation Preview will be shown here
-              </div>
-            )}
-            {loading && <div style={{ color: "#fff" }}>Loading…</div> }
-
+            <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
+              {GeneratedComp ? (
+                <Player
+                  component={SequenceBuilder}
+                  durationInFrames={totalDuration || 1}
+                  fps={30}
+                  compositionWidth={compositionWidth}
+                  compositionHeight={compositionHeight}
+                  inputProps={{ comps: GeneratedComp }}
+                  style={{ width: "100%" }}
+                  autoPlay
+                  controls
+                  loop
+                />
+              ) : (
+                <div style={{ color: "#888" }}>
+                  Animation Preview will be shown here
+                </div>
+              )}
+              {loading && <div style={{ color: "#fff" }}>Loading…</div>}
+            </div>
           </div>
-        </div>
+        </ResizablePanel>
+        <ResizablePanel defaultSize={25}>
+          <h2 className="text-xl font-bold m-4">Animation Properties</h2>
         </ResizablePanel>
       </ResizablePanelGroup>
     </>
