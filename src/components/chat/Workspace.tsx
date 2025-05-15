@@ -24,6 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/Navbar";
+import { Skeleton } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
 interface CompostitionConfig {
@@ -114,7 +116,6 @@ const Workspace = () => {
   return (
     <>
       <Navbar />
-
       <ResizablePanelGroup direction="horizontal" className="min-h-[calc(100vh-60px)]">
         <ResizablePanel defaultSize={25}>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -173,6 +174,15 @@ const Workspace = () => {
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={75}>
         <div className="flex-1 px-4 h-full">
+            {/*<Tabs defaultValue="account" className="w-[400px]">
+              <TabsList>
+                <TabsTrigger value="editor">Editor</TabsTrigger>
+                <TabsTrigger value="preview">Preview</TabsTrigger>
+              </TabsList>
+              <TabsContent value="editor"></TabsContent>
+              <TabsContent value="preview"></TabsContent>
+            </Tabs>
+        */}
           <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
             {GeneratedComp ? (
               <Player
@@ -192,8 +202,8 @@ const Workspace = () => {
                 Animation Preview will be shown here
               </div>
             )}
-            {loading && <div style={{ color: "#fff" }}>Loading…</div>}
-            {error && <div style={{ color: "salmon" }}>{error}</div>}
+            {loading && <div style={{ color: "#fff" }}>Loading…</div> }
+
           </div>
         </div>
         </ResizablePanel>
