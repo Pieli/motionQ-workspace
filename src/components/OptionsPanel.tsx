@@ -1,59 +1,13 @@
 import React, {
-  createRef,
   useCallback,
   useContext,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useState,
 } from "react";
 import type { _InternalTypes } from "remotion";
 import { Internals } from "remotion";
-import { BACKGROUND } from "../helpers/colors";
-import { useMobileLayout } from "../helpers/mobile-layout";
-import { VisualControlsTabActivatedContext } from "../visual-controls/VisualControls";
-import { GlobalPropsEditorUpdateButton } from "./GlobalPropsEditorUpdateButton";
-import { DataEditor } from "./RenderModal/DataEditor";
-import { deepEqual } from "./RenderModal/SchemaEditor/deep-equal";
-import { RenderQueue } from "./RenderQueue";
-import { RendersTab } from "./RendersTab";
-import { Tab, Tabs } from "./Tabs";
-import { VisualControlsContent } from "./VisualControls/VisualControlsContent";
-
-type OptionsSidebarPanel = "input-props" | "renders" | "visual-controls";
-
-const localStorageKey = "remotion.sidebarPanel";
-
-const getSelectedPanel = (readOnlyStudio: boolean): OptionsSidebarPanel => {
-  if (readOnlyStudio) {
-    return "input-props";
-  }
-
-  const panel = localStorage.getItem(localStorageKey);
-  if (panel === "renders") {
-    return "renders";
-  }
-
-  if (panel === "visual-controls") {
-    return "visual-controls";
-  }
-
-  return "input-props";
-};
-
-const tabsContainer: React.CSSProperties = {
-  backgroundColor: BACKGROUND,
-};
-
-export const persistSelectedOptionsSidebarPanel = (
-  panel: OptionsSidebarPanel,
-) => {
-  localStorage.setItem(localStorageKey, panel);
-};
-
-export const optionsSidebarTabs = createRef<{
-  selectRendersPanel: () => void;
-}>();
+import { DataEditor } from "@/components/RenderModal/DataEditor";
 
 export const OptionsPanel: React.FC<{
   readonly readOnlyStudio: boolean;
@@ -63,50 +17,17 @@ export const OptionsPanel: React.FC<{
   );
   const [saving, setSaving] = useState(false);
 
-  const isMobileLayout = useMobileLayout();
-
-  const visualControlsTabActivated = useContext(
-    VisualControlsTabActivatedContext,
-  );
-
   const container: React.CSSProperties = useMemo(
     () => ({
       height: "100%",
       width: "100%",
       display: "flex",
-      position: isMobileLayout ? "relative" : "absolute",
+      position: "absolute",
       flexDirection: "column",
       flex: 1,
     }),
-    [isMobileLayout],
+    [],
   );
-
-  const [panel, setPanel] = useState<OptionsSidebarPanel>(() =>
-    getSelectedPanel(readOnlyStudio),
-  );
-  const onPropsSelected = useCallback(() => {
-    setPanel("input-props");
-    persistSelectedOptionsSidebarPanel("input-props");
-  }, []);
-
-  const onRendersSelected = useCallback(() => {
-    setPanel("renders");
-    persistSelectedOptionsSidebarPanel("renders");
-  }, []);
-
-  const onVisualControlsSelected = useCallback(() => {
-    setPanel("visual-controls");
-    persistSelectedOptionsSidebarPanel("visual-controls");
-  }, []);
-
-  useImperativeHandle(optionsSidebarTabs, () => {
-    return {
-      selectRendersPanel: () => {
-        setPanel("renders");
-        persistSelectedOptionsSidebarPanel("renders");
-      },
-    };
-  }, []);
 
   const { compositions, canvasContent } = useContext(
     Internals.CompositionManager,
@@ -155,14 +76,6 @@ export const OptionsPanel: React.FC<{
     return props[composition.id] ?? composition.defaultProps ?? {};
   }, [composition, props]);
 
-  const unsavedChangesExist = useMemo(() => {
-    if (composition === null || composition.defaultProps === undefined) {
-      return false;
-    }
-
-    return !deepEqual(composition.defaultProps, currentDefaultProps);
-  }, [currentDefaultProps, composition]);
-
   const reset = useCallback(
     (e: Event) => {
       if ((e as CustomEvent).detail.resetUnsaved) {
@@ -182,40 +95,7 @@ export const OptionsPanel: React.FC<{
 
   return (
     <div style={container} className="css-reset">
-      <div style={tabsContainer}>
-        <Tabs>
-          {visualControlsTabActivated ? (
-            <Tab
-              selected={panel === "visual-controls"}
-              onClick={onVisualControlsSelected}
-            >
-              Controls
-            </Tab>
-          ) : null}
-          {composition ? (
-            <Tab
-              selected={panel === "input-props"}
-              onClick={onPropsSelected}
-              style={{ justifyContent: "space-between" }}
-            >
-              Props
-              {unsavedChangesExist ? (
-                <GlobalPropsEditorUpdateButton
-                  compositionId={composition.id}
-                  currentDefaultProps={currentDefaultProps}
-                />
-              ) : null}
-            </Tab>
-          ) : null}
-          {readOnlyStudio ? null : (
-            <RendersTab
-              onClick={onRendersSelected}
-              selected={panel === "renders"}
-            />
-          )}
-        </Tabs>
-      </div>
-      {panel === `input-props` && composition ? (
+      {composition && (
         <DataEditor
           key={composition.id}
           unresolvedComposition={composition}
@@ -227,10 +107,6 @@ export const OptionsPanel: React.FC<{
           setSaving={setSaving}
           readOnlyStudio={readOnlyStudio}
         />
-      ) : panel === "visual-controls" && visualControlsTabActivated ? (
-        <VisualControlsContent />
-      ) : readOnlyStudio ? null : (
-        <RenderQueue />
       )}
     </div>
   );

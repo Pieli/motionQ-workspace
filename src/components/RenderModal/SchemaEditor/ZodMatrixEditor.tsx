@@ -1,9 +1,7 @@
 import React, {useMemo, useState} from 'react';
-import type {z} from 'zod';
-import {
-	useZodIfPossible,
-	useZodTypesIfPossible,
-} from '../../get-zod-if-possible';
+import {z} from 'zod';
+import * as zodTypes from "@remotion/zod-types";
+
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {SchemaArrayItemSeparationLine} from './SchemaSeparationLine';
@@ -62,13 +60,6 @@ export const ZodMatrixEditor: React.FC<{
 		return expanded ? ' [' : ' [...] ';
 	}, [expanded]);
 
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
-	const zodTypes = useZodTypesIfPossible();
-
 	const isDefaultValue = useMemo(() => {
 		return deepEqual(localValue.value, defaultValue);
 	}, [defaultValue, localValue]);
@@ -112,7 +103,6 @@ export const ZodMatrixEditor: React.FC<{
 						{chunkedItems.map((row, rowIndex) => {
 							return (
 								<React.Fragment
-									// eslint-disable-next-line react/no-array-index-key
 									key={`${rowIndex}${localValue.keyStabilityRevision}`}
 								>
 									<div style={rowStyle}>
@@ -121,7 +111,6 @@ export const ZodMatrixEditor: React.FC<{
 
 											return (
 												<div
-													// eslint-disable-next-line react/no-array-index-key
 													key={`${_index}${localValue.keyStabilityRevision}`}
 													style={{flex: 1}}
 												>

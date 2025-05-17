@@ -57,10 +57,10 @@ export default function SvgPreviewer() {
           "http://www.w3.org/2000/svg",
           "rect",
         );
-        rect.setAttribute("x", bbox.x - 5);
-        rect.setAttribute("y", bbox.y >= 5 ? bbox.y - 5 : 0);
-        rect.setAttribute("width", bbox.width + 10);
-        rect.setAttribute("height", bbox.height + 10);
+        rect.setAttribute("x", `${bbox.x - 5}`);
+        rect.setAttribute("y", `${bbox.y >= 5 ? bbox.y - 5 : 0}`);
+        rect.setAttribute("width", `${bbox.width + 10}`);
+        rect.setAttribute("height", `${bbox.height + 10}`);
         rect.setAttribute("id", "highlight-overlay");
         rect.setAttribute("fill", "none");
         rect.setAttribute("stroke", "blue");

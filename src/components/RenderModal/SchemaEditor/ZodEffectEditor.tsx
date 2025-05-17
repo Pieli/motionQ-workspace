@@ -1,6 +1,6 @@
 import React from 'react';
-import type {z} from 'zod';
-import {useZodIfPossible} from '../../get-zod-if-possible';
+import { z } from 'zod';
+
 import {Fieldset} from './Fieldset';
 import {ZodFieldValidation} from './ZodFieldValidation';
 import type {UpdaterFunction} from './ZodSwitch';
@@ -35,10 +35,6 @@ export const ZodEffectEditor: React.FC<{
 	saving,
 	mayPad,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
 
 	const {localValue, onChange} = useLocalState({
 		unsavedValue: value,

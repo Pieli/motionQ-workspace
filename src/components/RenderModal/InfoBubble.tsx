@@ -1,11 +1,12 @@
 import {PlayerInternals} from '@remotion/player';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
 import {INPUT_BACKGROUND, LIGHT_TEXT} from '../../helpers/colors';
-import {HigherZIndex, useZIndex} from '../../state/z-index';
-import {getPortal} from '../Menu/portals';
-import {outerPortal} from '../Menu/styles';
 import {InfoTooltip} from './InfoTooltip';
+
+const outerPortal: React.CSSProperties = {
+	position: 'fixed',
+};
 
 const icon: React.CSSProperties = {
 	color: LIGHT_TEXT,
@@ -26,17 +27,13 @@ export const InfoBubble: React.FC<{
 	const [hovered, setIsHovered] = useState(false);
 	const [opened, setOpened] = useState(false);
 	const ref = useRef<HTMLButtonElement>(null);
-	const {tabIndex, currentZIndex} = useZIndex();
+	// const {tabIndex, currentZIndex} = useZIndex();
 	const size = PlayerInternals.useElementSize(ref, {
 		triggerOnWindowResize: true,
 		shouldApplyCssTransforms: true,
 	});
 
 	const refresh = size?.refresh;
-
-	const onHide = useCallback(() => {
-		setOpened(false);
-	}, []);
 
 	useEffect(() => {
 		const {current} = ref;
@@ -129,7 +126,6 @@ export const InfoBubble: React.FC<{
 		<>
 			<button
 				ref={ref}
-				tabIndex={tabIndex}
 				style={style}
 				title={title}
 				type="button"
@@ -144,7 +140,6 @@ export const InfoBubble: React.FC<{
 			{portalStyle
 				? ReactDOM.createPortal(
 						<div style={outerPortal} className="css-reset">
-							<HigherZIndex onOutsideClick={onHide} onEscape={onHide}>
 								<div style={portalStyle}>
 									<InfoTooltip
 										backgroundColor={INPUT_BACKGROUND}
@@ -153,9 +148,8 @@ export const InfoBubble: React.FC<{
 										{children}
 									</InfoTooltip>
 								</div>
-							</HigherZIndex>
 						</div>,
-						getPortal(currentZIndex),
+                        document.getElementById('menuportal-0') as Element,
 					)
 				: null}
 		</>

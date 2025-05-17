@@ -1,10 +1,12 @@
-import type {z} from 'zod';
-import type {ZodType} from '../../get-zod-if-possible';
-import {useZodIfPossible} from '../../get-zod-if-possible';
+import { z } from 'zod';
+
 import {ZonNonEditableValue} from './ZodNonEditableValue';
 import {ZodOrNullishEditor} from './ZodOrNullishEditor';
 import type {UpdaterFunction} from './ZodSwitch';
 import type {JSONPath} from './zod-types';
+
+type ZodType = typeof z;
+
 const findNull = (
 	value: readonly [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]],
 	zodType: ZodType,
@@ -63,11 +65,6 @@ export const ZodUnionEditor: React.FC<{
 	mayPad,
 }) => {
 	const {options} = schema._def as z.ZodUnionDef;
-
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
 
 	if (options.length > 2) {
 		return (

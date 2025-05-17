@@ -27,6 +27,8 @@ import { Navbar } from "@/components/Navbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { OptionsPanel } from "@/components/OptionsPanel";
+
 interface CompostitionConfig {
   id: string;
   component: React.FC<any>;
@@ -205,6 +207,7 @@ const Workspace = () => {
         </ResizablePanel>
         <ResizablePanel defaultSize={25}>
           <h2 className="text-xl font-bold m-4">Animation Properties</h2>
+          <OptionsPanel readOnlyStudio={true} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </>

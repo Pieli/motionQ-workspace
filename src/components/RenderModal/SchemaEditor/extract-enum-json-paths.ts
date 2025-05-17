@@ -1,5 +1,10 @@
-import type {z} from 'zod';
-import type {ZodType, ZodTypesType} from '../../get-zod-if-possible';
+import { z } from 'zod';
+import * as zodTypes from "@remotion/zod-types";
+
+type ZodType = typeof z;
+type ZodTypesType = typeof zodTypes;
+
+
 
 export const extractEnumJsonPaths = ({
 	schema,

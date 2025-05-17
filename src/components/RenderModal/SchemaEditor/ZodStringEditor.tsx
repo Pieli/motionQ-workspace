@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
-import type {z} from 'zod';
+import {z} from 'zod';
 import {RemotionInput} from '../../NewComposition/RemInput';
-import {useZodIfPossible} from '../../get-zod-if-possible';
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {ZodFieldValidation} from './ZodFieldValidation';
@@ -38,10 +37,6 @@ export const ZodStringEditor: React.FC<{
 	saveDisabledByParent,
 	mayPad,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
 
 	const {
 		localValue,

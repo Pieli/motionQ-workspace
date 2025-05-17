@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
-import type {z} from 'zod';
-import {useZodIfPossible} from '../../get-zod-if-possible';
+import {z} from 'zod';
+
 import {fieldsetLabel} from '../layout';
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
@@ -44,10 +44,6 @@ export const ZodObjectEditor: React.FC<{
 	mayPad,
 	discriminatedUnionReplacement,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
 
 	const [expanded, setExpanded] = useState(true);
 	const {localValue, onChange, RevisionContextProvider, reset} = useLocalState({

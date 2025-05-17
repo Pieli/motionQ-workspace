@@ -1,9 +1,9 @@
 import React, {useCallback, useMemo} from 'react';
-import type {z} from 'zod';
+import {z} from 'zod';
+
 import {Checkmark} from '../../../icons/Checkmark';
 import type {ComboboxValue} from '../../NewComposition/ComboBox';
 import {Combobox} from '../../NewComposition/ComboBox';
-import {useZodIfPossible} from '../../get-zod-if-possible';
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {ZodFieldValidation} from './ZodFieldValidation';
@@ -36,11 +36,6 @@ export const ZodEnumEditor: React.FC<{
 	onRemove,
 	saving,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
 	const {
 		localValue,
 		onChange: setLocalValue,

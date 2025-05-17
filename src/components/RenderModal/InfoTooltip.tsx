@@ -1,7 +1,12 @@
 import React, {useMemo} from 'react';
 import {BORDER_COLOR} from '../../helpers/colors';
-import {VERTICAL_SCROLLBAR_CLASSNAME} from '../Menu/is-menu-item';
-import {SHADOW_TOWARDS_BOTTOM, SHADOW_TOWARDS_TOP} from '../Menu/styles';
+
+const VERTICAL_SCROLLBAR_CLASSNAME = '__remotion-vertical-scrollbar';
+
+
+const SHADOW_TOWARDS_BOTTOM = '0 2px 8px rgba(0, 0, 0, 0.5)';
+const SHADOW_TOWARDS_TOP = '0 -2px 8px rgba(0, 0, 0, 0.5)';
+
 
 const arrow: React.CSSProperties = {
 	height: 7,

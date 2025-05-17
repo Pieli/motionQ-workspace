@@ -1,10 +1,6 @@
 import React, {useCallback} from 'react';
-import type {z} from 'zod';
+import {z} from 'zod';
 import {RemTextarea} from '../../NewComposition/RemTextarea';
-import {
-	useZodIfPossible,
-	useZodTypesIfPossible,
-} from '../../get-zod-if-possible';
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {ZodFieldValidation} from './ZodFieldValidation';
@@ -46,16 +42,6 @@ export const ZodTextareaEditor: React.FC<{
 	saveDisabledByParent,
 	mayPad,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
-	const zodTypes = useZodTypesIfPossible();
-	if (!zodTypes) {
-		throw new Error('expected zod textarea');
-	}
-
 	const {
 		localValue,
 		onChange: setLocalValue,

@@ -1,16 +1,20 @@
 import React, {useCallback, useMemo} from 'react';
-import type {z} from 'zod';
-import {getStaticFiles} from '../../../api/get-static-files';
+import {z} from 'zod';
 import {Checkmark} from '../../../icons/Checkmark';
 import type {ComboboxValue} from '../../NewComposition/ComboBox';
 import {Combobox} from '../../NewComposition/ComboBox';
-import {useZodIfPossible} from '../../get-zod-if-possible';
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {ZodFieldValidation} from './ZodFieldValidation';
 import type {UpdaterFunction} from './ZodSwitch';
 import {useLocalState} from './local-state';
 import type {JSONPath} from './zod-types';
+
+
+const getStaticFiles = () => {
+    console.warn('getStaticFiles is not implemented');
+    return [];
+}
 
 const container: React.CSSProperties = {
 	width: '100%',
@@ -41,10 +45,6 @@ export const ZodStaticFileEditor: React.FC<{
 	saveDisabledByParent,
 	mayPad,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
 
 	const {
 		localValue,

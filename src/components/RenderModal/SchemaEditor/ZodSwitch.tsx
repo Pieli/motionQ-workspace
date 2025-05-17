@@ -1,9 +1,7 @@
 import React from 'react';
-import type {z} from 'zod';
-import {
-	useZodIfPossible,
-	useZodTypesIfPossible,
-} from '../../get-zod-if-possible';
+import { z } from "zod";
+import * as zodTypes from "@remotion/zod-types";
+
 import type {JSONPath} from './zod-types';
 import {ZodArrayEditor} from './ZodArrayEditor';
 import {ZodBooleanEditor} from './ZodBooleanEditor';
@@ -60,13 +58,6 @@ export const ZodSwitch: React.FC<{
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const typeName = (def as any).typeName as z.ZodFirstPartyTypeKind;
 
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
-	const zodTypes = useZodTypesIfPossible();
-
 	if (typeName === z.ZodFirstPartyTypeKind.ZodObject) {
 		return (
 			<ZodObjectEditor
@@ -83,6 +74,7 @@ export const ZodSwitch: React.FC<{
 				mayPad={mayPad}
 				discriminatedUnionReplacement={null}
 			/>
+
 		);
 	}
 

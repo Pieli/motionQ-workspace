@@ -1,10 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Internals} from 'remotion';
-import type {AnyZodObject, z} from 'zod';
-import {setUnsavedProps} from '../../../helpers/document-title';
-import {useKeybinding} from '../../../helpers/use-keybinding';
-import {VERTICAL_SCROLLBAR_CLASSNAME} from '../../Menu/is-menu-item';
-import {useZodIfPossible} from '../../get-zod-if-possible';
+import type {AnyZodObject} from 'zod';
+import { z } from "zod";
+
 import {
 	InvalidDefaultProps,
 	InvalidSchema,
@@ -20,6 +18,14 @@ const scrollable: React.CSSProperties = {
 	display: 'flex',
 	flexDirection: 'column',
 	overflowY: 'auto',
+}; 
+
+
+let unsavedProps = false;
+const setUnsavedProps = (unsaved: boolean) => {
+	window.remotion_unsavedProps = unsaved;
+
+	unsavedProps = unsaved;
 };
 
 export const SchemaEditor: React.FC<{
@@ -47,7 +53,6 @@ export const SchemaEditor: React.FC<{
 	saving,
 	saveDisabledByParent,
 }) => {
-	const keybindings = useKeybinding();
 	const [revision, setRevision] = useState(0);
 
 	const revisionState: RevisionContextType = useMemo(() => {
@@ -71,11 +76,6 @@ export const SchemaEditor: React.FC<{
 		};
 	}, []);
 
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
 	const hasChanged = useMemo(() => {
 		return !deepEqual(savedDefaultProps, unsavedDefaultProps);
 	}, [savedDefaultProps, unsavedDefaultProps]);
@@ -84,29 +84,6 @@ export const SchemaEditor: React.FC<{
 		setUnsavedProps(hasChanged);
 	}, [hasChanged]);
 
-	const onQuickSave = useCallback(() => {
-		if (hasChanged && showSaveButton) {
-			onSave(() => {
-				return unsavedDefaultProps;
-			});
-		}
-	}, [hasChanged, onSave, showSaveButton, unsavedDefaultProps]);
-
-	useEffect(() => {
-		const save = keybindings.registerKeybinding({
-			event: 'keydown',
-			key: 's',
-			commandCtrlKey: true,
-			callback: onQuickSave,
-			preventDefault: true,
-			triggerIfInputFieldFocused: true,
-			keepRegisteredWhenNotHighestContext: true,
-		});
-
-		return () => {
-			save.unregister();
-		};
-	}, [keybindings, onQuickSave, onSave]);
 
 	const def: z.ZodTypeDef = schema._def;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,7 +113,6 @@ export const SchemaEditor: React.FC<{
 		<div
 			ref={defaultPropsEditorScrollableAreaRef}
 			style={scrollable}
-			className={VERTICAL_SCROLLBAR_CLASSNAME}
 		>
 			<RevisionContext.Provider value={revisionState}>
 				<ZodObjectEditor

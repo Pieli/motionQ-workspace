@@ -1,12 +1,12 @@
 import {useCallback, useMemo} from 'react';
-import type {ZodDiscriminatedUnionOption, z} from 'zod';
 import {Checkmark} from '../../../icons/Checkmark';
 import type {ComboboxValue} from '../../NewComposition/ComboBox';
 import {Combobox} from '../../NewComposition/ComboBox';
-import {
-	useZodIfPossible,
-	useZodTypesIfPossible,
-} from '../../get-zod-if-possible';
+
+import { z } from 'zod';
+import * as zodTypes from "@remotion/zod-types";
+import type {ZodDiscriminatedUnionOption} from 'zod';
+
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import type {ObjectDiscrimatedUnionReplacement} from './ZodObjectEditor';
@@ -41,13 +41,6 @@ export const ZodDiscriminatedUnionEditor: React.FC<{
 	jsonPath,
 	onRemove,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
-	const zodTypes = useZodTypesIfPossible();
-
 	const typedSchema = schema._def as z.ZodDiscriminatedUnionDef<string>;
 	const options = useMemo(
 		() => [...typedSchema.optionsMap.keys()],

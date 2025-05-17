@@ -1,4 +1,4 @@
-import {Spacing} from '../../layout';
+import {Spacing} from '@/components/ui/spacing';
 import {ValidationMessage} from '../../NewComposition/ValidationMessage';
 import {InfoBubble} from '../InfoBubble';
 import type {LocalState} from './local-state';
@@ -38,7 +38,6 @@ export const ZodFieldValidation: React.FC<{
 				<div style={stackTrace}>
 					<div style={stackTraceLabel}>Zod Validation has failed:</div>
 					{localValue.zodValidation.error.errors.map((error, index) => (
-						// eslint-disable-next-line react/no-array-index-key
 						<div key={index} style={stackTraceLabel}>
 							Type: {error.code} <br />
 							Message: {error.message}

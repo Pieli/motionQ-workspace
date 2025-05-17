@@ -1,9 +1,9 @@
 import React, {useMemo, useState} from 'react';
-import type {z} from 'zod';
-import {
-	useZodIfPossible,
-	useZodTypesIfPossible,
-} from '../../get-zod-if-possible';
+
+import { z } from "zod";
+import * as zodTypes from "@remotion/zod-types";
+
+
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {SchemaArrayItemSeparationLine} from './SchemaSeparationLine';
@@ -55,12 +55,6 @@ export const ZodArrayEditor: React.FC<{
 	const suffix = useMemo(() => {
 		return expanded ? ' [' : ' [...] ';
 	}, [expanded]);
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
-	const zodTypes = useZodTypesIfPossible();
 
 	const typeName = def.typeName as z.ZodFirstPartyTypeKind;
 	if (typeName !== z.ZodFirstPartyTypeKind.ZodArray) {
@@ -101,7 +95,6 @@ export const ZodArrayEditor: React.FC<{
 					<SchemaVerticalGuide isRoot={false}>
 						{localValue.value.map((child, i) => {
 							return (
-								// eslint-disable-next-line react/no-array-index-key
 								<React.Fragment key={`${i}${localValue.keyStabilityRevision}`}>
 									<ZodArrayItemEditor
 										onChange={onChange}

@@ -1,5 +1,4 @@
 import {useCallback, useMemo} from 'react';
-import {useZodIfPossible} from '../../get-zod-if-possible';
 import type {UpdaterFunction} from './ZodSwitch';
 import {ZodSwitch} from './ZodSwitch';
 import type {JSONPath} from './zod-types';
@@ -32,11 +31,6 @@ export const ZodArrayItemEditor: React.FC<{
 	mayPad,
 	mayRemove,
 }) => {
-	const z = useZodIfPossible();
-	if (!z) {
-		throw new Error('expected zod');
-	}
-
 	const onRemove = useCallback(() => {
 		onChange(
 			(oldV) => [...oldV.slice(0, index), ...oldV.slice(index + 1)],

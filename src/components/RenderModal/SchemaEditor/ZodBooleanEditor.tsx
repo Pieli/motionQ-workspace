@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import type {z} from 'zod';
-import {Checkbox} from '../../Checkbox';
+import { Checkbox } from "@/components/ui/checkbox"
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import type {UpdaterFunction} from './ZodSwitch';
@@ -43,9 +43,12 @@ export const ZodBooleanEditor: React.FC<{
 		savedValue: defaultValue,
 	});
 
-	const onToggle: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-		(e) => {
-			onChange(() => e.target.checked, false, false);
+	const onToggle = useCallback(
+		(checked: boolean | 'indeterminate') => {
+            if (checked === 'indeterminate') {
+                return;
+            }
+			onChange(() => checked, false, false);
 		},
 		[onChange],
 	);
@@ -73,7 +76,7 @@ export const ZodBooleanEditor: React.FC<{
 				<Checkbox
 					name={jsonPath.join('.')}
 					checked={localValue.value}
-					onChange={onToggle}
+					onCheckedChange={onToggle}
 					disabled={false}
 				/>
 			</div>
