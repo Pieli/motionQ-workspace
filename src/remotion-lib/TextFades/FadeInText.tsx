@@ -15,6 +15,7 @@ import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 export const fadeInOutSchema = z.object({
   text: z.string(),
   bgColor: zColor(),
+  textColor: zColor(),
 });
 
 loadFont("normal", {
@@ -26,6 +27,7 @@ loadFont("normal", {
 export const FadeInOutTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
   text,
   bgColor,
+  textColor,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -61,7 +63,7 @@ export const FadeInOutTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
   return (
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
-        <h1 style={{ fontSize: 100, fontFamily }}>
+        <h1 style={{ fontSize: 100, fontFamily, color: textColor }}>
           {text}
         </h1>
       </AbsoluteFill>

@@ -38,6 +38,7 @@ const components: CompostitionConfig[] = [
     props: {
       text: "I am testing this out",
       bgColor: "#000000",
+      textColor: "#ffffff",
     },
     duration: 120,
   },
@@ -48,6 +49,7 @@ const components: CompostitionConfig[] = [
     props: {
       text: "Wowi this is amazing",
       bgColor: "#000000",
+      textColor: "#ffffff",
     },
     duration: 120,
   },
