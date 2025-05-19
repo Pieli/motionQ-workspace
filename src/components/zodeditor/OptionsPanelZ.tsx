@@ -6,14 +6,14 @@ import { Spacing } from "@/components/ui/spacing";
 import { Row } from "@/components/ui/row";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import type { CompostitionConfig } from "@/components/interfaces/compositions";
+import type { CompositionConfig } from "@/components/interfaces/compositions";
 
 import { colorWithNewOpacity } from "@/helpers/color-math";
 
 export const OptionsPanelZ: React.FC<{
-  compositions: CompostitionConfig[];
+  compositions: CompositionConfig[];
   setCompositions: React.Dispatch<
-    React.SetStateAction<CompostitionConfig[] | null>
+    React.SetStateAction<CompositionConfig[] | null>
   >;
 }> = ({ compositions, setCompositions }) => {
   // initialize local state from incoming compositions
@@ -27,8 +27,8 @@ export const OptionsPanelZ: React.FC<{
 };
 
 interface ZodEditorProps {
-  compositions: CompostitionConfig[];
-  setCompositions: React.Dispatch<React.SetStateAction<CompostitionConfig[]>>;
+  compositions: CompositionConfig[];
+  setCompositions: React.Dispatch<React.SetStateAction<CompositionConfig[]>>;
 }
 
 const ZodEditor: React.FC<ZodEditorProps> = ({
@@ -78,7 +78,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
 
 // Factory that picks the correct editor based on Zod type
 interface ZodSwitchProps {
-  comp: CompostitionConfig;
+  comp: CompositionConfig;
   fieldKey: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFieldChange: (compId: string, key: string, value: any) => void;

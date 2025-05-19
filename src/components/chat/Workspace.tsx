@@ -28,9 +28,9 @@ import { Navbar } from "@/components/Navbar";
 
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 
-import type { CompostitionConfig } from "@/components/interfaces/compositions";
+import type { CompositionConfig } from "@/components/interfaces/compositions";
 
-const components: CompostitionConfig[] = [
+const composition: CompositionConfig[] = [
   {
     id: "FadeInOutTransition",
     component: FadeInOutTransition,
@@ -55,7 +55,7 @@ const components: CompostitionConfig[] = [
   },
 ];
 
-const SequenceBuilder: React.FC<{ comps: CompostitionConfig[] }> = ({
+const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
 }) => {
   const innerComp = comps.map(
@@ -84,7 +84,7 @@ const Workspace = () => {
 
   const [prompt, setPrompt] = useState("");
   const [GeneratedComp, setGeneratedComp] = useState<
-    CompostitionConfig[] | null
+    CompositionConfig[] | null
   >(null);
   const [loading, setLoading] = useState(false);
 
@@ -103,7 +103,7 @@ const Workspace = () => {
     setHistory((prev) => [...prev, prompt]);
     setPrompt("");
     setLoading(true);
-    setGeneratedComp(components);
+    setGeneratedComp(composition);
     setLoading(false);
   };
 
