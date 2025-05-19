@@ -1,141 +1,146 @@
-import React from 'react';
+import React from "react";
 import { z } from "zod";
 import * as zodTypes from "@remotion/zod-types";
 
-import type {JSONPath} from './zod-types';
-import {ZodArrayEditor} from './ZodArrayEditor';
-import {ZodBooleanEditor} from './ZodBooleanEditor';
-import {ZodColorEditor} from './ZodColorEditor';
-import {ZodDateEditor} from './ZodDateEditor';
-import {ZodDefaultEditor} from './ZodDefaultEditor';
-import {ZodDiscriminatedUnionEditor} from './ZodDiscriminatedUnionEditor';
-import {ZodEffectEditor} from './ZodEffectEditor';
-import {ZodEnumEditor} from './ZodEnumEditor';
-import {ZodMatrixEditor} from './ZodMatrixEditor';
-import {ZonNonEditableValue} from './ZodNonEditableValue';
-import {ZodNullableEditor} from './ZodNullableEditor';
-import {ZodNumberEditor} from './ZodNumberEditor';
-import {ZodObjectEditor} from './ZodObjectEditor';
-import {ZodOptionalEditor} from './ZodOptionalEditor';
-import {ZodStaticFileEditor} from './ZodStaticFileEditor';
-import {ZodStringEditor} from './ZodStringEditor';
-import {ZodTextareaEditor} from './ZodTextareaEditor';
-import {ZodTupleEditor} from './ZodTupleEditor';
-import {ZodUnionEditor} from './ZodUnionEditor';
+import type { JSONPath } from "./zod-types";
+// import { ZodArrayEditor } from "./ZodArrayEditor";
+// import { ZodBooleanEditor } from "./ZodBooleanEditor";
+// import { ZodColorEditor } from "./ZodColorEditor";
+// import { ZodDateEditor } from "./ZodDateEditor";
+// import { ZodDefaultEditor } from "./ZodDefaultEditor";
+// import { ZodDiscriminatedUnionEditor } from "./ZodDiscriminatedUnionEditor";
+// import { ZodEffectEditor } from "./ZodEffectEditor";
+// import { ZodEnumEditor } from "./ZodEnumEditor";
+// import { ZodMatrixEditor } from "./ZodMatrixEditor";
+import { ZonNonEditableValue } from "./ZodNonEditableValue";
+// import { ZodNullableEditor } from "./ZodNullableEditor";
+// import { ZodNumberEditor } from "./ZodNumberEditor";
+// import { ZodObjectEditor } from "./ZodObjectEditor";
+// import { ZodOptionalEditor } from "./ZodOptionalEditor";
+// import { ZodStaticFileEditor } from "./ZodStaticFileEditor";
+import { ZodStringEditor } from "./ZodStringEditor";
+import { ZodTextareaEditor } from "./ZodTextareaEditor";
+// import { ZodTupleEditor } from "./ZodTupleEditor";
+// import { ZodUnionEditor } from "./ZodUnionEditor";
 
 export type UpdaterFunction<T> = (
-	updater: (oldValue: T) => T,
-	forceApply: boolean,
-	increment: boolean,
+  updater: (oldValue: T) => T,
+  forceApply: boolean,
+  increment: boolean,
 ) => void;
 
 export const ZodSwitch: React.FC<{
-	readonly schema: z.ZodTypeAny;
-	readonly jsonPath: JSONPath;
-	readonly value: unknown;
-	readonly defaultValue: unknown;
-	readonly setValue: UpdaterFunction<unknown>;
-	readonly onSave: UpdaterFunction<unknown>;
-	readonly showSaveButton: boolean;
-	readonly onRemove: null | (() => void);
-	readonly saving: boolean;
-	readonly saveDisabledByParent: boolean;
-	readonly mayPad: boolean;
+  readonly schema: z.ZodTypeAny;
+  readonly jsonPath: JSONPath;
+  readonly value: unknown;
+  readonly defaultValue: unknown;
+  readonly setValue: UpdaterFunction<unknown>;
+  readonly onSave: UpdaterFunction<unknown>;
+  readonly showSaveButton: boolean;
+  readonly onRemove: null | (() => void);
+  readonly saving: boolean;
+  readonly saveDisabledByParent: boolean;
+  readonly mayPad: boolean;
 }> = ({
-	schema,
-	jsonPath,
-	value,
-	setValue,
-	defaultValue,
-	onSave,
-	showSaveButton,
-	onRemove,
-	saving,
-	saveDisabledByParent,
-	mayPad,
+  schema,
+  jsonPath,
+  value,
+  setValue,
+  defaultValue,
+  onSave,
+  showSaveButton,
+  onRemove,
+  saving,
+  saveDisabledByParent,
+  mayPad,
 }) => {
-	const def: z.ZodTypeDef = schema._def;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const typeName = (def as any).typeName as z.ZodFirstPartyTypeKind;
+  const def: z.ZodTypeDef = schema._def;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const typeName = (def as any).typeName as z.ZodFirstPartyTypeKind;
 
-	if (typeName === z.ZodFirstPartyTypeKind.ZodObject) {
-		return (
-			<ZodObjectEditor
-				setValue={setValue as UpdaterFunction<Record<string, unknown>>}
-				unsavedValue={value as Record<string, unknown>}
-				savedValue={defaultValue as Record<string, unknown>}
-				jsonPath={jsonPath}
-				schema={schema}
-				onSave={onSave as UpdaterFunction<Record<string, unknown>>}
-				showSaveButton={showSaveButton}
-				onRemove={onRemove}
-				saving={saving}
-				saveDisabledByParent={saveDisabledByParent}
-				mayPad={mayPad}
-				discriminatedUnionReplacement={null}
-			/>
+  /*
+  if (typeName === z.ZodFirstPartyTypeKind.ZodObject) {
+    return (
+      <ZodObjectEditor
+        setValue={setValue as UpdaterFunction<Record<string, unknown>>}
+        unsavedValue={value as Record<string, unknown>}
+        savedValue={defaultValue as Record<string, unknown>}
+        jsonPath={jsonPath}
+        schema={schema}
+        onSave={onSave as UpdaterFunction<Record<string, unknown>>}
+        showSaveButton={showSaveButton}
+        onRemove={onRemove}
+        saving={saving}
+        saveDisabledByParent={saveDisabledByParent}
+        mayPad={mayPad}
+        discriminatedUnionReplacement={null}
+      />
+    );
+  }
+  */
 
-		);
-	}
+  if (typeName === z.ZodFirstPartyTypeKind.ZodString) {
 
-	if (typeName === z.ZodFirstPartyTypeKind.ZodString) {
-		if ((value as string).startsWith(window.remotion_staticBase)) {
-			return (
-				<ZodStaticFileEditor
-					setValue={setValue as UpdaterFunction<string>}
-					value={value as string}
-					jsonPath={jsonPath}
-					schema={schema}
-					defaultValue={defaultValue as string}
-					onSave={onSave as (newValue: (oldVal: string) => string) => void}
-					showSaveButton={showSaveButton}
-					onRemove={onRemove}
-					saving={saving}
-					saveDisabledByParent={saveDisabledByParent}
-					mayPad={mayPad}
-				/>
-			);
-		}
+   /* 
+    if ((value as string).startsWith(window.remotion_staticBase)) {
+      return (
+        <ZodStaticFileEditor
+          setValue={setValue as UpdaterFunction<string>}
+          value={value as string}
+          jsonPath={jsonPath}
+          schema={schema}
+          defaultValue={defaultValue as string}
+          onSave={onSave as (newValue: (oldVal: string) => string) => void}
+          showSaveButton={showSaveButton}
+          onRemove={onRemove}
+          saving={saving}
+          saveDisabledByParent={saveDisabledByParent}
+          mayPad={mayPad}
+        />
+      );
+    }
+    */
 
-		if (
-			zodTypes &&
-			schema._def.description ===
-				zodTypes.ZodZypesInternals.REMOTION_TEXTAREA_BRAND
-		) {
-			return (
-				<ZodTextareaEditor
-					value={value as string}
-					setValue={setValue as UpdaterFunction<string>}
-					jsonPath={jsonPath}
-					schema={schema}
-					onSave={onSave as UpdaterFunction<string>}
-					defaultValue={defaultValue as string}
-					showSaveButton={showSaveButton}
-					onRemove={onRemove}
-					saving={saving}
-					saveDisabledByParent={saveDisabledByParent}
-					mayPad={mayPad}
-				/>
-			);
-		}
+    if (
+      zodTypes &&
+      schema._def.description ===
+        zodTypes.ZodZypesInternals.REMOTION_TEXTAREA_BRAND
+    ) {
+      return (
+        <ZodTextareaEditor
+          value={value as string}
+          setValue={setValue as UpdaterFunction<string>}
+          jsonPath={jsonPath}
+          schema={schema}
+          onSave={onSave as UpdaterFunction<string>}
+          defaultValue={defaultValue as string}
+          showSaveButton={showSaveButton}
+          onRemove={onRemove}
+          saving={saving}
+          saveDisabledByParent={saveDisabledByParent}
+          mayPad={mayPad}
+        />
+      );
+    }
 
-		return (
-			<ZodStringEditor
-				value={value as string}
-				setValue={setValue as UpdaterFunction<string>}
-				jsonPath={jsonPath}
-				schema={schema}
-				onSave={onSave as UpdaterFunction<string>}
-				defaultValue={defaultValue as string}
-				showSaveButton={showSaveButton}
-				onRemove={onRemove}
-				saving={saving}
-				saveDisabledByParent={saveDisabledByParent}
-				mayPad={mayPad}
-			/>
-		);
-	}
+    return (
+      <ZodStringEditor
+        value={value as string}
+        setValue={setValue as UpdaterFunction<string>}
+        jsonPath={jsonPath}
+        schema={schema}
+        onSave={onSave as UpdaterFunction<string>}
+        defaultValue={defaultValue as string}
+        showSaveButton={showSaveButton}
+        onRemove={onRemove}
+        saving={saving}
+        saveDisabledByParent={saveDisabledByParent}
+        mayPad={mayPad}
+      />
+    );
+  }
 
+  /*
 	if (typeName === z.ZodFirstPartyTypeKind.ZodDate) {
 		return (
 			<ZodDateEditor
@@ -452,14 +457,15 @@ export const ZodSwitch: React.FC<{
 			/>
 		);
 	}
+    */
 
-	return (
-		<ZonNonEditableValue
-			jsonPath={jsonPath}
-			showSaveButton={showSaveButton}
-			label={`${typeName} (not editable)`}
-			saving={saving}
-			mayPad={mayPad}
-		/>
-	);
+  return (
+    <ZonNonEditableValue
+      jsonPath={jsonPath}
+      showSaveButton={showSaveButton}
+      label={`${typeName} (not editable)`}
+      saving={saving}
+      mayPad={mayPad}
+    />
+  );
 };

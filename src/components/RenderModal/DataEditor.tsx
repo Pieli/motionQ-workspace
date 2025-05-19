@@ -241,7 +241,6 @@ export const DataEditor: React.FC<{
     <div style={outer}>
       {"Hello"}
 
-      {/*
       <SchemaEditor
         unsavedDefaultProps={defaultProps}
         setValue={setDefaultProps}
@@ -253,7 +252,6 @@ export const DataEditor: React.FC<{
         saving={saving}
         saveDisabledByParent={!zodValidationResult.success}
       />
-    */}
     </div>
   );
 };
