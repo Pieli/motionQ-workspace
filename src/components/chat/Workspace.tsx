@@ -13,7 +13,6 @@ import {
 import { Player } from "@remotion/player";
 import { createElement } from "react";
 import { Series } from "remotion";
-import { z } from "zod";
 
 import {
   ResizableHandle,
@@ -24,18 +23,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/Navbar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { OptionsPanel } from "@/components/OptionsPanel";
+import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 
-interface CompostitionConfig {
-  id: string;
-  component: React.FC<any>;
-  schema: z.ZodObject<any, any>;
-  props: Record<string, any>;
-  duration: number;
-}
+import type { CompostitionConfig } from "@/components/interfaces/compositions";
 
 const components: CompostitionConfig[] = [
   {
@@ -207,7 +200,11 @@ const Workspace = () => {
         </ResizablePanel>
         <ResizablePanel defaultSize={25}>
           <h2 className="text-xl font-bold m-4">Animation Properties</h2>
-          <OptionsPanel readOnlyStudio={true} />
+          {GeneratedComp && GeneratedComp.length > 0 && (
+            <OptionsPanelZ 
+                compositions={GeneratedComp} 
+                setCompositions={setGeneratedComp}/>
+          )}
         </ResizablePanel>
       </ResizablePanelGroup>
     </>
