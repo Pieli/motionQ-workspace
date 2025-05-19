@@ -201,11 +201,12 @@ const Workspace = () => {
           </div>
         </ResizablePanel>
         <ResizablePanel defaultSize={25}>
-          <h2 className="text-xl font-bold m-4">Animation Properties</h2>
+          <h2 className="text-xl font-bold my-4">Animation Properties</h2>
           {GeneratedComp && GeneratedComp.length > 0 && (
-            <OptionsPanelZ 
-                compositions={GeneratedComp} 
-                setCompositions={setGeneratedComp}/>
+            <OptionsPanelZ
+              compositions={GeneratedComp}
+              setCompositions={setGeneratedComp}
+            />
           )}
         </ResizablePanel>
       </ResizablePanelGroup>

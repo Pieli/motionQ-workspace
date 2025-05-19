@@ -57,8 +57,8 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
         >;
         return (
           <div key={comp.id} className="mb-8">
-            <h2 className="text-xl font-bold mb-4">{comp.id}</h2>
-            <div className="space-y-4">
+            <h2 className="text-ml font-bold mb-4">{comp.id}</h2>
+            <div className="space-y-4 pr-4">
               {Object.keys(shapeDef).map((key) => (
                 <ZodSwitch
                   key={key}
@@ -89,10 +89,11 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
   fieldKey,
   onFieldChange,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fieldSchema = (
-    (comp.schema as any)._def.shape() as Record<string, z.ZodTypeAny>
-  )[fieldKey];
+  const fieldSchema =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ((comp.schema as any)._def.shape() as Record<string, z.ZodTypeAny>)[
+      fieldKey
+    ];
   const typeName = fieldSchema._def.typeName as z.ZodFirstPartyTypeKind;
   const currentValue = comp.props?.[fieldKey] ?? "";
 
