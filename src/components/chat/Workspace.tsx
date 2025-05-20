@@ -23,10 +23,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/Navbar";
+import { Spacing } from "@/components/ui/spacing";
 // import { Skeleton } from "@/components/ui/skeleton";
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
+import { Timeline } from "@/components/timeline/Timeline";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 
@@ -37,10 +39,10 @@ const composition: CompositionConfig[] = [
     schema: fadeInOutSchema,
     props: {
       text: "I am testing this out",
-      bgColor: "#000000",
+      bgColor: "#f88787",
       textColor: "#ffffff",
     },
-    duration: 120,
+    duration: 60,
   },
   {
     id: "SlideInTransition",
@@ -48,10 +50,10 @@ const composition: CompositionConfig[] = [
     schema: slideInSchema,
     props: {
       text: "Wowi this is amazing",
-      bgColor: "#000000",
+      bgColor: "#99ffad",
       textColor: "#ffffff",
     },
-    duration: 120,
+    duration: 60,
   },
 ];
 
@@ -85,7 +87,7 @@ const Workspace = () => {
   const [prompt, setPrompt] = useState("");
   const [GeneratedComp, setGeneratedComp] = useState<
     CompositionConfig[] | null
-  >(null);
+  >(composition);
   const [loading, setLoading] = useState(false);
 
   const [history, setHistory] = useState<string[]>([]);
@@ -179,18 +181,26 @@ const Workspace = () => {
         */}
             <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
               {GeneratedComp ? (
-                <Player
-                  component={SequenceBuilder}
-                  durationInFrames={totalDuration || 1}
-                  fps={30}
-                  compositionWidth={compositionWidth}
-                  compositionHeight={compositionHeight}
-                  inputProps={{ comps: GeneratedComp }}
-                  style={{ width: "100%" }}
-                  autoPlay
-                  controls
-                  loop
-                />
+                <>
+                  <Player
+                    component={SequenceBuilder}
+                    durationInFrames={totalDuration || 1}
+                    fps={30}
+                    compositionWidth={compositionWidth}
+                    compositionHeight={compositionHeight}
+                    inputProps={{ comps: GeneratedComp }}
+                    style={{ width: "100%" }}
+                    acknowledgeRemotionLicense
+                    autoPlay
+                    controls
+                    loop
+                  />
+                  <Spacing y={1} />
+                  <Timeline
+                    compositions={GeneratedComp}
+                    setCompositions={setGeneratedComp}
+                  />
+                </>
               ) : (
                 <div style={{ color: "#888" }}>
                   Animation Preview will be shown here
