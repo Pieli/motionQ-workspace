@@ -63,7 +63,7 @@ export const FadeInOutTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
   return (
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
-        <h1 style={{ fontSize: 100, fontFamily, color: textColor }}>
+        <h1 style={{ fontSize: 180, fontFamily, fontWeight: 550, color: textColor }}>
           {text}
         </h1>
       </AbsoluteFill>
