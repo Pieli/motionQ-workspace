@@ -196,10 +196,7 @@ const Workspace = () => {
                     loop
                   />
                   <Spacing y={1} />
-                  <Timeline
-                    compositions={GeneratedComp}
-                    setCompositions={setGeneratedComp}
-                  />
+                  <Timeline comps={GeneratedComp} />
                 </>
               ) : (
                 <div style={{ color: "#888" }}>

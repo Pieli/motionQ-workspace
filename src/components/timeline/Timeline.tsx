@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { debounce } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // import { Row } from "@/components/ui/row";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -47,7 +48,7 @@ const TrackItems: React.FC<{
   calcWidth: (duration: number) => number;
 }> = ({ items, calcWidth }) => {
   return (
-    <>
+    <div className="flex" style={{ gap: '1px' }}>
       {items.map((item: BaseItem) => (
         <div
           style={{
@@ -62,7 +63,7 @@ const TrackItems: React.FC<{
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
@@ -86,9 +87,9 @@ const TrackLines: React.FC<{
               className="absolute flex box-border cursor-pointer rounded-sm border border-black/80 select-none"
               style={{
                 width: calculateTrackItemWidth(120),
-                height: 32,
+                height: 40,
                 left: stepWidth,
-                top: 34 * index + 40,
+                top: 40 * index + 40 + index * 10,
                 overflow: "hidden",
                 zIndex: 0,
               }}
@@ -129,22 +130,8 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
   const maxDuration: number = 120;
 
   const [zoom, setZoom] = useState<number>(1);
-  const [steps, setSteps] = useState<number>(maxDuration / 60);
 
-  useEffect(() => {
-    setSteps(maxDuration / stepToSecs(zoom));
-  }, [zoom]);
-
-  const { width } = useWindowDimensions();
-
-  const stepWidth = useMemo(() => (width * 0.75) / 12, [width]);
-  const maxWidth = useMemo(() => (steps + 2) * stepWidth, [steps, stepWidth]);
-
-  const onZoomChange = (value: number[]) => {
-    setZoom(value[0]);
-  };
-
-  function stepToSecs(step: number): number {
+  const stepToSecs = useCallback((step: number): number => {
     switch (step) {
       case 1:
         return 60;
@@ -161,22 +148,50 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
       default:
         return 60;
     }
-  }
+  }, []);
 
-  function secToMinSec(secs: number): string {
+  const steps = useMemo(() => maxDuration / stepToSecs(zoom), [
+    zoom,
+    maxDuration,
+    stepToSecs,
+  ]);
+
+  const { width } = useWindowDimensions();
+
+  const stepWidth = useMemo(() => (width * 0.75) / 12, [width]);
+  const maxWidth = useMemo(() => (steps + 2) * stepWidth, [steps, stepWidth]);
+
+  const secToMinSec = useCallback((secs: number): string => {
     const mins: number = Math.floor(secs / 60);
     const minFmt: string = mins > 9 ? mins.toString() : `0${mins}`;
     const secRest: number = secs % 60;
     const secsFmt: string = secRest > 9 ? secRest.toString() : `0${secRest}`;
 
     return `${minFmt}:${secsFmt}`;
-  }
+  }, []);
 
   const stepsToMinSec = useCallback(
     (step: number) => {
       return secToMinSec(step * stepToSecs(zoom));
     },
-    [zoom],
+    [zoom, stepToSecs, secToMinSec],
+  );
+
+  const timelineMarkers = useMemo(
+    () =>
+      Array.from({ length: steps + 2 }, (_, i) => ({
+        key: i,
+        time: stepsToMinSec(i),
+      })),
+    [steps, stepsToMinSec],
+  );
+
+  const debouncedZoomChange = useMemo(
+    () =>
+      debounce((value: number[]) => {
+        setZoom(value[0]);
+      }, 50),
+    [setZoom],
   );
 
   return (
@@ -211,16 +226,16 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
                   className="absolute top-0 left-0 flex h-full select-none"
                   style={{ width: maxWidth }}
                 >
-                  {Array.from({ length: steps + 2 }, (_, i) => (
+                  {timelineMarkers.map(({ key, time }) => (
                     <div
-                      key={i}
+                      key={key}
                       className="border-r-white flex min-h-full items-start justify-end truncate border-r-[1px] pt-3 pr-1"
                       style={{
                         minWidth: Math.max(stepWidth, 35),
                         width: stepWidth,
                       }}
                     >
-                      {stepsToMinSec(i)}
+                      {time}
                     </div>
                   ))}
                 </div>
@@ -237,7 +252,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
       </div>
       <Slider
         defaultValue={[1]}
-        onValueChange={onZoomChange}
+        onValueChange={debouncedZoomChange}
         max={6}
         min={1}
         step={1}
