@@ -1,10 +1,10 @@
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // import { Row } from "@/components/ui/row";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
-// import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Plus } from "@/icons/plus";
 
@@ -48,7 +48,7 @@ const TrackItems: React.FC<{
   calcWidth: (duration: number) => number;
 }> = ({ items, calcWidth }) => {
   return (
-    <div className="flex" style={{ gap: '1px' }}>
+    <div className="flex" style={{ gap: "1px" }}>
       {items.map((item: BaseItem) => (
         <div
           style={{
@@ -111,7 +111,6 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
 }) => {
   const [tracks, setTracks] = useState<Track[]>([
     { name: "Animation", items: [] },
-    { name: "Audio", items: [] },
   ]);
 
   useEffect(() => {
@@ -123,7 +122,6 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
           duration: com.duration,
         })),
       },
-      { name: "Audio", items: [] },
     ]);
   }, [comps]);
 
@@ -150,11 +148,10 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
     }
   }, []);
 
-  const steps = useMemo(() => maxDuration / stepToSecs(zoom), [
-    zoom,
-    maxDuration,
-    stepToSecs,
-  ]);
+  const steps = useMemo(
+    () => maxDuration / stepToSecs(zoom),
+    [zoom, maxDuration, stepToSecs],
+  );
 
   const { width } = useWindowDimensions();
 
@@ -196,57 +193,60 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
 
   return (
     <>
-      <div className="w-full border-black-50 overflow-hidden rounded-md shadow-lg  mb-4">
+      <div className="w-full border-black-50 overflow-hidden rounded-md shadow-lg mb-4">
         <div className="relative h-full w-full" style={{ height: 250 }}>
-          <div className="absoulte w-full h-full flex flex-column">
-            <div
-              id="tracksContainer"
-              className="flex h-full w-full overflow-x-auto overflow-y-hidden"
-            >
-              <div className="sticky left-0 bg-black z-20 flex h-full w-1/4 flex-col">
-                <div className="border-timeline-border relative top-0 flex w-full shrink-0 items-center justify-end border-r-[1px] pr-2 font-bold text-white tabular-nums">
-                  <div className="bg-timeline-panel flex items-center justify-center gap-1 rounded-sm px-2 py-1 text-sm font-semibold text-white shadow-xs hover:bg-white/20 undefined">
-                    <Plus color={"white"} className="size-4" />
-                  </div>
-                </div>
-                {tracks.map((track, index) => (
-                  <div
-                    key={index}
-                    className="flex h-16 w-full items-center justify-end border-b-[1px] border-timeline-border pr-2 font-bold text-white tabular-nums"
-                  >
-                    {track.name}
-                  </div>
-                ))}
-              </div>
-              <div
-                className="relative h-full w-3/4"
-                style={{ minHeight: 230, height: 132 }}
-              >
+          <div className="absolute w-full h-full flex flex-column">
+            <ScrollArea className="h-full w-full">
+              <div className="flex h-full w-full">
                 <div
-                  className="absolute top-0 left-0 flex h-full select-none"
-                  style={{ width: maxWidth }}
+                  className="sticky left-0 bg-black z-20 flex h-full flex-col"
+                  style={{ width: "200px", minWidth: "200px" }}
                 >
-                  {timelineMarkers.map(({ key, time }) => (
+                  <div className="border-timeline-border relative top-0 flex w-full shrink-0 items-center justify-end border-r-[1px] pr-2 font-bold text-white tabular-nums">
+                    <div className="bg-timeline-panel flex items-center justify-center gap-1 rounded-sm px-2 py-1 text-sm font-semibold text-white shadow-xs hover:bg-white/20">
+                      <Plus color={"white"} className="size-4" />
+                    </div>
+                  </div>
+                  {tracks.map((track, index) => (
                     <div
-                      key={key}
-                      className="border-r-white flex min-h-full items-start justify-end truncate border-r-[1px] pt-3 pr-1"
-                      style={{
-                        minWidth: Math.max(stepWidth, 35),
-                        width: stepWidth,
-                      }}
+                      key={index}
+                      className="flex h-16 w-full items-center justify-end border-b-[1px] border-timeline-border pr-2 font-bold text-white tabular-nums"
                     >
-                      {time}
+                      {track.name}
                     </div>
                   ))}
                 </div>
-                <TrackLines
-                  tracks={tracks}
-                  width={maxWidth}
-                  stepWidth={stepWidth}
-                  stepTime={stepToSecs(zoom)}
-                />
+                <div
+                  className="relative flex-1"
+                  style={{ minHeight: 230, height: 132 }}
+                >
+                  <div
+                    className="absolute top-0 left-0 flex h-full select-none"
+                    style={{ width: maxWidth }}
+                  >
+                    {timelineMarkers.map(({ key, time }) => (
+                      <div
+                        key={key}
+                        className="border-r-white flex min-h-full items-start justify-end truncate border-r-[1px] pt-3 pr-1"
+                        style={{
+                          minWidth: Math.max(stepWidth, 35),
+                          width: stepWidth,
+                        }}
+                      >
+                        {time}
+                      </div>
+                    ))}
+                  </div>
+                  <TrackLines
+                    tracks={tracks}
+                    width={maxWidth}
+                    stepWidth={stepWidth}
+                    stepTime={stepToSecs(zoom)}
+                  />
+                </div>
               </div>
-            </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </div>
         </div>
       </div>
