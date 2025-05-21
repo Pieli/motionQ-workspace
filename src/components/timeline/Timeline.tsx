@@ -196,7 +196,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
 
   return (
     <>
-      <div className="w-full overflow-hidden rounded-md shadow-lg mb-4">
+      <div className="w-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
           className="relative h-full w-full"
           style={{ height: Math.max(250, tracks.length * 50 + 50) }}
