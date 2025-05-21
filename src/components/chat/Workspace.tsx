@@ -1,18 +1,10 @@
 import { useState, useMemo } from "react";
 
-import {
-  FadeInOutTransition,
-  fadeInOutSchema,
-} from "@/remotion-lib/TextFades/FadeInText";
-
-import {
-  SlideInTransition,
-  slideInSchema,
-} from "@/remotion-lib/TextFades/SlideInText";
-
 import { Player } from "@remotion/player";
 import { createElement } from "react";
 import { Series } from "remotion";
+
+import { ChatBoxPanel } from "@/components/chat/chatBoxPanel";
 
 import {
   ResizableHandle,
@@ -20,42 +12,13 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/Navbar";
 import { Spacing } from "@/components/ui/spacing";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import { Timeline } from "@/components/timeline/Timeline";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
-
-const composition: CompositionConfig[] = [
-  {
-    id: "FadeInOutTransition",
-    component: FadeInOutTransition,
-    schema: fadeInOutSchema,
-    props: {
-      text: "I am testing this out",
-      bgColor: "#f88787",
-      textColor: "#ffffff",
-    },
-    duration: 90,
-  },
-  {
-    id: "SlideInTransition",
-    component: SlideInTransition,
-    schema: slideInSchema,
-    props: {
-      text: "Wowi this is amazing",
-      bgColor: "#99ffad",
-      textColor: "#ffffff",
-    },
-    duration: 60,
-  },
-];
 
 const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
@@ -84,13 +47,10 @@ const Workspace = () => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
 
-  const [prompt, setPrompt] = useState("");
   const [GeneratedComp, setGeneratedComp] = useState<
     CompositionConfig[] | null
-  >(composition);
-  const [loading, setLoading] = useState(false);
-
-  const [history, setHistory] = useState<string[]>([]);
+  >(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const totalDuration = useMemo(
     () =>
@@ -101,14 +61,6 @@ const Workspace = () => {
     [GeneratedComp],
   );
 
-  const generate = async () => {
-    setHistory((prev) => [...prev, prompt]);
-    setPrompt("");
-    setLoading(true);
-    setGeneratedComp(composition);
-    setLoading(false);
-  };
-
   return (
     <>
       <Navbar />
@@ -117,68 +69,15 @@ const Workspace = () => {
         className="min-h-[calc(100vh-60px)]"
       >
         <ResizablePanel defaultSize={25}>
-          <div
-            style={{ display: "flex", flexDirection: "column", height: "100%" }}
-          >
-            <div className="flex-1">
-              {history.length > 0 ? (
-                <ul className="overflow-auto p-4 space-y-4">
-                  {history.map((item, index) => (
-                    <li key={index} className="flex justify-end">
-                      <div className="max-w-[80%] rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words text-left">
-                        {item}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="text-muted-foreground p-4 text-center">
-                  No history available
-                </div>
-              )}
-            </div>
-            <div className="pt-4 px-4">
-              <div className="relative">
-                <Textarea
-                  className="min-h-[60px] w-full pr-12 resize-none rounded-xl"
-                  placeholder="Describe your animation..."
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  rows={1}
-                  style={{
-                    minHeight: "60px",
-                    maxHeight: "200px",
-                  }}
-                  onInput={(e) => {
-                    const target = e.target as HTMLTextAreaElement;
-                    target.style.height = "auto";
-                    target.style.height = `${target.scrollHeight}px`;
-                  }}
-                />
-                <Button
-                  className="absolute right-2 bottom-2"
-                  size="sm"
-                  onClick={generate}
-                  disabled={loading || !prompt}
-                >
-                  <span style={{ fontWeight: 900, fontSize: 12 }}>{">"}</span>
-                </Button>
-              </div>
-            </div>
-          </div>
+          <ChatBoxPanel
+            setGeneratedComp={setGeneratedComp}
+            setIsGenerating={setIsGenerating}
+            isGenerating={isGenerating}
+          />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={50}>
           <div className="flex-1 px-4 h-full">
-            {/*<Tabs defaultValue="account" className="w-[400px]">
-              <TabsList>
-                <TabsTrigger value="editor">Editor</TabsTrigger>
-                <TabsTrigger value="preview">Preview</TabsTrigger>
-              </TabsList>
-              <TabsContent value="editor"></TabsContent>
-              <TabsContent value="preview"></TabsContent>
-            </Tabs>
-        */}
             <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
               {GeneratedComp ? (
                 <>
@@ -203,7 +102,7 @@ const Workspace = () => {
                   Animation Preview will be shown here
                 </div>
               )}
-              {loading && <div style={{ color: "#fff" }}>Loading…</div>}
+              {isGenerating && <div style={{ color: "#fff" }}>Loading…</div>}
             </div>
           </div>
         </ResizablePanel>
