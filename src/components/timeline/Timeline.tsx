@@ -53,10 +53,7 @@ const TrackItems: React.FC<{
             width: calcWidth(item.duration),
           }}
         >
-          <div
-            className="h-full w-full border border-black"
-            style={{ backgroundColor: "#b04bcf" }}
-          >
+          <div className="h-full w-full" style={{ backgroundColor: "#b04bcf" }}>
             {item.id}
           </div>
         </div>
@@ -87,7 +84,7 @@ const TrackLines: React.FC<{
               className="absolute flex box-border cursor-pointer rounded-sm border border-black/80 select-none"
               style={{
                 height: 40,
-                left: stepWidth + (stepWidth * index * (60 / stepTime)), // Remove +1 to include first element
+                left: stepWidth + stepWidth * index * (60 / stepTime), // Remove +1 to include first element
                 top: 60 + 40 * index + index * 10,
                 overflow: "hidden",
                 zIndex: 0,
@@ -189,7 +186,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
     if (e.deltaY !== 0) {
       e.preventDefault();
       const scrollContainer = e.currentTarget.querySelector(
-        '[data-radix-scroll-area-viewport]',
+        "[data-radix-scroll-area-viewport]",
       );
       if (scrollContainer) {
         scrollContainer.scrollLeft += e.deltaY;
@@ -200,21 +197,30 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
   return (
     <>
       <div className="w-full overflow-hidden rounded-md shadow-lg mb-4">
-        <div className="relative h-full w-full" style={{ height: Math.max(250, tracks.length * 50 + 50) }}>
-          <ScrollArea
-            className="h-full w-full"
-            onWheel={handleWheel}
-          >
-            <div className="relative flex-1" style={{ minHeight: Math.max(230, tracks.length * 50), height: tracks.length * 50 + 50 }}>
-              <div className="absolute top-0 left-0 flex select-none" style={{ width: maxWidth, height: tracks.length * 50 + 50 }}>
+        <div
+          className="relative h-full w-full"
+          style={{ height: Math.max(250, tracks.length * 50 + 50) }}
+        >
+          <ScrollArea className="h-full w-full" onWheel={handleWheel}>
+            <div
+              className="relative flex-1"
+              style={{
+                minHeight: Math.max(230, tracks.length * 50),
+                height: tracks.length * 50 + 50,
+              }}
+            >
+              <div
+                className="absolute top-0 left-0 flex select-none"
+                style={{ width: maxWidth, height: tracks.length * 50 + 50 }}
+              >
                 {timelineMarkers.map(({ key, time }) => (
                   <div
                     key={key}
-                    className="border-r-white flex items-start justify-end truncate border-r-[1px] pt-3 pr-1"
+                    className="border-r-black flex items-start justify-end truncate border-r-[1px] pt-3 pr-1"
                     style={{
                       minWidth: Math.max(stepWidth, 35),
                       width: stepWidth,
-                      height: '100%'
+                      height: "100%",
                     }}
                   >
                     {time}

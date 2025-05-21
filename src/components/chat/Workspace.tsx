@@ -42,7 +42,7 @@ const composition: CompositionConfig[] = [
       bgColor: "#f88787",
       textColor: "#ffffff",
     },
-    duration: 60,
+    duration: 90,
   },
   {
     id: "SlideInTransition",
