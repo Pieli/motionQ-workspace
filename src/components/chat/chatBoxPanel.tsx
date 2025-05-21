@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 
+import { OpenAIService } from "@/api/llm";
+import type { LLMService } from "@/components/interfaces/llm";
+
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 
 import { Button } from "@/components/ui/button";
@@ -40,10 +43,10 @@ const composition: CompositionConfig[] = [
   },
 ];
 
+const llm: LLMService = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
+
 export const ChatBoxPanel: React.FC<{
-  setGeneratedComp: React.Dispatch<
-    React.SetStateAction<CompositionConfig[] | null>
-  >;
+  setGeneratedComp: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
   isGenerating: boolean;
 }> = ({ setGeneratedComp, setIsGenerating, isGenerating }) => {
@@ -51,10 +54,32 @@ export const ChatBoxPanel: React.FC<{
   const [prompt, setPrompt] = useState("");
 
   const generate = async () => {
-    setHistory((prev) => [...prev, prompt]);
+    // Add the user prompt to history
+    setHistory((prev) => [...prev, `User: ${prompt}`]);
+    const currentPrompt = prompt;
     setPrompt("");
     setIsGenerating(true);
-    setGeneratedComp(composition);
+
+    try {
+      const response = await llm.generateCompositions(currentPrompt);
+      if (!response) {
+        throw new Error("Failed to generate compositions");
+      }
+      const composition = llm.responseToGeneratedComposition(response);
+      if (!composition) {
+        throw new Error("Failed to parse generated compositions");
+      }
+      setGeneratedComp(composition);
+      
+      // Append the agent's comment to the history
+      setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
+    } catch (e) {
+      console.error("Error during generation:", e);
+      setGeneratedComp(null);
+      // In case of error, you might also want to add an error message to history
+      setHistory((prev) => [...prev, "Agent: An error occurred during generation."]);
+    }
+
     setIsGenerating(false);
   };
 

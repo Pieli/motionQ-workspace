@@ -47,8 +47,9 @@ const TrackItems: React.FC<{
 }> = ({ items, calcWidth }) => {
   return (
     <div className="flex" style={{ gap: "1px" }}>
-      {items.map((item: BaseItem) => (
+      {items.map((item: BaseItem, index) => (
         <div
+          key={index}
           style={{
             width: calcWidth(item.duration),
           }}

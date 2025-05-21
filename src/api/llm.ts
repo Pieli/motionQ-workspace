@@ -1,39 +1,75 @@
-import type { LLMService } from "@/components/interfaces/llm"
+import OpenAI from "openai";
+import { zodResponseFormat } from 'openai/helpers/zod';
+
+
+import { Response } from "./types";
+
+import type { ResponseType } from "./types";
+import type { LLMService } from "@/components/interfaces/llm";
+import type { CompositionConfig } from "@/components/interfaces/compositions";
+import type { AnimationBinding } from "@/components/interfaces/llm";
+import type { AnimationComponents } from "@/api/animation-factories";
+
+
+import { animationFactory, schemaFactory } from "./animation-factories";
+import { bindings } from "@/remotion-lib/animation-bindings";
+
+
+export function generateAnimationContext(bindings: AnimationBinding[]): string {
+    return bindings.map(animation =>
+        `Animation: ${animation.name}\nUse case: ${animation.usecase}\nParameters: ${animation.settings}\n`
+    ).join('\n');
+}
+
 
 
 export class OpenAIService implements LLMService {
-  private apiKey: string;
-  private endpoint = 'https://api.openai.com/v1/chat/completions';
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+  private client: OpenAI;
+
+  constructor(apiKey: string, ) {
+    this.client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true});
   }
 
-  async generateComponentCode(prompt: string): Promise<string> {
-    const system = {
-      role: 'system',
-      content:
-        'You are an AI that writes a complete React component for a Remotion composition. ' +
-        'Use only built-in HTML, CSS, and SVG; no external assets. ' +
-        'Output ONLY valid ES module code including imports for React and Remotion. ' +
-        'Do not return code wrapped in markdowns "```".' +
-        'Return the raw string only.' +
-        'Use remotuion funtions like useCurrentFrame... to manage the ticks' +
-        'Name the component "GeneratedComp" and export it as default.' +
-        'Defaults are window width=640, height=360, fps=30, durationInFrames=90.',
-    };
-    const user = { role: 'user', content: prompt };
+  async generateCompositions(prompt: string): Promise<ResponseType> {
+    const systemPrompt = (
+        'You are an AI that writes creates typography motion animations for promo videos' +
+        'Your goal is to craft the perfect script and animation for the user.' +
+        'Promo videos are stunning, engaging, unpredictable.' +  
+        'Content per Composition should be kept at a minimum and less is more.' +
+        'You have the following animations available to choose from: ' +
+        generateAnimationContext(bindings) +
+        'Duration is in frames and the video has 30 FPS' +
+        'Output: JSON format with composition-array and commentary.'
+    );
 
-    const res = await fetch(this.endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
-      },
-      body: JSON.stringify({ model: 'gpt-4o-mini', messages: [system, user], temperature: 0.7, max_tokens: 1500 }),
+    const completion = await this.client.beta.chat.completions.parse({
+      model: 'gpt-4o',
+      messages: [{role: 'system', content: systemPrompt}, { role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 1500,
+      response_format: zodResponseFormat(Response, 'response'),
     });
 
-    const data = await res.json();
-    console.log(data.choices[0].message.content.trim())
-    return data.choices[0].message.content.trim();
-  }
+    console.dir(completion, { depth: 5 });
+    const message= completion.choices[0]?.message
+    if (message?.parsed) {
+      console.log(message.parsed.compositions);
+      console.log(`answer: ${message.parsed.comment}`);
+    };
+
+    return message.parsed as ResponseType;
+  };
+
+    responseToGeneratedComposition(resp: ResponseType): CompositionConfig[]  {
+    const compostitions = resp.compositions.map((comp) => ({
+        id:  comp.id,
+        component: animationFactory(comp.animationName) as AnimationComponents,
+        schema: schemaFactory(comp.animationName),
+        props: comp.animationSettings,
+        duration: comp.duration,
+
+    }));
+
+    return compostitions;
+};
 }
