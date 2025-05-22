@@ -21,7 +21,7 @@
     "@remotion/google-fonts": "4.0.302",
     "@remotion/media-utils": "4.0.302",
     "@remotion/player": "4.0.302",
-    "@remotion/renderer": "4.0.304",
+    "@remotion/renderer": "4.0.302",
     "@remotion/zod-types": "4.0.302",
     "@tailwindcss/vite": "^4.1.6",
     "@types/lodash": "^4.17.17",

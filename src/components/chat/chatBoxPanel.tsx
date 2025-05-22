@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import {
-  FadeInOutTransition,
+  FadeInTransition,
   fadeInOutSchema,
 } from "@/remotion-lib/TextFades/FadeInText";
 
@@ -21,7 +21,7 @@ import {
 const composition: CompositionConfig[] = [
   {
     id: "FadeInOutTransition",
-    component: FadeInOutTransition,
+    component: FadeInTransition,
     schema: fadeInOutSchema,
     props: {
       text: "I am testing this out",

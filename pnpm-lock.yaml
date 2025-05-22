@@ -42,8 +42,8 @@ importers:
         specifier: 4.0.302
         version: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@remotion/renderer':
-        specifier: 4.0.304
-        version: 4.0.304(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 4.0.302
+        version: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@remotion/zod-types':
         specifier: 4.0.302
         version: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@3.22.3)
@@ -1007,18 +1007,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@remotion/compositor-darwin-arm64@4.0.304':
-    resolution: {integrity: sha512-fjKvpE61kK8cWH+lL9b3IsA9PiRy81vs1xS/P3ebL2GrkuK9h50KoQToa34HcP4ZsGDD/Fdcb1dir9taYuM0NQ==}
-    cpu: [arm64]
-    os: [darwin]
-
   '@remotion/compositor-darwin-x64@4.0.302':
     resolution: {integrity: sha512-CBFxTCcQOIpzV+7s2qi8Rz8J8A1JLu9uvVDHdX/BuVVhK8M6s7ZV8Pm2HktS8MDiFGoIXeQrn5wZS3tYYRaXLQ==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@remotion/compositor-darwin-x64@4.0.304':
-    resolution: {integrity: sha512-+4TI+ifvzshIZmdiSQWp5qovETadbhvcd5qZe4F3DxvlaxMu98nIYp54bQPnDGkb7kvXJOtJlE4W3T5gr4nwHw==}
     cpu: [x64]
     os: [darwin]
 
@@ -1027,18 +1017,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@remotion/compositor-linux-arm64-gnu@4.0.304':
-    resolution: {integrity: sha512-TDAqLjkkMguw0Yc8CcrDm2yKIyTlBk1pnV363nMxPxmXaNC8uXanPLTiVLBQnBEGdof8EcvxPv8AXKNmPZgA9A==}
-    cpu: [arm64]
-    os: [linux]
-
   '@remotion/compositor-linux-arm64-musl@4.0.302':
     resolution: {integrity: sha512-oB9u2fD3NuquLewBi8UQY7yXhW9El1O+Zj7yj2oxaNfmWKlO3zbSLuHElzLCwYOsSdqglEor+xtLovC1Ez6w9w==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@remotion/compositor-linux-arm64-musl@4.0.304':
-    resolution: {integrity: sha512-1NCKFqlIBzRewFXAGPELRtfFsiU6hYvRWz6s0OVk9lQ+o5rVoQ36Q20VO07HkqFVB5qd5dqhoCnMuqeiQsfxwQ==}
     cpu: [arm64]
     os: [linux]
 
@@ -1047,28 +1027,13 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@remotion/compositor-linux-x64-gnu@4.0.304':
-    resolution: {integrity: sha512-syTLZy/MI6JUxVaDYv757iX84g5g+L24N9Hc6BoWmbYzx/1Hm5SoXBFvsAkHXE0B0NofCZdCNcHnqNgydXhdMA==}
-    cpu: [x64]
-    os: [linux]
-
   '@remotion/compositor-linux-x64-musl@4.0.302':
     resolution: {integrity: sha512-dfj6N6qOhiInF+FQpNRk660pAzhHC8ZZf/r/M6WgLkuyXtIknCYjvoSdSUDJBbrUfULUKEOJwvbeP6/EjMEeow==}
     cpu: [x64]
     os: [linux]
 
-  '@remotion/compositor-linux-x64-musl@4.0.304':
-    resolution: {integrity: sha512-K+JW9r5CsDYcE10Pt57+pKAuEuEcx+A43m2npOvpEpmNnsHZ9oHIC9M6E3aywhi9yr7yHbExbGIOUi7EBjHw2w==}
-    cpu: [x64]
-    os: [linux]
-
   '@remotion/compositor-win32-x64-msvc@4.0.302':
     resolution: {integrity: sha512-PFvtA6+8zBOP1EcSgGUlzrN+QdN+bRFK6D9w3MCiPsVT/MJQf+acrh/eiZwBXXD7n8SPZS20o+OYRdekdG7h/g==}
-    cpu: [x64]
-    os: [win32]
-
-  '@remotion/compositor-win32-x64-msvc@4.0.304':
-    resolution: {integrity: sha512-F/rOnxHDdBGaXzpPSS7kGxYXryqyPzBWuoAvpt5NVW97py9DwpV29Nt1OjRy+/PByCB1EemZaoKZdnGs41a+FQ==}
     cpu: [x64]
     os: [win32]
 
@@ -1096,17 +1061,8 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@remotion/renderer@4.0.304':
-    resolution: {integrity: sha512-sQcaZl3jmySbXuIi9ES4PSPBgSizjKZWPE08z3Bsohh0pWTTwpkSAiebmlMcPULm8u83R4r7pZskyGfD+nY9qg==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-
   '@remotion/streaming@4.0.302':
     resolution: {integrity: sha512-g9PaUOMXseBXnfq2GrDrq5dBrxSpR948ACAGrksXwGjqU8UlOMy4wkd412BsTnMkiXCwamssOsdRYHmvBd3dgQ==}
-
-  '@remotion/streaming@4.0.304':
-    resolution: {integrity: sha512-ZSrO9GGlJe31DouQWg8Axnak2Nb0DTvUHwfbpyxZteIiaS/iQVcUk5icDyGxvN5mbbJjkZiJ4eZBzDIvpzMDSA==}
 
   '@remotion/studio-server@4.0.302':
     resolution: {integrity: sha512-yO2jrw0mP/VOuEy6lWpxE5966twVvp5Q9jXH2+qA4c1XslrVHvNoBf9pO1DQdeHosc2Zt3a0drhdcU3goXYAlw==}
@@ -2587,12 +2543,6 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  remotion@4.0.304:
-    resolution: {integrity: sha512-F2G85Zvn7fwQg21e0/uaVdeudc3Yp4o5JA6g+1m5sDsXKtXAmx5iHKyg/VmMKzdjb9rgmzPg90GYbL0LScXeUQ==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
@@ -3743,14 +3693,14 @@ snapshots:
     dependencies:
       '@remotion/studio': 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@remotion/studio-shared': 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      css-loader: 5.2.7(webpack@5.96.1(esbuild@0.25.0))
+      css-loader: 5.2.7(webpack@5.96.1)
       esbuild: 0.25.0
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       react-refresh: 0.9.0
       remotion: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       source-map: 0.7.3
-      style-loader: 4.0.0(webpack@5.96.1(esbuild@0.25.0))
+      style-loader: 4.0.0(webpack@5.96.1)
       webpack: 5.96.1(esbuild@0.25.0)
     transitivePeerDependencies:
       - '@swc/core'
@@ -3786,43 +3736,22 @@ snapshots:
   '@remotion/compositor-darwin-arm64@4.0.302':
     optional: true
 
-  '@remotion/compositor-darwin-arm64@4.0.304':
-    optional: true
-
   '@remotion/compositor-darwin-x64@4.0.302':
-    optional: true
-
-  '@remotion/compositor-darwin-x64@4.0.304':
     optional: true
 
   '@remotion/compositor-linux-arm64-gnu@4.0.302':
     optional: true
 
-  '@remotion/compositor-linux-arm64-gnu@4.0.304':
-    optional: true
-
   '@remotion/compositor-linux-arm64-musl@4.0.302':
-    optional: true
-
-  '@remotion/compositor-linux-arm64-musl@4.0.304':
     optional: true
 
   '@remotion/compositor-linux-x64-gnu@4.0.302':
     optional: true
 
-  '@remotion/compositor-linux-x64-gnu@4.0.304':
-    optional: true
-
   '@remotion/compositor-linux-x64-musl@4.0.302':
     optional: true
 
-  '@remotion/compositor-linux-x64-musl@4.0.304':
-    optional: true
-
   '@remotion/compositor-win32-x64-msvc@4.0.302':
-    optional: true
-
-  '@remotion/compositor-win32-x64-msvc@4.0.304':
     optional: true
 
   '@remotion/google-fonts@4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
@@ -3869,32 +3798,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@remotion/renderer@4.0.304(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@remotion/streaming': 4.0.304
-      execa: 5.1.1
-      extract-zip: 2.0.1
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      remotion: 4.0.304(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      source-map: 0.8.0-beta.0
-      ws: 8.17.1
-    optionalDependencies:
-      '@remotion/compositor-darwin-arm64': 4.0.304
-      '@remotion/compositor-darwin-x64': 4.0.304
-      '@remotion/compositor-linux-arm64-gnu': 4.0.304
-      '@remotion/compositor-linux-arm64-musl': 4.0.304
-      '@remotion/compositor-linux-x64-gnu': 4.0.304
-      '@remotion/compositor-linux-x64-musl': 4.0.304
-      '@remotion/compositor-win32-x64-msvc': 4.0.304
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
   '@remotion/streaming@4.0.302': {}
-
-  '@remotion/streaming@4.0.304': {}
 
   '@remotion/studio-server@4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -4490,7 +4394,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  css-loader@5.2.7(webpack@5.96.1(esbuild@0.25.0)):
+  css-loader@5.2.7(webpack@5.96.1):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.3)
       loader-utils: 2.0.4
@@ -5391,11 +5295,6 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  remotion@4.0.304(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-
   require-from-string@2.0.2: {}
 
   resolve-from@4.0.0: {}
@@ -5561,7 +5460,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  style-loader@4.0.0(webpack@5.96.1(esbuild@0.25.0)):
+  style-loader@4.0.0(webpack@5.96.1):
     dependencies:
       webpack: 5.96.1(esbuild@0.25.0)
 

@@ -24,7 +24,7 @@ loadFont("normal", {
 });
 
 
-export const FadeInOutTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
+export const FadeInTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
   text,
   bgColor,
   textColor,
@@ -38,11 +38,10 @@ export const FadeInOutTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
     config: {
       damping: 200,
     },
-    durationInFrames: 80,
+    durationInFrames: 1.5 * fps,
   });
 
-  // Fade In/Out Transition: Fade in and out based on progress
-  const opacity = interpolate(progress, [0, 0.5, 1], [0, 1, 0]);
+  const opacity = interpolate(progress, [0, 1], [0, 1]);
 
   const container: React.CSSProperties = useMemo(() => {
     return {

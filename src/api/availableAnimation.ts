@@ -2,7 +2,7 @@ import { z } from "zod";
 import * as  zodTypes from "@remotion/zod-types"
 
 import {
-    FadeInOutTransition,
+    FadeInTransition,
     fadeInOutSchema,
 } from "@/remotion-lib/TextFades/FadeInText";
 
@@ -40,7 +40,7 @@ export function AnimationFactory<T extends AnimationType>(
         case "slideInTransition":
             return SlideInTransition as React.FC<AnimationProps[T]>;
         case "fadeInOutTransition":
-            return FadeInOutTransition as React.FC<AnimationProps[T]>;
+            return FadeInTransition as React.FC<AnimationProps[T]>;
         default:
             console.error("No Animation found for", name);
             return null;

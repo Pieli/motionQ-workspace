@@ -11,8 +11,8 @@ export const bindings: AnimationBinding[] = [
         settings: getSchemaDescription(slideInSchema)
     },
     {
-        name: "fadeInOutTransition",
-        usecase: "Smooth fade in/out effects. Ideal for subtle transitions or gentle text appearances.",
+        name: "fadeInTransition",
+        usecase: "Smooth fade in effects. Ideal for subtle transitions or gentle text appearances.",
         settings: getSchemaDescription(fadeInOutSchema)
     }
 ];

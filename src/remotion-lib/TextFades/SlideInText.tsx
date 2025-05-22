@@ -36,18 +36,18 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
     fps,
     frame,
     config: {
-      damping: 400,
+      damping: 800,
     },
-    durationInFrames: 30,
+    durationInFrames: 0.5 * fps,
   });
 
-  // Slide In Transition: Slide from left to right
-  const slideX = interpolate(progress, [0, 1], [-500, 0]);
+  const slideX = interpolate(progress, [0, 0.9, 1], [-500, 80, 0]);
 
   const container: React.CSSProperties = useMemo(() => {
     return {
       justifyContent: "center",
       alignItems: "center",
+      opacity: Math.min(progress+0.2, 1),
       transform: `translateX(${slideX}px)`,
     };
   }, [slideX]);

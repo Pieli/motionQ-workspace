@@ -2,7 +2,7 @@ import * as zodTypes from "@remotion/zod-types";
 import { z } from "zod";
 
 import {
-    FadeInOutTransition,
+    FadeInTransition,
     fadeInOutSchema,
 } from "@/remotion-lib/TextFades/FadeInText";
 
@@ -20,7 +20,7 @@ export const animationMap = {
         schema: slideInSchema,
     },
     fadeInOutTransition: {
-        component: FadeInOutTransition,
+        component: FadeInTransition,
         schema: fadeInOutSchema,
     },
 } as const;
