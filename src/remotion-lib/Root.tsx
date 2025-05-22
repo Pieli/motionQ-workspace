@@ -5,7 +5,7 @@ import { SimpleTextFade, simpleFadeSchema } from "./TextFades/SimpleTextFade";
 import { SimpleTextTyping, simpleTypingSchema } from "./TextFades/SimpleTextTyping";
 import { SlideInTransition, slideInSchema } from "./TextFades/SlideInText";
 import { ScaleUpDownTransition, scaleUpDownSchema } from "./TextFades/ScaldeUpDowText";
-import { FadeInTransition, fadeInOutSchema } from "./TextFades/FadeInText";
+import { FadeInTransition, fadeInSchema } from "./TextFades/FadeInText";
 import { ThreeDTextTransition, threeDTextSchema } from "./TextFades/ThreeDTextTransition";
 import { TextShatterTransition, textShatterSchema } from "./TextFades/TextShatterTransition";
 import { WaveEffectTransition, waveEffectSchema } from "./TextFades/WaveEffectTransition";
@@ -111,13 +111,13 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
-        id="FadeInOutTransition"
+        id="FadeInTransition"
         component={FadeInTransition}
         durationInFrames={60}
         fps={30}
         width={1920}
         height={1080}
-        schema={fadeInOutSchema}
+        schema={fadeInSchema}
         defaultProps={{
           text: "Hello World" as const,
           textColor: "#000" as const,

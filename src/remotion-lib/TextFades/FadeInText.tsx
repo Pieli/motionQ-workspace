@@ -12,7 +12,7 @@ import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 
-export const fadeInOutSchema = z.object({
+export const fadeInSchema = z.object({
   text: z.string(),
   bgColor: zColor(),
   textColor: zColor(),
@@ -24,7 +24,7 @@ loadFont("normal", {
 });
 
 
-export const FadeInTransition: React.FC<z.infer<typeof fadeInOutSchema>> = ({
+export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
   text,
   bgColor,
   textColor,

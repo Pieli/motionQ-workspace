@@ -34,9 +34,9 @@ export const ScaleUpDownTransition: React.FC<z.infer<typeof scaleUpDownSchema>> 
     fps,
     frame,
     config: {
-      damping: 400,
+      damping: 100,
     },
-    durationInFrames: 20,
+    durationInFrames: 0.5 * fps,
   });
 
   // Scale Up/Down Transition: Scale from 0.5 to 1
@@ -60,7 +60,8 @@ export const ScaleUpDownTransition: React.FC<z.infer<typeof scaleUpDownSchema>> 
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
         <h1 style={{
-          fontSize: 100,
+          fontSize: 180,
+          fontWeight: 550,
           fontFamily,
         }}> {text} </h1>
       </AbsoluteFill>

@@ -49,7 +49,7 @@ export const WaveEffectTransition: React.FC<z.infer<typeof waveEffectSchema>> = 
     // No movement for first 20 frames
     if (progress < 0.25) return 0;
     // Return to 0 for last frames
-    if (progress > 0.75) return 0;
+    // if (progress > 0.75) return 0;
     
     // Map progress from 0.25-0.75 to 0-2PI for one complete wave
     const waveProgress = (progress - 0.25) * 2 * Math.PI * 2;

@@ -34,9 +34,9 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
     fps,
     frame,
     config: {
-      damping: 200,
+      damping: 100,
     },
-    durationInFrames: 80,
+    durationInFrames: 2 * fps,
   });
 
   // Calculate how many characters should be visible by current frame
@@ -58,7 +58,7 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
             {text.split("").map((char, index) => {
               const opacity = index <= visibleCharacters ? 1 : 0;
               return (
-                <span key={index} style={{ opacity }}>
+                <span key={index} style={{ opacity, fontSize: 180, fontFamily, fontWeight: 550 }}>
                   {char}
                 </span>
               );
