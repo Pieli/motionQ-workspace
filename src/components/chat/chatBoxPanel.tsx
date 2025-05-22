@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import {
   FadeInTransition,
-  fadeInOutSchema,
+  fadeInSchema,
 } from "@/remotion-lib/TextFades/FadeInText";
 
 import {
@@ -22,7 +22,7 @@ const composition: CompositionConfig[] = [
   {
     id: "FadeInOutTransition",
     component: FadeInTransition,
-    schema: fadeInOutSchema,
+    schema: fadeInSchema,
     props: {
       text: "I am testing this out",
       bgColor: "#f88787",

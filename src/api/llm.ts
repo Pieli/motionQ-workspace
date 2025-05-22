@@ -7,7 +7,7 @@ import { Response } from "./types";
 import type { ResponseType } from "./types";
 import type { LLMService } from "@/components/interfaces/llm";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
-import type { AnimationBinding } from "@/components/interfaces/llm";
+import type { AnimationBinding } from "@/remotion-lib/animation-bindings";
 import type { AnimationComponents } from "@/api/animation-factories";
 
 

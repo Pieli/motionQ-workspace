@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { AvailableAnimations, UnionOfAvailableSchemas } from "@/api/availableAnimation";
+import { AvailableAnimations, UnionAvailableSchemas } from "@/api/animation-factories";
 
 export const Composition = z.object({
   id: z.string(),
   duration: z.number(),
   animationName: AvailableAnimations,
-  animationSettings: UnionOfAvailableSchemas, 
+  animationSettings: UnionAvailableSchemas, 
   text: z.string()
 });
 

@@ -1,18 +1,100 @@
-import { fadeInOutSchema, } from "@/remotion-lib/TextFades/FadeInText";
-import { slideInSchema, } from "@/remotion-lib/TextFades/SlideInText";
+import { z } from "zod";
+import * as zodTypes from "@remotion/zod-types";
 
-import { getSchemaDescription } from "@/api/animation-factories";
-import type { AnimationBinding } from "@/components/interfaces/llm";
+import {
+    FadeInTransition,
+    fadeInSchema,
+} from "@/remotion-lib/TextFades/FadeInText";
 
+import {
+    SlideInTransition,
+    slideInSchema,
+} from "@/remotion-lib/TextFades/SlideInText";
+
+
+import {
+    SimpleTextTyping,
+    simpleTypingSchema,
+} from "@/remotion-lib/TextFades/SimpleTextTyping";
+
+
+export interface AnimationBinding {
+    name: string,
+    usecase: string,
+    settings: string,
+}
+
+
+// Create a map for animations
+export const animationMap = {
+    slideInTransition: {
+        component: SlideInTransition,
+        schema: slideInSchema,
+    },
+    fadeInTransition: {
+        component: FadeInTransition,
+        schema: fadeInSchema,
+    },
+    simpleTypingSchema: {
+        component: SimpleTextTyping,
+        schema: simpleTypingSchema,
+    }
+} as const;
+
+// add binding here and to the animation map
 export const bindings: AnimationBinding[] = [
     {
         name: "slideInTransition",
-        usecase: "Moving text into frame from any direction. Best for dramatic entrances or sequential reveals.",
+        usecase: "Moving text into frame from left to right direction. Best for dramatic entrances or sequential reveals.",
         settings: getSchemaDescription(slideInSchema)
     },
     {
         name: "fadeInTransition",
-        usecase: "Smooth fade in effects. Ideal for subtle transitions or gentle text appearances.",
-        settings: getSchemaDescription(fadeInOutSchema)
-    }
+        usecase: "Smooth fade in effects. Ideal for subtle transitions or gentle text appearances. soft.",
+        settings: getSchemaDescription(fadeInSchema)
+    },
+    {
+        name: "scaleUpTransition",
+        usecase: "Text scales up from the center. Text jumps out to present something.",
+        settings: getSchemaDescription(fadeInSchema)
+    },
+    {
+        name: "simpleTyping",
+        usecase: "Reveals text gradually. For points that visualize typing, manual entry, but also to highlight the written text, because the viewers wait to see the content unveiled.",
+        settings: getSchemaDescription(fadeInSchema)
+    },
 ];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getSchemaDescription(schema: z.ZodObject<any>) {
+    return Object.entries(schema.shape).map(([key, value]) => {
+
+        let type: string;
+        if (value instanceof z.ZodType) {
+            const typeName = value._def.typeName;
+
+            switch (typeName) {
+            case "ZodString":
+                type = "string";
+                break;
+            case "ZodNumber":
+                type = "number";
+                break;
+            case "ZodBoolean":
+                type = "boolean";
+                break;
+            case "ZodEffects":
+                type = value._def.description === zodTypes.ZodZypesInternals.REMOTION_COLOR_BRAND
+                ? "color-hex"
+                : "unknown";
+                break;
+            default:
+                type = typeName.replace("Zod", "").toLowerCase();
+            }
+        } else {
+            type = "unknown";
+        }
+
+        return `${key}: ${type}`;
+    }).join(', ');
+}
