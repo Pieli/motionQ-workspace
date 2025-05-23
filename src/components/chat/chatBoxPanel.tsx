@@ -8,6 +8,7 @@ import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+/*
 import {
   FadeInTransition,
   fadeInSchema,
@@ -42,6 +43,7 @@ const composition: CompositionConfig[] = [
     duration: 60,
   },
 ];
+*/
 
 const llm: LLMService = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
 

@@ -18,6 +18,12 @@ import {
 } from "@/remotion-lib/TextFades/SimpleTextTyping";
 
 
+import {
+    ScaleUpDownTransition,
+    scaleUpDownSchema,
+} from "@/remotion-lib/TextFades/ScaldeUpDowText"
+
+
 export interface AnimationBinding {
     name: string,
     usecase: string,
@@ -35,10 +41,15 @@ export const animationMap = {
         component: FadeInTransition,
         schema: fadeInSchema,
     },
-    simpleTypingSchema: {
+    simpleTextTyping: {
         component: SimpleTextTyping,
         schema: simpleTypingSchema,
+    }, 
+    scaleUpDownTransition: {
+        component: ScaleUpDownTransition,
+        schema: scaleUpDownSchema,
     }
+
 } as const;
 
 // add binding here and to the animation map
@@ -54,14 +65,14 @@ export const bindings: AnimationBinding[] = [
         settings: getSchemaDescription(fadeInSchema)
     },
     {
-        name: "scaleUpTransition",
+        name: "scaleUpDownTransition",
         usecase: "Text scales up from the center. Text jumps out to present something.",
-        settings: getSchemaDescription(fadeInSchema)
+        settings: getSchemaDescription(scaleUpDownSchema)
     },
     {
-        name: "simpleTyping",
+        name: "simpleTextTyping",
         usecase: "Reveals text gradually. For points that visualize typing, manual entry, but also to highlight the written text, because the viewers wait to see the content unveiled.",
-        settings: getSchemaDescription(fadeInSchema)
+        settings: getSchemaDescription(simpleTypingSchema)
     },
 ];
 

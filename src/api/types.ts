@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { AvailableAnimations, UnionAvailableSchemas } from "@/api/animation-factories";
+import { EnumAvailableAnimations, UnionAvailableSchemas } from "@/api/animation-factories";
 
 export const Composition = z.object({
   id: z.string(),
   duration: z.number(),
-  animationName: AvailableAnimations,
+  animationName: EnumAvailableAnimations,
   animationSettings: UnionAvailableSchemas, 
   text: z.string()
 });
