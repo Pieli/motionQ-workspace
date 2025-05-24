@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { SendHorizonal } from "lucide-react";
+
 import { OpenAIService } from "@/api/llm";
 import type { LLMService } from "@/components/interfaces/llm";
 
@@ -120,7 +122,7 @@ const ChatInput: React.FC<{
         onClick={onSend}
         disabled={isGenerating || !prompt}
       >
-        <span style={{ fontWeight: 900, fontSize: 12 }}>{">"}</span>
+        <SendHorizonal />
       </Button>
     </div>
   </div>
@@ -134,8 +136,8 @@ export const ChatBoxPanel: React.FC<{
   isGenerating: boolean;
 }> = ({ setGeneratedComp, setIsGenerating, isGenerating }) => {
   const [history, setHistory] = useState<string[]>([
-      "User: test",
-      "Agent: response",
+    "User: test",
+    "Agent: response",
   ]);
   const [prompt, setPrompt] = useState("");
 
@@ -173,9 +175,7 @@ export const ChatBoxPanel: React.FC<{
   };
 
   return (
-    <div
-      className="flex flex-col h-full w-full bg-background border rounded-xl"
-    >
+    <div className="flex flex-col h-full w-full bg-background border rounded-xl">
       <div>
         {history.length > 0 ? (
           <ChatHistory history={history} />
