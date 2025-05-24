@@ -63,59 +63,67 @@ const Workspace = () => {
 
   return (
     <>
-      <Navbar />
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="min-h-[calc(100vh-60px)]"
-      >
-        <ResizablePanel defaultSize={25}>
-          <ChatBoxPanel
-            setGeneratedComp={setGeneratedComp}
-            setIsGenerating={setIsGenerating}
-            isGenerating={isGenerating}
-          />
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={50}>
-          <div className="flex-1 px-4 h-full">
-            <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
-              {GeneratedComp ? (
-                <>
-                  <Player
-                    component={SequenceBuilder}
-                    durationInFrames={totalDuration || 1}
-                    fps={30}
-                    compositionWidth={compositionWidth}
-                    compositionHeight={compositionHeight}
-                    inputProps={{ comps: GeneratedComp }}
-                    style={{ width: "100%" }}
-                    acknowledgeRemotionLicense
-                    autoPlay
-                    controls
-                    loop
-                  />
-                  <Spacing y={1} />
-                  <Timeline comps={GeneratedComp} />
-                </>
-              ) : (
-                <div style={{ color: "#888" }}>
-                  Animation Preview will be shown here
+      <div className="h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 w-full">
+          <ResizablePanelGroup
+            direction="horizontal"
+            className="h-full w-full"
+          >
+            <ResizablePanel defaultSize={25}>
+              <ChatBoxPanel
+                setGeneratedComp={setGeneratedComp}
+                setIsGenerating={setIsGenerating}
+                isGenerating={isGenerating}
+              />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={50}>
+              <div
+                className="flex-1 px-4 h-full"
+              >
+                <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
+                  {GeneratedComp ? (
+                    <>
+                      <Player
+                        component={SequenceBuilder}
+                        durationInFrames={totalDuration || 1}
+                        fps={30}
+                        compositionWidth={compositionWidth}
+                        compositionHeight={compositionHeight}
+                        inputProps={{ comps: GeneratedComp }}
+                        style={{ width: "100%" }}
+                        acknowledgeRemotionLicense
+                        autoPlay
+                        controls
+                        loop
+                      />
+                      <Spacing y={1} />
+                      <Timeline comps={GeneratedComp} />
+                    </>
+                  ) : (
+                    <div style={{ color: "#888" }}>
+                      Animation Preview will be shown here
+                    </div>
+                  )}
+                  {isGenerating && <div style={{ color: "#fff" }}>Loading…</div>}
                 </div>
-              )}
-              {isGenerating && <div style={{ color: "#fff" }}>Loading…</div>}
-            </div>
-          </div>
-        </ResizablePanel>
-        <ResizablePanel defaultSize={25}>
-          <h2 className="text-xl font-bold my-4">Animation Properties</h2>
-          {GeneratedComp && GeneratedComp.length > 0 && (
-            <OptionsPanelZ
-              compositions={GeneratedComp}
-              setCompositions={setGeneratedComp}
-            />
-          )}
-        </ResizablePanel>
-      </ResizablePanelGroup>
+              </div>
+            </ResizablePanel>
+            <ResizablePanel defaultSize={25}>
+              <div className="h-full">
+                <h2 className="text-xl font-bold my-4">Animation Properties</h2>
+                {GeneratedComp && GeneratedComp.length > 0 && (
+                  <OptionsPanelZ
+                    compositions={GeneratedComp}
+                    setCompositions={setGeneratedComp}
+                  />
+                )}
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
+      </div>
     </>
   );
 };

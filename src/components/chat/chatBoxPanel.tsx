@@ -82,7 +82,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
 // ChatHistory component for rendering the chat history with a scrollbar
 const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
   return (
-    <ScrollArea className="h-[calc(100vh-128px)] w-full">
+    <ScrollArea className="h-[calc(100vh-180px)] w-full">
       <div className="p-4 space-y-4">
         {history.map((item, index) => (
           <ChatMessage key={index} message={item} />
@@ -170,8 +170,10 @@ export const ChatBoxPanel: React.FC<{
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-background border rounded-xl">
-      <div className="flex-1 h-full">
+    <div
+      className="flex flex-col h-full w-full bg-background border rounded-xl"
+    >
+      <div>
         {history.length > 0 ? (
           <ChatHistory history={history} />
         ) : (

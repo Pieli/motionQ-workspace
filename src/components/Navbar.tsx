@@ -13,7 +13,7 @@ import {
 
 export const Navbar = () => {
     return (
-        <div className="flex items-center justify-between p-4 border-b m-0 text-secondary-foreground">
+        <div className="flex h-18 items-center justify-between p-4 border-b m-0 text-secondary-foreground">
             <DropdownMenu>
                 <DropdownMenuTrigger> 
                     <span className="text-xl font-bold">Imagine</span>

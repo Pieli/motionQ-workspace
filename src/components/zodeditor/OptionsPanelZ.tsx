@@ -6,6 +6,8 @@ import { Spacing } from "@/components/ui/spacing";
 import { Row } from "@/components/ui/row";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 
 import { colorWithNewOpacity } from "@/helpers/color-math";
@@ -48,31 +50,31 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
   };
 
   return (
-    <>
-      {compositions.map((comp) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const shapeDef = (comp.schema as any)._def.shape() as Record<
-          string,
-          z.ZodTypeAny
-        >;
-        return (
-          <div key={comp.id} className="mb-8">
-            <h2 className="text-ml font-bold mb-4">{comp.id}</h2>
-            <div className="space-y-4 pr-4">
-              {Object.keys(shapeDef).map((key) => (
-                <ZodSwitch
-                  key={key}
-                  comp={comp}
-                  fieldKey={key}
-                  onFieldChange={handleFieldChange}
-                />
-              ))}
+      <ScrollArea className="h-full w-full">
+        {compositions.map((comp) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const shapeDef = (comp.schema as any)._def.shape() as Record<
+            string,
+            z.ZodTypeAny
+          >;
+          return (
+            <div key={comp.id} className="mb-8">
+              <h2 className="text-ml font-bold mb-4">{comp.id}</h2>
+              <div>
+                {Object.keys(shapeDef).map((key) => (
+                  <ZodSwitch
+                    key={key}
+                    comp={comp}
+                    fieldKey={key}
+                    onFieldChange={handleFieldChange}
+                  />
+                ))}
+              </div>
+              <Spacing />
             </div>
-            <Spacing />
-          </div>
-        );
-      })}
-    </>
+          );
+        })}
+      </ScrollArea>
   );
 };
 
