@@ -66,7 +66,7 @@ export const AppSidebar: React.FC<{
       {/* This is the first sidebar */}
       {/* We disable collapsible and adjust width to icon. */}
       {/* This will make the sidebar appear as icons. */}
-      <Sidebar collapsible="none">
+      <Sidebar collapsible="none" className="bg-background">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-medium">
@@ -95,7 +95,7 @@ export const AppSidebar: React.FC<{
       {/* We disable collapsible and let it fill remaining space */}
       <Sidebar
         collapsible="none"
-        className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r"
+        className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r bg-background border-l"
       >
         <SidebarHeader>
           <SidebarMenu>

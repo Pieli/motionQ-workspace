@@ -96,7 +96,7 @@ const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
 const ChatInput: React.FC<{
   prompt: string;
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
-  onSend: () => voidC;
+  onSend: () => void;
   isGenerating: boolean;
 }> = ({ prompt, setPrompt, onSend, isGenerating }) => (
   <div className="pt-4 px-4 bg-background sticky bottom-0 z-10">

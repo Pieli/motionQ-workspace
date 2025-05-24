@@ -88,7 +88,7 @@ const Workspace = () => {
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={75}>
-                  <div className="flex-1 px-4 h-full">
+                  <div className="flex-1  h-full">
                     <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
                       {GeneratedComp ? (
                         <>
