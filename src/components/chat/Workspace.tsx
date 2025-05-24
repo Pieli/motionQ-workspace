@@ -15,7 +15,11 @@ import {
 import { Navbar } from "@/components/Navbar";
 import { Spacing } from "@/components/ui/spacing";
 
-import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
+import { AppSidebar } from "@/components/app-sidebar";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+// import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import { Timeline } from "@/components/timeline/Timeline";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -66,10 +70,7 @@ const Workspace = () => {
       <div className="h-screen flex flex-col">
         <Navbar />
         <div className="flex-1 w-full">
-          <ResizablePanelGroup
-            direction="horizontal"
-            className="h-full w-full"
-          >
+          <ResizablePanelGroup direction="horizontal" className="h-full w-full">
             <ResizablePanel defaultSize={25}>
               <ChatBoxPanel
                 setGeneratedComp={setGeneratedComp}
@@ -79,9 +80,7 @@ const Workspace = () => {
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={50}>
-              <div
-                className="flex-1 px-4 h-full"
-              >
+              <div className="flex-1 px-4 h-full">
                 <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
                   {GeneratedComp ? (
                     <>
@@ -106,12 +105,24 @@ const Workspace = () => {
                       Animation Preview will be shown here
                     </div>
                   )}
-                  {isGenerating && <div style={{ color: "#fff" }}>Loading…</div>}
+                  {isGenerating && (
+                    <div style={{ color: "#fff" }}>Loading…</div>
+                  )}
                 </div>
               </div>
             </ResizablePanel>
             <ResizablePanel defaultSize={25}>
               <div className="h-full">
+                <SidebarProvider
+                  style={
+                    {
+                      "--sidebar-width": "350px",
+                    } as React.CSSProperties
+                  }
+                >
+                  <AppSidebar />
+                </SidebarProvider>
+                {/*
                 <h2 className="text-xl font-bold my-4">Animation Properties</h2>
                 {GeneratedComp && GeneratedComp.length > 0 && (
                   <OptionsPanelZ
@@ -119,6 +130,7 @@ const Workspace = () => {
                     setCompositions={setGeneratedComp}
                   />
                 )}
+              */}
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
