@@ -13,8 +13,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
+  SidebarMenuItem
 } from "@/components/ui/sidebar";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -52,10 +51,31 @@ export const AppSidebar: React.FC<{
   comps: CompositionConfig[] | null;
   setComps: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
 }> = ({ comps, setComps }) => {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/routerc.
   const [activeItem, setActiveItem] = React.useState(data.navMain[0]);
-  const { setOpen } = useSidebar();
+
+  const renderContent = () => {
+    switch (activeItem.title) {
+      case "Properties":
+        return (
+          <div className="p-4">
+            {comps && comps.length > 0 ? (
+              <OptionsPanelZ
+                compositions={comps}
+                setCompositions={setComps}
+              />
+            ) : (
+              <span>Select a composition to edit its properties</span>
+            )}
+          </div>
+        );
+      case "Captions":
+        return <div className="p-4">Captions content goes here.</div>;
+      case "Assets":
+        return <div className="p-4">Assets content goes here.</div>;
+      default:
+        return <div className="p-4">Default content goes here.</div>;
+    }
+  };
 
   return (
     <Sidebar
@@ -63,9 +83,6 @@ export const AppSidebar: React.FC<{
       collapsible="icon"
       className="top-12 !h-[calc(100svh-12] overflow-hidden  *:data-[sidebar=sidebar]:flex-row"
     >
-      {/* This is the first sidebar */}
-      {/* We disable collapsible and adjust width to icon. */}
-      {/* This will make the sidebar appear as icons. */}
       <Sidebar collapsible="none" className="bg-background">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
@@ -76,23 +93,10 @@ export const AppSidebar: React.FC<{
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup className="px-0">
-            <SidebarGroupContent>
-              <div className="p-4">
-                {comps && comps.length > 0 ? (
-                  <OptionsPanelZ
-                    compositions={comps}
-                    setCompositions={setComps}
-                  />
-                ) : (
-                  <span>Select a composition to edit its properties</span>
-                )}
-              </div>
-            </SidebarGroupContent>
+            <SidebarGroupContent>{renderContent()}</SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      {/* This is the second sidebar */}
-      {/* We disable collapsible and let it fill remaining space */}
       <Sidebar
         collapsible="none"
         className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r bg-background border-l"
@@ -125,12 +129,9 @@ export const AppSidebar: React.FC<{
                         children: item.title,
                         hidden: false,
                       }}
-                      onClick={() => {
-                        setActiveItem(item);
-                        setOpen(true);
-                      }}
                       isActive={activeItem?.title === item.title}
                       className="px-2.5 md:px-2"
+                      onClick={() => setActiveItem(item)}
                     >
                       <item.icon />
                       <span>{item.title}</span>
