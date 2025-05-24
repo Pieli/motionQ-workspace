@@ -13,25 +13,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export const Navbar = () => {
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary">
-      <div className="flex h-12 w-full items-center gap-2 px-4">
-        <SidebarIcon />
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <span className="text-xl font-bold">Imagine</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>My Projects</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Files</DropdownMenuItem>
-            <DropdownMenuItem>Exports</DropdownMenuItem>
-            <DropdownMenuItem>Recents</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex h-12 w-full items-center justify-between gap-2 px-4">
         <div className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <span className="text-xl font-bold">Imagine</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Projects</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Files</DropdownMenuItem>
+              <DropdownMenuItem>Exports</DropdownMenuItem>
+              <DropdownMenuItem>Recents</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <SidebarIcon />
+        </div>
+        <div className="flex items-center gap-4">
+          <Button>Export</Button>
           <ModeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger>
