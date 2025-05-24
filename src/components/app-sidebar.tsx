@@ -1,5 +1,5 @@
-import * as React from "react";
 import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react";
+import * as React from "react";
 
 import { NavUser } from "@/components/nav-user";
 import { Label } from "@/components/ui/label";
@@ -76,16 +76,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [mails, setMails] = React.useState(data.mails);
   const { setOpen } = useSidebar();
 
+  /*className="overflow-hidden *:data-[sidebar=sidebar]:flex-row" */
   return (
     <Sidebar
       side="right"
       collapsible="icon"
-      className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
+      className="top-12 !h-[calc(100svh-12] overflow-hidden  *:data-[sidebar=sidebar]:flex-row"
       {...props}
     >
       {/* This is the second sidebar */}
       {/* We disable collapsible and let it fill remaining space */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex">
+      <Sidebar collapsible="none">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-medium">

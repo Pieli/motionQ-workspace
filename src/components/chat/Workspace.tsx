@@ -17,7 +17,7 @@ import { Spacing } from "@/components/ui/spacing";
 
 import { AppSidebar } from "@/components/app-sidebar";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 // import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import { Timeline } from "@/components/timeline/Timeline";
@@ -67,62 +67,68 @@ const Workspace = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-1 w-full">
-          <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-            <ResizablePanel defaultSize={25}>
-              <ChatBoxPanel
-                setGeneratedComp={setGeneratedComp}
-                setIsGenerating={setIsGenerating}
-                isGenerating={isGenerating}
-              />
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={50}>
-              <div className="flex-1 px-4 h-full">
-                <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
-                  {GeneratedComp ? (
-                    <>
-                      <Player
-                        component={SequenceBuilder}
-                        durationInFrames={totalDuration || 1}
-                        fps={30}
-                        compositionWidth={compositionWidth}
-                        compositionHeight={compositionHeight}
-                        inputProps={{ comps: GeneratedComp }}
-                        style={{ width: "100%" }}
-                        acknowledgeRemotionLicense
-                        autoPlay
-                        controls
-                        loop
-                      />
-                      <Spacing y={1} />
-                      <Timeline comps={GeneratedComp} />
-                    </>
-                  ) : (
-                    <div style={{ color: "#888" }}>
-                      Animation Preview will be shown here
+      <div>
+        <SidebarProvider
+          className="flex flex-col"
+          style={{ "--sidebar-width": "350px" } as React.CSSProperties}
+        >
+          {/*<Navbar />*/}
+          <Navbar />
+          <div className="flex flex-1">
+            {/*<div className="flex-1 w-full">*/}
+            <SidebarInset>
+              <ResizablePanelGroup
+                direction="horizontal"
+                className="h-full w-full"
+              >
+                <ResizablePanel defaultSize={25}>
+                  <ChatBoxPanel
+                    setGeneratedComp={setGeneratedComp}
+                    setIsGenerating={setIsGenerating}
+                    isGenerating={isGenerating}
+                  />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel defaultSize={50}>
+                  <div className="flex-1 px-4 h-full">
+                    <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
+                      {GeneratedComp ? (
+                        <>
+                          <Player
+                            component={SequenceBuilder}
+                            durationInFrames={totalDuration || 1}
+                            fps={30}
+                            compositionWidth={compositionWidth}
+                            compositionHeight={compositionHeight}
+                            inputProps={{ comps: GeneratedComp }}
+                            style={{ width: "100%" }}
+                            acknowledgeRemotionLicense
+                            autoPlay
+                            controls
+                            loop
+                          />
+                          <Spacing y={1} />
+                          <Timeline comps={GeneratedComp} />
+                        </>
+                      ) : (
+                        <div style={{ color: "#888" }}>
+                          Animation Preview will be shown here
+                        </div>
+                      )}
+                      {isGenerating && (
+                        <div style={{ color: "#fff" }}>Loading…</div>
+                      )}
                     </div>
-                  )}
-                  {isGenerating && (
-                    <div style={{ color: "#fff" }}>Loading…</div>
-                  )}
-                </div>
-              </div>
-            </ResizablePanel>
-            <ResizablePanel defaultSize={25}>
-              <div className="h-full">
-                <SidebarProvider
-                  style={
-                    {
-                      "--sidebar-width": "350px",
-                    } as React.CSSProperties
-                  }
-                >
-                  <AppSidebar />
-                </SidebarProvider>
-                {/*
+                  </div>
+                </ResizablePanel>
+                <ResizablePanel defaultSize={25}>
+                  <div
+                    className="h-full w-full"
+                    style={{ backgroundColor: "green" }}
+                  >
+                    hello
+                  </div>
+                  {/*
                 <h2 className="text-xl font-bold my-4">Animation Properties</h2>
                 {GeneratedComp && GeneratedComp.length > 0 && (
                   <OptionsPanelZ
@@ -131,10 +137,12 @@ const Workspace = () => {
                   />
                 )}
               */}
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </SidebarInset>
+            <AppSidebar />
+          </div>
+        </SidebarProvider>
       </div>
     </>
   );

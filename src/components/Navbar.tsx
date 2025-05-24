@@ -1,5 +1,9 @@
+"use client";
+
 import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
+import { SidebarIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -10,41 +14,42 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 export const Navbar = () => {
-    return (
-        <div className="flex h-18 items-center justify-between p-4 border-b m-0 text-secondary-foreground">
-            <DropdownMenu>
-                <DropdownMenuTrigger> 
-                    <span className="text-xl font-bold">Imagine</span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuLabel>My Projects</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Files</DropdownMenuItem>
-                    <DropdownMenuItem>Exports</DropdownMenuItem>
-                    <DropdownMenuItem>Recents</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <div className="flex items-center gap-4">
-                <ModeToggle />
-                <DropdownMenu>
-                    <DropdownMenuTrigger> 
-                    <Avatar>
-                        <AvatarFallback>PG</AvatarFallback>
-                    </Avatar>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Billing</DropdownMenuItem>
-                        <DropdownMenuItem>Team</DropdownMenuItem>
-                        <DropdownMenuItem>Subscription</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                </div>
+  return (
+    <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary">
+      <div className="flex h-12 w-full items-center gap-2 px-4">
+        <SidebarIcon />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <span className="text-xl font-bold">Imagine</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Projects</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Files</DropdownMenuItem>
+            <DropdownMenuItem>Exports</DropdownMenuItem>
+            <DropdownMenuItem>Recents</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar>
+                <AvatarFallback>PG</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Billing</DropdownMenuItem>
+              <DropdownMenuItem>Team</DropdownMenuItem>
+              <DropdownMenuItem>Subscription</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-    );
-}
-
+      </div>
+    </header>
+  );
+};
