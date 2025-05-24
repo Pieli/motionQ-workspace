@@ -57,7 +57,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
       <div
         className={
           (isUser
-            ? "w-fit rounded-2xl bg-primary text-primary-foreground px-4 py-2 break-words break-all text-right ml-auto"
+            ? "w-fit rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-right ml-auto"
             : "w-fit rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
           " max-w-full"
         }
@@ -133,7 +133,10 @@ export const ChatBoxPanel: React.FC<{
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
   isGenerating: boolean;
 }> = ({ setGeneratedComp, setIsGenerating, isGenerating }) => {
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<string[]>([
+      "User: test",
+      "Agent: response",
+  ]);
   const [prompt, setPrompt] = useState("");
 
   const generate = async () => {
@@ -177,7 +180,7 @@ export const ChatBoxPanel: React.FC<{
         {history.length > 0 ? (
           <ChatHistory history={history} />
         ) : (
-          <div className="text-muted-foreground p-4 text-center">
+          <div className="text-muted-foreground p-4 text-center h-[calc(100vh-180px)] w-full">
             No history available
           </div>
         )}
