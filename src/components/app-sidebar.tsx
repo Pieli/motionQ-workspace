@@ -1,8 +1,9 @@
-import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react";
+import { Captions, Command, Component, Folders } from "lucide-react";
 import * as React from "react";
 
 import { NavUser } from "@/components/nav-user";
-import { Label } from "@/components/ui/label";
+import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
+
 import {
   Sidebar,
   SidebarContent,
@@ -10,13 +11,13 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Switch } from "@/components/ui/switch";
+
+import type { CompositionConfig } from "@/components/interfaces/compositions";
 
 // This is sample data
 const data = {
@@ -27,104 +28,71 @@ const data = {
   },
   navMain: [
     {
-      title: "Inbox",
+      title: "Properties",
       url: "#",
-      icon: Inbox,
+      icon: Component,
       isActive: true,
     },
     {
-      title: "Drafts",
+      title: "Captions",
       url: "#",
-      icon: File,
+      icon: Captions,
       isActive: false,
     },
     {
-      title: "Sent",
+      title: "Assets",
       url: "#",
-      icon: Send,
+      icon: Folders,
       isActive: false,
-    },
-    {
-      title: "Junk",
-      url: "#",
-      icon: ArchiveX,
-      isActive: false,
-    },
-    {
-      title: "Trash",
-      url: "#",
-      icon: Trash2,
-      isActive: false,
-    },
-  ],
-  mails: [
-    {
-      name: "William Smith",
-      email: "williamsmith@example.com",
-      subject: "Meeting Tomorrow",
-      date: "09:34 AM",
-      teaser:
-        "Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.",
     },
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export const AppSidebar: React.FC<{
+  comps: CompositionConfig[] | null;
+  setComps: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
+}> = ({ comps, setComps }) => {
   // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
+  // IRL you should use the url/routerc.
   const [activeItem, setActiveItem] = React.useState(data.navMain[0]);
-  const [mails, setMails] = React.useState(data.mails);
   const { setOpen } = useSidebar();
 
-  /*className="overflow-hidden *:data-[sidebar=sidebar]:flex-row" */
   return (
     <Sidebar
       side="right"
       collapsible="icon"
       className="top-12 !h-[calc(100svh-12] overflow-hidden  *:data-[sidebar=sidebar]:flex-row"
-      {...props}
     >
-      {/* This is the second sidebar */}
-      {/* We disable collapsible and let it fill remaining space */}
+      {/* This is the first sidebar */}
+      {/* We disable collapsible and adjust width to icon. */}
+      {/* This will make the sidebar appear as icons. */}
       <Sidebar collapsible="none">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-medium">
               {activeItem?.title}
             </div>
-            <Label className="flex items-center gap-2 text-sm">
-              <span>Unreads</span>
-              <Switch className="shadow-none" />
-            </Label>
           </div>
-          <SidebarInput placeholder="Type to search..." />
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {mails.map((mail) => (
-                <a
-                  href="#"
-                  key={mail.email}
-                  className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
-                >
-                  <div className="flex w-full items-center gap-2">
-                    <span>{mail.name}</span>{" "}
-                    <span className="ml-auto text-xs">{mail.date}</span>
-                  </div>
-                  <span className="font-medium">{mail.subject}</span>
-                  <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
-                    {mail.teaser}
-                  </span>
-                </a>
-              ))}
+              <div className="p-4">
+                {comps && comps.length > 0 ? (
+                  <OptionsPanelZ
+                    compositions={comps}
+                    setCompositions={setComps}
+                  />
+                ) : (
+                  <span>Select a composition to edit its properties</span>
+                )}
+              </div>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      {/* This is the first sidebar */}
-      {/* We disable collapsible and adjust width to icon. */}
-      {/* This will make the sidebar appear as icons. */}
+      {/* This is the second sidebar */}
+      {/* We disable collapsible and let it fill remaining space */}
       <Sidebar
         collapsible="none"
         className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r"
@@ -159,13 +127,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       }}
                       onClick={() => {
                         setActiveItem(item);
-                        const mail = data.mails.sort(() => Math.random() - 0.5);
-                        setMails(
-                          mail.slice(
-                            0,
-                            Math.max(5, Math.floor(Math.random() * 10) + 1),
-                          ),
-                        );
                         setOpen(true);
                       }}
                       isActive={activeItem?.title === item.title}
@@ -186,4 +147,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </Sidebar>
     </Sidebar>
   );
-}
+};

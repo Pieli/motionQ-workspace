@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 
-/*
 import {
   FadeInTransition,
   fadeInSchema,
@@ -46,7 +45,6 @@ const composition: CompositionConfig[] = [
     duration: 60,
   },
 ];
-*/
 
 const llm: LLMService = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
 
@@ -98,7 +96,7 @@ const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
 const ChatInput: React.FC<{
   prompt: string;
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
-  onSend: () => void;
+  onSend: () => voidC;
   isGenerating: boolean;
 }> = ({ prompt, setPrompt, onSend, isGenerating }) => (
   <div className="pt-4 px-4 bg-background sticky bottom-0 z-10">
@@ -147,6 +145,10 @@ export const ChatBoxPanel: React.FC<{
     const currentPrompt = prompt;
     setPrompt("");
     setIsGenerating(true);
+
+    setGeneratedComp(composition);
+    setIsGenerating(false);
+    return;
 
     try {
       const response = await llm.generateCompositions(currentPrompt);

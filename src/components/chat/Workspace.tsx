@@ -70,12 +70,10 @@ const Workspace = () => {
       <div>
         <SidebarProvider
           className="flex flex-col"
-          style={{ "--sidebar-width": "350px" } as React.CSSProperties}
+          style={{ "--sidebar-width": "calc(30svw)" } as React.CSSProperties}
         >
-          {/*<Navbar />*/}
           <Navbar />
           <div className="flex flex-1">
-            {/*<div className="flex-1 w-full">*/}
             <SidebarInset>
               <ResizablePanelGroup
                 direction="horizontal"
@@ -89,7 +87,7 @@ const Workspace = () => {
                   />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={50}>
+                <ResizablePanel defaultSize={75}>
                   <div className="flex-1 px-4 h-full">
                     <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
                       {GeneratedComp ? (
@@ -121,26 +119,9 @@ const Workspace = () => {
                     </div>
                   </div>
                 </ResizablePanel>
-                <ResizablePanel defaultSize={25}>
-                  <div
-                    className="h-full w-full"
-                    style={{ backgroundColor: "green" }}
-                  >
-                    hello
-                  </div>
-                  {/*
-                <h2 className="text-xl font-bold my-4">Animation Properties</h2>
-                {GeneratedComp && GeneratedComp.length > 0 && (
-                  <OptionsPanelZ
-                    compositions={GeneratedComp}
-                    setCompositions={setGeneratedComp}
-                  />
-                )}
-              */}
-                </ResizablePanel>
               </ResizablePanelGroup>
             </SidebarInset>
-            <AppSidebar />
+            <AppSidebar setComps={setGeneratedComp} comps={GeneratedComp} />
           </div>
         </SidebarProvider>
       </div>
