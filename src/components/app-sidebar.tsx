@@ -1,10 +1,9 @@
 import { Captions, Command, Component, Folders } from "lucide-react";
 import * as React from "react";
 
-// TODO is the NavUser needed (decide later)
 import { NavUser } from "@/components/sidebar/nav-user";
-import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import { Transcript } from "@/components/sidebar/transcript";
+import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 
 import {
   Sidebar,
