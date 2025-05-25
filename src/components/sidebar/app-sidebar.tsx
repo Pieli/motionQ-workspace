@@ -1,7 +1,8 @@
 import { Captions, Command, Component, Folders } from "lucide-react";
 import * as React from "react";
 
-import { NavUser } from "@/components/nav-user";
+// TODO is the NavUser needed (decide later)
+import { NavUser } from "@/components/sidebar/nav-user";
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 
 import {
@@ -13,7 +14,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -33,7 +34,7 @@ const data = {
       isActive: true,
     },
     {
-      title: "Captions",
+      title: "Transcript",
       url: "#",
       icon: Captions,
       isActive: false,
@@ -59,16 +60,14 @@ export const AppSidebar: React.FC<{
         return (
           <div className="p-4">
             {comps && comps.length > 0 ? (
-              <OptionsPanelZ
-                compositions={comps}
-                setCompositions={setComps}
-              />
+              <OptionsPanelZ compositions={comps} setCompositions={setComps} />
             ) : (
               <span>Select a composition to edit its properties</span>
             )}
           </div>
         );
-      case "Captions":
+      case "Transcript":
+        // Transcript is imported and placed here
         return <div className="p-4">Captions content goes here.</div>;
       case "Assets":
         return <div className="p-4">Assets content goes here.</div>;

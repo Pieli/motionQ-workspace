@@ -15,7 +15,7 @@ import {
 import { Navbar } from "@/components/Navbar";
 import { Spacing } from "@/components/ui/spacing";
 
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
