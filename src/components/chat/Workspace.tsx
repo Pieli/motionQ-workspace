@@ -88,36 +88,45 @@ const Workspace = () => {
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={75}>
-                  <div className="flex-1  h-full">
-                    <div className="isolate flex-1 p-20 h-full rounded-xl bg-secondary">
-                      {GeneratedComp ? (
-                        <>
-                          <Player
-                            component={SequenceBuilder}
-                            durationInFrames={totalDuration || 1}
-                            fps={30}
-                            compositionWidth={compositionWidth}
-                            compositionHeight={compositionHeight}
-                            inputProps={{ comps: GeneratedComp }}
-                            style={{ width: "100%" }}
-                            acknowledgeRemotionLicense
-                            autoPlay
-                            controls
-                            loop
-                          />
-                          <Spacing y={1} />
-                          <Timeline comps={GeneratedComp} />
-                        </>
-                      ) : (
-                        <div style={{ color: "#888" }}>
-                          Animation Preview will be shown here
+                  <ResizablePanelGroup direction="vertical">
+                    <ResizablePanel defaultSize={70}>
+                      <div className="flex-1  h-full">
+                        <div className="isolate flex-1 h-full bg-secondary">
+                          {GeneratedComp ? (
+                            <div className="p-20">
+                              <Player
+                                component={SequenceBuilder}
+                                durationInFrames={totalDuration || 1}
+                                fps={30}
+                                compositionWidth={compositionWidth}
+                                compositionHeight={compositionHeight}
+                                inputProps={{ comps: GeneratedComp }}
+                                style={{ width: "100%" }}
+                                acknowledgeRemotionLicense
+                                autoPlay
+                                controls
+                                loop
+                              />
+                              <Spacing y={1} />
+                            </div>
+                          ) : (
+                            <div style={{ color: "#888" }}>
+                              Animation Preview will be shown here
+                            </div>
+                          )}
+                          {isGenerating && (
+                            <div style={{ color: "#fff" }}>Loading…</div>
+                          )}
                         </div>
-                      )}
-                      {isGenerating && (
-                        <div style={{ color: "#fff" }}>Loading…</div>
-                      )}
-                    </div>
-                  </div>
+                      </div>
+                    </ResizablePanel>
+                    <ResizableHandle />
+                    <ResizablePanel defaultSize={30}>
+                      <div className="h-full overflow-hidden">
+                        <Timeline comps={GeneratedComp || []} />
+                      </div>
+                    </ResizablePanel>
+                  </ResizablePanelGroup>
                 </ResizablePanel>
               </ResizablePanelGroup>
             </SidebarInset>

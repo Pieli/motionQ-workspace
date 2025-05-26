@@ -1,13 +1,19 @@
-import type { CompositionConfig } from "@/components/interfaces/compositions";
+import { debounce } from "lodash";
+import { Pause, Play, Repeat2 } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 import { Minus } from "@/icons/minus";
 import { Plus } from "@/icons/plus";
-import { debounce } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import type { CompositionConfig } from "@/components/interfaces/compositions";
 
 type BaseItem = {
   id: string;
+  start: number;
+  end: number;
   duration: number;
 };
 
@@ -52,9 +58,16 @@ const TrackItems: React.FC<{
           key={index}
           style={{
             width: calcWidth(item.duration),
+            marginLeft: calcWidth(item.start), // Add margin based on start time
           }}
         >
-          <div className="h-full w-full" style={{ backgroundColor: "#b04bcf" }}>
+          <div
+            className="h-full w-full"
+            style={{
+              color: "#ffffff",
+              backgroundColor: "#347ebf",
+            }}
+          >
             {item.id}
           </div>
         </div>
@@ -65,12 +78,12 @@ const TrackItems: React.FC<{
 
 const TrackLines: React.FC<{
   tracks: Track[];
-  width: number;
   stepWidth: number;
   stepTime: number;
-}> = ({ tracks, width, stepWidth, stepTime }) => {
+}> = ({ tracks, stepWidth, stepTime }) => {
   const calculateTrackItemWidth = useCallback(
-    (duration: number) => (duration / stepTime) * stepWidth,
+    // 30 = FPS
+    (duration: number) => (duration / (30 * stepTime)) * stepWidth,
     [stepWidth, stepTime],
   );
 
@@ -78,14 +91,14 @@ const TrackLines: React.FC<{
 
   return (
     <>
-      <div style={{ width: width, height: containerHeight }}>
+      <div style={{ height: containerHeight }}>
         {tracks.map((track, index) => (
           <div key={index} className="relative">
             <div
               className="absolute flex box-border cursor-pointer rounded-sm border border-black/80 select-none"
               style={{
                 height: 40,
-                left: stepWidth + stepWidth * index * (60 / stepTime), // Remove +1 to include first element
+                left: stepWidth, // Remove the index-based offset since items have their own start times
                 top: 60 + 40 * index + index * 10,
                 overflow: "hidden",
                 zIndex: 0,
@@ -103,17 +116,60 @@ const TrackLines: React.FC<{
   );
 };
 
+const ControllMenu: React.FC<{
+  debounceZoomChange: (value: number[]) => void;
+}> = ({ debounceZoomChange }) => {
+  return (
+    <div className="flex border-b h-12">
+      <Play />
+      <div className="">
+        <Pause />
+      </div>
+      <Repeat2 />
+      <div className="flex items-center justify-center gap-4 w-full">
+        <Button variant="outline">
+          <Minus className="size-3" />
+        </Button>
+        <div className="w-28">
+          <Slider
+            defaultValue={[1]}
+            onValueChange={debounceZoomChange}
+            max={6}
+            min={1}
+            step={1}
+          />
+        </div>
+        <Button variant="outline">
+          <Plus className="size-3" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
 }) => {
   const [tracks, setTracks] = useState<Track[]>([]);
 
   useEffect(() => {
+    let currentStartTime = 0;
     setTracks(
-      comps?.map((com: CompositionConfig, index: number) => ({
-        name: `A-${index + 1}`,
-        items: [{ id: com.id, duration: com.duration }],
-      })),
+      comps?.map((com: CompositionConfig, index: number) => {
+        const item: BaseItem = {
+          id: com.id,
+          start: currentStartTime,
+          end: currentStartTime + com.duration,
+          duration: com.duration,
+        };
+
+        currentStartTime += com.duration; // Update start time for next track
+
+        return {
+          name: `A-${index + 1}`,
+          items: [item],
+        };
+      }),
     );
   }, [comps]);
 
@@ -197,7 +253,8 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
 
   return (
     <>
-      <div className="w-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
+      <ControllMenu debounceZoomChange={debouncedZoomChange} />
+      <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
           className="relative h-full w-full"
           style={{ height: Math.max(250, tracks.length * 50 + 50) }}
@@ -211,13 +268,13 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
               }}
             >
               <div
-                className="absolute top-0 left-0 flex select-none"
+                className="absolute top-0 left-0 flex select-none overflow_hidden"
                 style={{ width: maxWidth, height: tracks.length * 50 + 50 }}
               >
                 {timelineMarkers.map(({ key, time }) => (
                   <div
                     key={key}
-                    className="border-r-black flex items-start justify-end truncate border-r-[1px] pt-3 pr-1"
+                    className="border-r-secondary text-muted-foreground flex items-start justify-end truncate border-r-[1px] pt-3 pr-1"
                     style={{
                       minWidth: Math.max(stepWidth, 35),
                       width: stepWidth,
@@ -230,7 +287,6 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
               </div>
               <TrackLines
                 tracks={tracks}
-                width={maxWidth}
                 stepWidth={stepWidth}
                 stepTime={stepToSecs(zoom)}
               />
@@ -238,19 +294,6 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </div>
-      </div>
-      <div className="flex items-center justify-center gap-4 w-full">
-        <Minus className="size-4" />
-        <div className="w-28">
-          <Slider
-            defaultValue={[1]}
-            onValueChange={debouncedZoomChange}
-            max={6}
-            min={1}
-            step={1}
-          />
-        </div>
-        <Plus className="size-4" />
       </div>
     </>
   );
