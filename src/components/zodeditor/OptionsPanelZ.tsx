@@ -51,20 +51,20 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
 
   return (
     <ScrollArea className="h-full w-full">
-      {compositions.map((comp) => {
+      {compositions.map((comp, ind) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const shapeDef = (comp.schema as any)._def.shape() as Record<
           string,
           z.ZodTypeAny
         >;
         return (
-          <div key={comp.id} className="mb-8">
+          <div key={comp.id + ind} className="mb-8">
             <h2 className="text-ml font-bold pb-2">{comp.id}</h2>
             <div>
-              {Object.keys(shapeDef).map((key) => (
-                <div className="py-2">
+              {Object.keys(shapeDef).map((key, index) => (
+                <div className="py-2" key={index}>
                   <ZodSwitch
-                    key={key}
+                    key={index}
                     comp={comp}
                     fieldKey={key}
                     onFieldChange={handleFieldChange}
