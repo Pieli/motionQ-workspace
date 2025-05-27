@@ -177,7 +177,7 @@ export const ChatBoxPanel: React.FC<{
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-background border rounded-xl">
+    <div className="flex flex-col h-full w-full bg-background ">
       <div>
         {history.length > 0 ? (
           <ChatHistory history={history} />

@@ -62,7 +62,7 @@ const TrackItems: React.FC<{
           }}
         >
           <div
-            className="h-full w-full"
+            className="h-full w-full p-2 box-border cursor-pointer rounded-sm border border-black/80 select-none"
             style={{
               color: "#ffffff",
               backgroundColor: "#347ebf",
@@ -95,7 +95,7 @@ const TrackLines: React.FC<{
         {tracks.map((track, index) => (
           <div key={index} className="relative">
             <div
-              className="absolute flex box-border cursor-pointer rounded-sm border border-black/80 select-none"
+              className="absolute flex"
               style={{
                 height: 40,
                 left: stepWidth, // Remove the index-based offset since items have their own start times
@@ -132,7 +132,7 @@ const ControllMenu: React.FC<{
         </Button>
         <div className="w-28">
           <Slider
-            defaultValue={[1]}
+            defaultValue={[4]}
             onValueChange={debounceZoomChange}
             max={6}
             min={1}
@@ -175,7 +175,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
 
   const maxDuration: number = 120;
 
-  const [zoom, setZoom] = useState<number>(1);
+  const [zoom, setZoom] = useState<number>(4);
 
   const stepToSecs = useCallback((step: number): number => {
     switch (step) {
@@ -192,7 +192,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
       case 6:
         return 0.5;
       default:
-        return 60;
+        return 5; 
     }
   }, []);
 
