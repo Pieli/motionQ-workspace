@@ -106,10 +106,10 @@ export const Transcript: React.FC<TranscriptProps> = ({
             <div className="text-sm font-medium mb-1">
               [{formatTime(starttime)} - {formatTime(endtime)}]
             </div>
-            <div className="relative hover:bg-gray-900 rounded">
+            <div className="relative hover:bg-accent rounded pb-4">
               <div
                 className={`text-sm font-medium peer/text ${
-                  editingId === comp.id ? "py-4" : "py-1"
+                  editingId === comp.id ? "py-2" : "py-1"
                 }`}
               >
                 {editingId === comp.id ? (
@@ -120,12 +120,14 @@ export const Transcript: React.FC<TranscriptProps> = ({
                     className="w-full p-2 border rounded"
                   />
                 ) : (
-                  editedText[comp.id] || comp.props.text || ""
+                    <div className="text-base font-medium">
+                    {editedText[comp.id] || comp.props.text || ""}
+                    </div>
                 )}
               </div>
               {editingId !== comp.id && (
                 <Pencil
-                  className="w-5 h-5 text-gray-500 absolute top-1/2 -translate-y-1/2 right-2 opacity-0 peer-hover/text:opacity-100 cursor-pointer"
+                  className="w-5 h-5 text-primary absolute top-1/2 -translate-y-1/2 right-2 opacity-100 peer-hover:text-primary-dark cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     setEditingId(comp.id);
@@ -133,15 +135,16 @@ export const Transcript: React.FC<TranscriptProps> = ({
                 />
               )}
               {editingId === comp.id && (
-                <Button
-                  className="mt-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSave(comp.id);
-                  }}
-                >
-                  Save
-                </Button>
+                <div className="flex justify-end">
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSave(comp.id);
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
               )}
             </div>
           </div>
