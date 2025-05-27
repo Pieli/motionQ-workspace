@@ -198,6 +198,28 @@ const ControllMenu: React.FC<{
   );
 };
 
+const Cursor: React.FC<{
+  frame: number | null;
+  stepWidth: number;
+  stepTime: number;
+  height: number;
+}> = ({ frame, stepWidth, stepTime, height }) => {
+  if (frame === null) return null;
+
+  const position = (frame / FPS / stepTime) * stepWidth + stepWidth;
+
+  return (
+    <div
+      className="absolute top-0 w-[2px] bg-red-500 pointer-events-none"
+      style={{
+        left: position,
+        height: height,
+        zIndex: 1000,
+      }}
+    />
+  );
+};
+
 export const Timeline: React.FC<{
   comps: CompositionConfig[];
   playerRef: React.RefObject<PlayerRef | null>;
@@ -304,6 +326,8 @@ export const Timeline: React.FC<{
     }
   }, []);
 
+  const frame = useCurrentPlayerFrame(playerRef);
+
   return (
     <>
       <ControllMenu
@@ -342,6 +366,12 @@ export const Timeline: React.FC<{
                   </div>
                 ))}
               </div>
+              <Cursor
+                frame={frame}
+                stepWidth={stepWidth}
+                stepTime={stepToSecs(zoom)}
+                height={tracks.length * 50 + 50}
+              />
               <TrackLines
                 tracks={tracks}
                 stepWidth={stepWidth}
