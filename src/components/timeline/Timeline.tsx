@@ -125,12 +125,16 @@ const ControlMenu: React.FC<{
   currentFrame: number | null;
   parentPlayerRef: React.RefObject<PlayerRef | null>;
   setLoop: React.Dispatch<React.SetStateAction<boolean>>;
+  zoom: number;
+  setZoom: React.Dispatch<React.SetStateAction<number>>;
 }> = ({
   debounceZoomChange,
   totalDuration,
   currentFrame,
   parentPlayerRef,
   setLoop,
+  zoom,
+  setZoom,
 }) => {
   const [isLoopActive, setIsLoopActive] = useState(false);
 
@@ -148,6 +152,14 @@ const ControlMenu: React.FC<{
   const handleLoopToggle = () => {
     setIsLoopActive((prev) => !prev);
     setLoop((prev) => !prev);
+  };
+
+  const handleZoomIn = () => {
+    setZoom((prevZoom) => Math.min(prevZoom + 1, 6));
+  };
+
+  const handleZoomOut = () => {
+    setZoom((prevZoom) => Math.max(prevZoom - 1, 1));
   };
 
   return (
@@ -168,25 +180,27 @@ const ControlMenu: React.FC<{
       <div className="flex items-center gap-4">
         <PlayPauseButton playerRef={parentPlayerRef} />
         <div className="text-sm font-mono">
-          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} / {frameToTime(totalDuration * FPS)}
+          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} /{" "}
+          {frameToTime(totalDuration * FPS)}
         </div>
       </div>
 
       {/* Right section - Zoom controls */}
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon">
+        <Button variant="ghost" size="icon" onClick={handleZoomOut}>
           <Minus className="size-3" />
         </Button>
         <div className="w-28">
           <Slider
-            defaultValue={[4]}
+            defaultValue={[zoom]}
             onValueChange={debounceZoomChange}
+            value={[zoom]}
             max={6}
             min={1}
             step={1}
           />
         </div>
-        <Button variant="outline" size="icon">
+        <Button variant="ghost" size="icon" onClick={handleZoomIn}>
           <Plus className="size-3" />
         </Button>
       </div>
@@ -248,7 +262,7 @@ export const Timeline: React.FC<{
 
   const maxDuration: number = 120;
 
-  const [zoom, setZoom] = useState<number>(4);
+  const [zoom, setZoom] = useState<number>(5);
 
   const stepToSecs = useCallback((step: number): number => {
     switch (step) {
@@ -331,6 +345,8 @@ export const Timeline: React.FC<{
         currentFrame={frame}
         parentPlayerRef={playerRef}
         setLoop={setLoop}
+        zoom={zoom}
+        setZoom={setZoom}
       />
       <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
