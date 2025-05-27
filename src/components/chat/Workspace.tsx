@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 
-import { Player } from "@remotion/player";
+import { Player, type PlayerRef } from "@remotion/player";
 import { createElement } from "react";
 import { Series } from "remotion";
 
@@ -23,6 +23,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Timeline } from "@/components/timeline/Timeline";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import { FPS } from "@/globals";
 
 const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
@@ -65,6 +66,8 @@ const Workspace = () => {
     [GeneratedComp],
   );
 
+  const playerRef = useRef<PlayerRef>(null);
+
   return (
     <>
       <div>
@@ -97,7 +100,8 @@ const Workspace = () => {
                               <Player
                                 component={SequenceBuilder}
                                 durationInFrames={totalDuration || 1}
-                                fps={30}
+                                fps={FPS}
+                                ref={playerRef}
                                 compositionWidth={compositionWidth}
                                 compositionHeight={compositionHeight}
                                 inputProps={{ comps: GeneratedComp }}
@@ -123,7 +127,10 @@ const Workspace = () => {
                     <ResizableHandle />
                     <ResizablePanel defaultSize={30}>
                       <div className="h-full overflow-hidden">
-                        <Timeline comps={GeneratedComp || []} />
+                        <Timeline
+                          comps={GeneratedComp || []}
+                          playerRef={playerRef}
+                        />
                       </div>
                     </ResizablePanel>
                   </ResizablePanelGroup>

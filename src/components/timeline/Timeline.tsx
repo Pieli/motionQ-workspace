@@ -1,5 +1,6 @@
 import { debounce } from "lodash";
 import { Pause, Play, Repeat2 } from "lucide-react";
+import type { PlayerRef } from "@remotion/player";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,8 @@ import { Minus } from "@/icons/minus";
 import { Plus } from "@/icons/plus";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import { useCurrentPlayerFrame } from "@/components/timeline/user-current-player-frame";
+import { FPS } from "@/globals";
 
 type BaseItem = {
   id: string;
@@ -82,8 +85,7 @@ const TrackLines: React.FC<{
   stepTime: number;
 }> = ({ tracks, stepWidth, stepTime }) => {
   const calculateTrackItemWidth = useCallback(
-    // 30 = FPS
-    (duration: number) => (duration / (30 * stepTime)) * stepWidth,
+    (duration: number) => (duration / (FPS * stepTime)) * stepWidth,
     [stepWidth, stepTime],
   );
 
@@ -118,7 +120,22 @@ const TrackLines: React.FC<{
 
 const ControllMenu: React.FC<{
   debounceZoomChange: (value: number[]) => void;
-}> = ({ debounceZoomChange }) => {
+  frame: number | null;
+}> = ({ debounceZoomChange, frame }) => {
+
+
+  function frameToTime(frame: number): string {
+        const secs = Math.floor(frame / FPS);
+        const milis = Math.floor((frame % FPS) * (100 / FPS)); // Adjusted for 2 decimal places
+        if (secs < 60) {
+            return `00:${secs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
+        }
+        const mins = Math.floor(secs / 60);
+        const remainingSecs = secs % 60;
+        return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
+  }
+
+
   return (
     <div className="flex border-b h-12">
       <Play />
@@ -126,6 +143,7 @@ const ControllMenu: React.FC<{
         <Pause />
       </div>
       <Repeat2 />
+       {frame !== null && <span>{frameToTime(frame)}</span>}
       <div className="flex items-center justify-center gap-4 w-full">
         <Button variant="outline">
           <Minus className="size-3" />
@@ -147,9 +165,12 @@ const ControllMenu: React.FC<{
   );
 };
 
-export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
-  comps,
-}) => {
+export const Timeline: React.FC<{
+  comps: CompositionConfig[];
+  playerRef: React.RefObject<PlayerRef | null>;
+}> = ({ comps, playerRef }) => {
+
+  const frame = useCurrentPlayerFrame(playerRef);
   const [tracks, setTracks] = useState<Track[]>([]);
 
   useEffect(() => {
@@ -192,7 +213,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
       case 6:
         return 0.5;
       default:
-        return 5; 
+        return 5;
     }
   }, []);
 
@@ -253,7 +274,7 @@ export const Timeline: React.FC<{ comps: CompositionConfig[] }> = ({
 
   return (
     <>
-      <ControllMenu debounceZoomChange={debouncedZoomChange} />
+      <ControllMenu debounceZoomChange={debouncedZoomChange} frame={frame} />
       <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
           className="relative h-full w-full"
