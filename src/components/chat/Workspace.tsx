@@ -56,6 +56,8 @@ const Workspace = () => {
   >(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [loop, setLoop] = useState(false);
+
   const totalDuration = useMemo(
     () =>
       GeneratedComp?.reduce((acc, comp) => {
@@ -110,7 +112,7 @@ const Workspace = () => {
                                 acknowledgeRemotionLicense
                                 autoPlay
                                 controls
-                                loop
+                                loop={loop}
                               />
                               <Spacing y={1} />
                             </div>
@@ -133,6 +135,7 @@ const Workspace = () => {
                             <Timeline
                               comps={GeneratedComp || []}
                               playerRef={playerRef}
+                              setLoop={setLoop}
                             />
                           </div>
                         </ResizablePanel>

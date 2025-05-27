@@ -4,7 +4,7 @@ import { Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 export const PlayPauseButton: React.FC<{
-  playerRef: React.RefObject<PlayerRef>;
+  playerRef: React.RefObject<PlayerRef | null>;
 }> = ({ playerRef }) => {
   const [playing, setPlaying] = useState(false);
 

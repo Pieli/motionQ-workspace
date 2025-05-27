@@ -124,7 +124,16 @@ const ControlMenu: React.FC<{
   totalDuration: number;
   currentFrame: number | null;
   parentPlayerRef: React.RefObject<PlayerRef | null>;
-}> = ({ debounceZoomChange, totalDuration, currentFrame, parentPlayerRef }) => {
+  setLoop: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({
+  debounceZoomChange,
+  totalDuration,
+  currentFrame,
+  parentPlayerRef,
+  setLoop,
+}) => {
+  const [isLoopActive, setIsLoopActive] = useState(false);
+
   function frameToTime(frame: number): string {
     const secs = Math.floor(frame / FPS);
     const milis = Math.floor((frame % FPS) * (100 / FPS));
@@ -136,11 +145,21 @@ const ControlMenu: React.FC<{
     return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
   }
 
+  const handleLoopToggle = () => {
+    setIsLoopActive((prev) => !prev);
+    setLoop((prev) => !prev);
+  };
+
   return (
     <div className="flex items-center justify-between border-b h-12 px-4">
       {/* Left section - Loop button */}
       <div className="flex-none">
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          className={`transition-colors duration-200 ${isLoopActive ? "bg-primary text-white" : "hover:bg-gray-100"}`}
+          onClick={handleLoopToggle}
+        >
           <Repeat2 className="size-5" />
         </Button>
       </div>
@@ -149,8 +168,7 @@ const ControlMenu: React.FC<{
       <div className="flex items-center gap-4">
         <PlayPauseButton playerRef={parentPlayerRef} />
         <div className="text-sm font-mono">
-          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} /{" "}
-          {frameToTime(totalDuration * FPS)}
+          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} / {frameToTime(totalDuration * FPS)}
         </div>
       </div>
 
@@ -201,7 +219,8 @@ const Cursor: React.FC<{
 export const Timeline: React.FC<{
   comps: CompositionConfig[];
   playerRef: React.RefObject<PlayerRef | null>;
-}> = ({ comps, playerRef }) => {
+  setLoop: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ comps, playerRef, setLoop }) => {
   const [tracks, setTracks] = useState<Track[]>([]);
 
   const frame = useCurrentPlayerFrame(playerRef);
@@ -295,7 +314,6 @@ export const Timeline: React.FC<{
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     if (e.deltaY !== 0) {
-      e.preventDefault();
       const scrollContainer = e.currentTarget.querySelector(
         "[data-radix-scroll-area-viewport]",
       );
@@ -312,6 +330,7 @@ export const Timeline: React.FC<{
         totalDuration={maxDuration}
         currentFrame={frame}
         parentPlayerRef={playerRef}
+        setLoop={setLoop}
       />
       <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
