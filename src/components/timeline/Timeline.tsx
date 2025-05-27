@@ -351,19 +351,19 @@ export const Timeline: React.FC<{
       <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
           className="relative h-full w-full"
-          style={{ height: Math.max(250, tracks.length * 50 + 50) }}
+          style={{ height: Math.max(300, tracks.length * 50 + 100) }}
         >
           <ScrollArea className="h-full w-full" onWheel={handleWheel}>
             <div
               className="relative flex-1"
               style={{
                 minHeight: Math.max(230, tracks.length * 50),
-                height: tracks.length * 50 + 50,
+                height: tracks.length * 50 + 100,
               }}
             >
               <div
                 className="absolute top-0 left-0 flex select-none overflow_hidden"
-                style={{ width: maxWidth, height: tracks.length * 50 + 50 }}
+                style={{ width: maxWidth, height: tracks.length * 50 + 100 }}
               >
                 {timelineMarkers.map(({ key, time }) => (
                   <div
