@@ -85,7 +85,7 @@ export const AppSidebar: React.FC<{
       <Sidebar collapsible="none" className="bg-background">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
-            <div className="text-foreground text-base font-medium">
+            <div className="text-foreground text-2xl font-semibold tracking-tight">
               {activeItem?.title}
             </div>
           </div>
