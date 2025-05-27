@@ -19,7 +19,6 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
-// import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import { Timeline } from "@/components/timeline/Timeline";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -66,6 +65,8 @@ const Workspace = () => {
     [GeneratedComp],
   );
 
+  const inputProps = useMemo(() => GeneratedComp, [GeneratedComp]);
+
   const playerRef = useRef<PlayerRef>(null);
 
   return (
@@ -95,7 +96,7 @@ const Workspace = () => {
                     <ResizablePanel defaultSize={70}>
                       <div className="flex-1  h-full">
                         <div className="isolate flex-1 h-full bg-secondary">
-                          {GeneratedComp ? (
+                          {inputProps ? (
                             <div className="p-20">
                               <Player
                                 component={SequenceBuilder}
@@ -104,7 +105,7 @@ const Workspace = () => {
                                 ref={playerRef}
                                 compositionWidth={compositionWidth}
                                 compositionHeight={compositionHeight}
-                                inputProps={{ comps: GeneratedComp }}
+                                inputProps={{ comps: inputProps }}
                                 style={{ width: "100%" }}
                                 acknowledgeRemotionLicense
                                 autoPlay
@@ -124,15 +125,19 @@ const Workspace = () => {
                         </div>
                       </div>
                     </ResizablePanel>
-                    <ResizableHandle />
-                    <ResizablePanel defaultSize={30}>
-                      <div className="h-full overflow-hidden">
-                        <Timeline
-                          comps={GeneratedComp || []}
-                          playerRef={playerRef}
-                        />
-                      </div>
-                    </ResizablePanel>
+                    {inputProps && (
+                      <>
+                        <ResizableHandle />
+                        <ResizablePanel defaultSize={30}>
+                          <div className="h-full overflow-hidden">
+                            <Timeline
+                              comps={GeneratedComp || []}
+                              playerRef={playerRef}
+                            />
+                          </div>
+                        </ResizablePanel>
+                      </>
+                    )}
                   </ResizablePanelGroup>
                 </ResizablePanel>
               </ResizablePanelGroup>

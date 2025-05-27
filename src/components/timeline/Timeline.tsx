@@ -1,6 +1,6 @@
 import type { PlayerRef } from "@remotion/player";
 import { debounce } from "lodash";
-import { Pause, Play, Repeat2 } from "lucide-react";
+import { Repeat2 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Minus } from "@/icons/minus";
 import { Plus } from "@/icons/plus";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import { PlayPauseButton } from "@/components/timeline/PlayPauseButton";
 import { useCurrentPlayerFrame } from "@/components/timeline/user-current-player-frame";
 import { FPS } from "@/globals";
 
@@ -118,15 +119,12 @@ const TrackLines: React.FC<{
   );
 };
 
-const ControllMenu: React.FC<{
+const ControlMenu: React.FC<{
   debounceZoomChange: (value: number[]) => void;
-  playerRef: React.RefObject<PlayerRef | null>;
   totalDuration: number;
-}> = ({ debounceZoomChange, playerRef, totalDuration }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  
-  const frame = useCurrentPlayerFrame(playerRef);
-
+  currentFrame: number | null;
+  parentPlayerRef: React.RefObject<PlayerRef | null>;
+}> = ({ debounceZoomChange, totalDuration, currentFrame, parentPlayerRef }) => {
   function frameToTime(frame: number): string {
     const secs = Math.floor(frame / FPS);
     const milis = Math.floor((frame % FPS) * (100 / FPS));
@@ -137,17 +135,6 @@ const ControllMenu: React.FC<{
     const remainingSecs = secs % 60;
     return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
   }
-
-  const togglePlayPause = () => {
-    if (playerRef.current) {
-      if (isPlaying) {
-        playerRef.current.pause();
-      } else {
-        playerRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   return (
     <div className="flex items-center justify-between border-b h-12 px-4">
@@ -160,19 +147,10 @@ const ControllMenu: React.FC<{
 
       {/* Center section - Play controls and time */}
       <div className="flex items-center gap-4">
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={togglePlayPause}
-        >
-          {isPlaying ? (
-            <Pause className="size-6" />
-          ) : (
-            <Play className="size-6" />
-          )}
-        </Button>
+        <PlayPauseButton playerRef={parentPlayerRef} />
         <div className="text-sm font-mono">
-          {frame !== null ? frameToTime(frame) : "00:00:00"} / {frameToTime(totalDuration * FPS)}
+          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} /{" "}
+          {frameToTime(totalDuration * FPS)}
         </div>
       </div>
 
@@ -224,8 +202,9 @@ export const Timeline: React.FC<{
   comps: CompositionConfig[];
   playerRef: React.RefObject<PlayerRef | null>;
 }> = ({ comps, playerRef }) => {
-
   const [tracks, setTracks] = useState<Track[]>([]);
+
+  const frame = useCurrentPlayerFrame(playerRef);
 
   useEffect(() => {
     let currentStartTime = 0;
@@ -326,14 +305,13 @@ export const Timeline: React.FC<{
     }
   }, []);
 
-  const frame = useCurrentPlayerFrame(playerRef);
-
   return (
     <>
-      <ControllMenu
+      <ControlMenu
         debounceZoomChange={debouncedZoomChange}
-        playerRef={playerRef}
         totalDuration={maxDuration}
+        currentFrame={frame}
+        parentPlayerRef={playerRef}
       />
       <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
