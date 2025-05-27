@@ -179,8 +179,8 @@ const ControlMenu: React.FC<{
       {/* Center section - Play controls and time */}
       <div className="flex items-center gap-4">
         <PlayPauseButton playerRef={parentPlayerRef} />
-        <div className="text-sm font-mono">
-          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} /{" "}
+        <div className="border p-1 px-3 rounded-xl text-base font-mono">
+          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} |{" "}
           {frameToTime(totalDuration * FPS)}
         </div>
       </div>
