@@ -1,6 +1,6 @@
+import type { PlayerRef } from "@remotion/player";
 import { debounce } from "lodash";
 import { Pause, Play, Repeat2 } from "lucide-react";
-import type { PlayerRef } from "@remotion/player";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -120,32 +120,65 @@ const TrackLines: React.FC<{
 
 const ControllMenu: React.FC<{
   debounceZoomChange: (value: number[]) => void;
-  frame: number | null;
-}> = ({ debounceZoomChange, frame }) => {
-
+  playerRef: React.RefObject<PlayerRef | null>;
+  totalDuration: number;
+}> = ({ debounceZoomChange, playerRef, totalDuration }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  
+  const frame = useCurrentPlayerFrame(playerRef);
 
   function frameToTime(frame: number): string {
-        const secs = Math.floor(frame / FPS);
-        const milis = Math.floor((frame % FPS) * (100 / FPS)); // Adjusted for 2 decimal places
-        if (secs < 60) {
-            return `00:${secs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
-        }
-        const mins = Math.floor(secs / 60);
-        const remainingSecs = secs % 60;
-        return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
+    const secs = Math.floor(frame / FPS);
+    const milis = Math.floor((frame % FPS) * (100 / FPS));
+    if (secs < 60) {
+      return `00:${secs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
+    }
+    const mins = Math.floor(secs / 60);
+    const remainingSecs = secs % 60;
+    return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}:${milis.toString().padStart(2, "0")}`;
   }
 
+  const togglePlayPause = () => {
+    if (playerRef.current) {
+      if (isPlaying) {
+        playerRef.current.pause();
+      } else {
+        playerRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   return (
-    <div className="flex border-b h-12">
-      <Play />
-      <div className="">
-        <Pause />
+    <div className="flex items-center justify-between border-b h-12 px-4">
+      {/* Left section - Loop button */}
+      <div className="flex-none">
+        <Button variant="ghost" size="icon">
+          <Repeat2 className="size-5" />
+        </Button>
       </div>
-      <Repeat2 />
-       {frame !== null && <span>{frameToTime(frame)}</span>}
-      <div className="flex items-center justify-center gap-4 w-full">
-        <Button variant="outline">
+
+      {/* Center section - Play controls and time */}
+      <div className="flex items-center gap-4">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={togglePlayPause}
+        >
+          {isPlaying ? (
+            <Pause className="size-6" />
+          ) : (
+            <Play className="size-6" />
+          )}
+        </Button>
+        <div className="text-sm font-mono">
+          {frame !== null ? frameToTime(frame) : "00:00:00"} / {frameToTime(totalDuration * FPS)}
+        </div>
+      </div>
+
+      {/* Right section - Zoom controls */}
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="icon">
           <Minus className="size-3" />
         </Button>
         <div className="w-28">
@@ -157,7 +190,7 @@ const ControllMenu: React.FC<{
             step={1}
           />
         </div>
-        <Button variant="outline">
+        <Button variant="outline" size="icon">
           <Plus className="size-3" />
         </Button>
       </div>
@@ -170,7 +203,6 @@ export const Timeline: React.FC<{
   playerRef: React.RefObject<PlayerRef | null>;
 }> = ({ comps, playerRef }) => {
 
-  const frame = useCurrentPlayerFrame(playerRef);
   const [tracks, setTracks] = useState<Track[]>([]);
 
   useEffect(() => {
@@ -274,7 +306,11 @@ export const Timeline: React.FC<{
 
   return (
     <>
-      <ControllMenu debounceZoomChange={debouncedZoomChange} frame={frame} />
+      <ControllMenu
+        debounceZoomChange={debouncedZoomChange}
+        playerRef={playerRef}
+        totalDuration={maxDuration}
+      />
       <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
         <div
           className="relative h-full w-full"
