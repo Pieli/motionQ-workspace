@@ -41,7 +41,7 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
     durationInFrames: 0.5 * fps,
   });
 
-  const slideX = interpolate(progress, [0, 0.9, 1], [-500, 80, 0]);
+  const slideX = interpolate(progress, [0, 0.9, 1], [0, -2, -3]);
 
   const container: React.CSSProperties = useMemo(() => {
     return {
@@ -50,7 +50,7 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
       opacity: Math.min(progress+0.2, 1),
       transform: `translateX(${slideX}px)`,
     };
-  }, [slideX]);
+  }, [progress, slideX]);
   
   const outer: React.CSSProperties = {
         backgroundColor: bgColor,
