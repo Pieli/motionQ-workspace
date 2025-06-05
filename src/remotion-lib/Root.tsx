@@ -1,19 +1,34 @@
-import { Composition, staticFile } from "remotion";
+import { Composition } from "remotion";
 import { HelloWorld, myCompSchema } from "./HelloWorld";
 import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
-import { SimpleTextFade, simpleFadeSchema } from "./TextFades/SimpleTextFade";
-import { SimpleTextTyping, simpleTypingSchema } from "./TextFades/SimpleTextTyping";
-import { SlideInTransition, slideInSchema } from "./TextFades/SlideInText";
-import { ScaleUpDownTransition, scaleUpDownSchema } from "./TextFades/ScaldeUpDowText";
 import { FadeInTransition, fadeInSchema } from "./TextFades/FadeInText";
-import { ThreeDTextTransition, threeDTextSchema } from "./TextFades/ThreeDTextTransition";
-import { TextShatterTransition, textShatterSchema } from "./TextFades/TextShatterTransition";
-import { WaveEffectTransition, waveEffectSchema } from "./TextFades/WaveEffectTransition";
+import {
+  ScaleUpDownTransition,
+  scaleUpDownSchema,
+} from "./TextFades/ScaldeUpDowText";
+import { SimpleTextFade, simpleFadeSchema } from "./TextFades/SimpleTextFade";
+import {
+  SimpleTextTyping,
+  simpleTypingSchema,
+} from "./TextFades/SimpleTextTyping";
+import { SlideInTransition, slideInSchema } from "./TextFades/SlideInText";
+import {
+  TextShatterTransition,
+  textShatterSchema,
+} from "./TextFades/TextShatterTransition";
+import {
+  ThreeDTextTransition,
+  threeDTextSchema,
+} from "./TextFades/ThreeDTextTransition";
+import {
+  WaveEffectTransition,
+  waveEffectSchema,
+} from "./TextFades/WaveEffectTransition";
+import { CountingStars, countingStarsSchema } from "./counting/counting-stars";
+import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
 // import { ReactComponent as SaasOverview } from "./public/saas_overview.svg";
 // import { SvgTransition, svgTransitionSchema } from "./ProductPreview/SvgTransition";
-
-
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -167,6 +182,34 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
 
+      <Composition
+        id="CountingStars"
+        component={CountingStars}
+        durationInFrames={120}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={countingStarsSchema}
+        defaultProps={{
+          text: "100 Counting Stars",
+          bgColor: "#000",
+          textColor: "#fff",
+          startingNumber: 0,
+          goalNumber: 100,
+          suffixText: "",
+          prefixText: "",
+        }}
+      />
+
+      <Composition
+        id="SearchBar"
+        component={SearchBarAnimation}
+        durationInFrames={4 * 30}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
       {/*
       <Composition
         id="SvgTransition"
@@ -183,21 +226,6 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
      */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </>
   );
 };
