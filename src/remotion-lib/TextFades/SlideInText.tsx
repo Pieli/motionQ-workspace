@@ -23,7 +23,6 @@ loadFont("normal", {
   weights: ["400", "700"],
 });
 
-
 export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
   text,
   bgColor,
@@ -36,33 +35,33 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
     fps,
     frame,
     config: {
-      damping: 800,
+      damping: 400,
     },
-    durationInFrames: 0.5 * fps,
+    durationInFrames: 1 * fps,
   });
 
-  const slideX = interpolate(progress, [0, 0.9, 1], [0, -2, -3]);
+  const slideX = interpolate(progress, [0, 0.9, 1], [-1000, 80, 0]);
 
   const container: React.CSSProperties = useMemo(() => {
     return {
-      justifyContent: "center",
-      alignItems: "center",
-      opacity: Math.min(progress+0.2, 1),
+      opacity: Math.min(progress, 1),
       transform: `translateX(${slideX}px)`,
+      color: textColor,
+      fontSize: 180,
+      fontFamily,
+      fontWeight: 550,
     };
-  }, [progress, slideX]);
-  
+  }, [progress, slideX, textColor]);
+
   const outer: React.CSSProperties = {
-        backgroundColor: bgColor,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: bgColor,
   };
 
   return (
     <AbsoluteFill style={outer}>
-      <AbsoluteFill style={container}>
-        <h1 style={{ fontSize: 180, fontFamily, fontWeight: 550,  color: textColor }}>
-          {text}
-        </h1>
-      </AbsoluteFill>
+      <div style={container}>{text}</div>
     </AbsoluteFill>
   );
 };

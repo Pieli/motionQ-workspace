@@ -22,11 +22,9 @@ export const scaleUpDownSchema = z.object({
   bgColor: zColor(),
 });
 
-
-export const ScaleUpDownTransition: React.FC<z.infer<typeof scaleUpDownSchema>> = ({
-  text,
-  bgColor,
-}) => {
+export const ScaleUpDownTransition: React.FC<
+  z.infer<typeof scaleUpDownSchema>
+> = ({ text, bgColor }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
 
@@ -44,27 +42,24 @@ export const ScaleUpDownTransition: React.FC<z.infer<typeof scaleUpDownSchema>> 
 
   const container: React.CSSProperties = useMemo(() => {
     return {
-      justifyContent: "center",
-      alignItems: "center",
       transform: `scale(${scale})`,
+      fontSize: 180,
+      fontWeight: 550,
+      fontFamily,
     };
-  }, [ scale]);
+  }, [scale]);
 
   const outer: React.CSSProperties = useMemo(() => {
     return {
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: bgColor,
     };
   }, [bgColor]);
 
   return (
     <AbsoluteFill style={outer}>
-      <AbsoluteFill style={container}>
-        <h1 style={{
-          fontSize: 180,
-          fontWeight: 550,
-          fontFamily,
-        }}> {text} </h1>
-      </AbsoluteFill>
+      <div style={container}> {text} </div>
     </AbsoluteFill>
   );
 };
