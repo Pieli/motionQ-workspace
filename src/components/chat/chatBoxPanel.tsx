@@ -133,10 +133,13 @@ export const ChatBoxPanel: React.FC<{
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
   isGenerating: boolean;
 }> = ({ setGeneratedComp, setIsGenerating, isGenerating }) => {
+  const [history, setHistory] = useState<string[]>([]);
+  /*
   const [history, setHistory] = useState<string[]>([
     "User: test",
     "Agent: response",
   ]);
+  */
   const [prompt, setPrompt] = useState("");
 
   const generate = async () => {
@@ -146,9 +149,9 @@ export const ChatBoxPanel: React.FC<{
     setPrompt("");
     setIsGenerating(true);
 
-    setGeneratedComp(composition);
-    setIsGenerating(false);
-    return;
+    // setGeneratedComp(composition);
+    // setIsGenerating(false);
+    // return;
 
     try {
       const response = await llm.generateCompositions(currentPrompt);
