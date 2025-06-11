@@ -57,8 +57,8 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
       <div
         className={
           (isUser
-            ? "w-fit rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-right ml-auto"
-            : "w-fit rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
+            ? "w-9.5/10 rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left ml-auto"
+            : "w-fit rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
           " max-w-full"
         }
         style={{
