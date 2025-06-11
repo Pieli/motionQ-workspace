@@ -1,12 +1,29 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { ThemeProvider } from "@/components/theme-provider";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import "./index.css";
-import App from "@/App";
-import Workspace from "@/components/chat/Workspace";
-import SvgPreviewer from "@/components/chat/SvgPreviewer";
 
+import Workspace from "@/components/chat/Workspace";
+import LandingPage from "@/components/LandingPage"; // Import your landing page component
+import { ThemeProvider } from "@/components/theme-provider";
+
+import "./index.css";
+
+const isLoggedIn = () => {
+  // Replace this with your actual authentication logic
+  return true;
+  // return Boolean(localStorage.getItem("authToken"));
+};
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: isLoggedIn() ? Workspace : LandingPage, // Conditional rendering
+  },
+]);
+
+
+
+/*
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,6 +34,8 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+*/
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
