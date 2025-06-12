@@ -13,6 +13,21 @@ import type { AnimationComponents } from "@/api/animation-factories";
 import { animationFactory, schemaFactory } from "./animation-factories";
 
 
+export class NullLLMService implements LLMService {
+    async generateCompositions(prompt: string): Promise<ResponseType> {
+        console.log("No LLM service configured. Returning empty response.", prompt);
+        return {
+        compositions: [],
+        comment: "No LLM service configured.",
+        };
+    }
+    
+    responseToGeneratedComposition(resp: ResponseType): CompositionConfig[] {
+        console.log("No LLM service configured", resp);
+        return [];
+    }
+};
+
 export class OpenAIService implements LLMService {
   private client: OpenAI;
 

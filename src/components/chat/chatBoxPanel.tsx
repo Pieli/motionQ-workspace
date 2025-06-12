@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { SendHorizonal } from "lucide-react";
 
-import { OpenAIService } from "@/api/llm";
+import { NullLLMService, OpenAIService } from "@/api/llm";
 import type { LLMService } from "@/components/interfaces/llm";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -48,7 +48,13 @@ const composition: CompositionConfig[] = [
 ];
 */
 
-const llm: LLMService = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
+// keep service null if undefined env
+let llm: LLMService = new NullLLMService();
+
+if (import.meta.env.VITE_APP_OPENAI_KEY !== undefined) {
+    llm = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
+}
+
 
 // ChatMessage component for rendering user/agent messages differently
 const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
