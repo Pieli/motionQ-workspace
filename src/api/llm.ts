@@ -32,8 +32,8 @@ export class OpenAIService implements LLMService {
     console.dir(completion, { depth: 5 });
     const message= completion.choices[0]?.message
     if (message?.parsed) {
-      console.log(message.parsed.compositions);
-      console.log(`answer: ${message.parsed.comment}`);
+      // console.log(message.parsed.compositions);
+      // console.log(`answer: ${message.parsed.comment}`);
     };
 
     return message.parsed as ResponseType;

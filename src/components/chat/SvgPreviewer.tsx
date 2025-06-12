@@ -36,22 +36,19 @@ export default function SvgPreviewer() {
   // Highlight logic with rectangle overlay
   useEffect(() => {
     const container = svgContainerRef.current;
-    console.log("hello");
     if (!container) return;
     const svgEl = container?.querySelector("svg");
-    console.log("hi");
     if (!svgEl) return;
 
     // Remove any existing overlay
     const old = svgEl.querySelector("#highlight-overlay");
     if (old) old.remove();
-    console.log("ho");
 
     if (hoveredId) {
       const target = svgEl.querySelector(`#${CSS.escape(hoveredId)}`);
       if (target) {
         const bbox = target.getBBox();
-        console.log("ha");
+        // console.log("ha");
 
         const rect = document.createElementNS(
           "http://www.w3.org/2000/svg",
