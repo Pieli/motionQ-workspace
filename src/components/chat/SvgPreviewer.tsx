@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+// import React, { useState, useEffect, useRef } from "react";
 
 export default function SvgPreviewer() {
+
+ /*
   const svgUrl = "/dashboard.svg";
   const [treeData, setTreeData] = useState([]);
   const [expandedIds, setExpandedIds] = useState(new Set());
@@ -111,4 +113,8 @@ export default function SvgPreviewer() {
       <main className="flex-1 p-4 overflow-auto" ref={svgContainerRef} />
     </div>
   );
+  */
+  return (
+      <h1>SVG Previewer</h1> 
+  )
 }

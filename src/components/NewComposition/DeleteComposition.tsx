@@ -1,3 +1,4 @@
+/*
 import type {RecastCodemod} from '@remotion/studio-shared';
 import React, {useCallback, useContext, useMemo} from 'react';
 import {inlineCodeSnippet} from '../Menu/styles';
@@ -16,7 +17,15 @@ const content: React.CSSProperties = {
 	flex: 1,
 	minWidth: 500,
 };
+*/
 
+import React from 'react';
+
+export const DeleteCompositionLoaded: React.FC = () => {
+    return <h1>DeleteCompositionLoaded</h1>;
+}
+
+/*
 const DeleteCompositionLoaded: React.FC<{
 	readonly compositionId: string;
 }> = ({compositionId}) => {
@@ -83,3 +92,4 @@ export const DeleteComposition: React.FC<{
 		</DismissableModal>
 	);
 };
+*/

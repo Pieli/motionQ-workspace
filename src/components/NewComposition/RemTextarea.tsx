@@ -1,16 +1,17 @@
 import React, {
 	forwardRef,
-	useEffect,
+	// useEffect,
 	useImperativeHandle,
-	useMemo,
+	// useMemo,
 	useRef,
-	useState,
+	// useState,
 } from 'react';
+/*
 import {INPUT_BACKGROUND} from '../../helpers/colors';
 import {
-	INPUT_HORIZONTAL_PADDING,
 	getInputBorderColor,
 } from '../NewComposition/RemInput';
+*/
 
 
  const VERTICAL_SCROLLBAR_CLASSNAME = '__remotion-vertical-scrollbar';
@@ -22,6 +23,7 @@ type Props = React.DetailedHTMLProps<
 	readonly status: 'error' | 'warning' | 'ok';
 };
 
+/*
 const inputBaseStyle: React.CSSProperties = {
 	padding: `${INPUT_HORIZONTAL_PADDING}px 10px`,
 	color: 'white',
@@ -31,26 +33,31 @@ const inputBaseStyle: React.CSSProperties = {
 	resize: 'none',
 	overflowX: 'hidden',
 };
+*/
 
 const RemTextareaFRFunction: React.ForwardRefRenderFunction<
 	HTMLTextAreaElement,
 	Props
-> = ({status, ...props}, ref) => {
-	const [isFocused, setIsFocused] = useState(false);
-	const [isHovered, setIsHovered] = useState(false);
+> = ({...props}, ref) => {
+	// const [isFocused, setIsFocused] = useState(false);
+	// const [isHovered, setIsHovered] = useState(false);
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 
+    /*
     const useZIndex = () => {
         console.warn('useZIndex called');
     }
+    */
 
-	const {tabIndex} = useZIndex();
+	// const {tabIndex} = useZIndex();
+	const tabIndex = 0 ;
 
 	useImperativeHandle(ref, () => {
 		return inputRef.current as HTMLTextAreaElement;
 	}, []);
 
+    /*
 	const style = useMemo(() => {
 		return {
 			backgroundColor: INPUT_BACKGROUND,
@@ -60,7 +67,9 @@ const RemTextareaFRFunction: React.ForwardRefRenderFunction<
 			...(props.style ?? {}),
 		};
 	}, [isFocused, isHovered, props.style, status]);
+    */
 
+    /*
 	useEffect(() => {
 		if (!inputRef.current) {
 			return;
@@ -127,6 +136,7 @@ const RemTextareaFRFunction: React.ForwardRefRenderFunction<
 			current.removeEventListener('keydown', onKeyDown);
 		};
 	}, [inputRef]);
+    */
 
 	return (
 		<textarea
@@ -134,7 +144,6 @@ const RemTextareaFRFunction: React.ForwardRefRenderFunction<
 			tabIndex={tabIndex}
 			{...props}
 			className={VERTICAL_SCROLLBAR_CLASSNAME}
-			style={style}
 		/>
 	);
 };

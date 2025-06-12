@@ -69,10 +69,14 @@ export const ZodStaticFileEditor: React.FC<{
 	const comboBoxValues = useMemo(() => {
 		return getStaticFiles().map((option): ComboboxValue => {
 			return {
+                // @ts-expect-error not implemented 
 				value: option.src,
+                // @ts-expect-error not implemented 
 				label: option.name,
+                // @ts-expect-error not implemented 
 				id: option.src,
 				keyHint: null,
+                // @ts-expect-error not implemented 
 				leftItem: option.src === value ? <Checkmark /> : null,
 				onClick: (id: string) => {
 					setLocalValue(() => id, false, false);
@@ -106,6 +110,7 @@ export const ZodStaticFileEditor: React.FC<{
 
 			<div style={isRoot ? undefined : container}>
 				<Combobox
+                    // @ts-expect-error not implemented
 					values={comboBoxValues}
 					selectedId={localValue.value}
 					title={value}

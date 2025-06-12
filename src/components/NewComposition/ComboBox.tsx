@@ -1,3 +1,4 @@
+/*
 import { PlayerInternals } from "@remotion/player";
 import React, {
   useCallback,
@@ -45,6 +46,7 @@ const label: React.CSSProperties = {
   fontSize: 14,
   textAlign: "left",
 };
+*/
 
 type DividerItem = {
   type: "divider";
@@ -70,6 +72,14 @@ export type SelectionItem = {
 };
 
 export type ComboboxValue = DividerItem | SelectionItem;
+
+
+export const Combobox: React.FC = () => {
+    return <h1>Combobox</h1>;
+}
+
+/*
+
 
 export const Combobox: React.FC<{
   readonly values: ComboboxValue[];
@@ -285,3 +295,4 @@ export const Combobox: React.FC<{
     </>
   );
 };
+*/

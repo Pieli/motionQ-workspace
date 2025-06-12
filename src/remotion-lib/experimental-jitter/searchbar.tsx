@@ -135,7 +135,7 @@ export const RemotionVideo: React.FC = () => (
       width={680}
       height={120}
       fps={60}
-      durationInFrames={msToFrames(4000)}
+      durationInFrames={4 * 60}
     />
   </>
 );

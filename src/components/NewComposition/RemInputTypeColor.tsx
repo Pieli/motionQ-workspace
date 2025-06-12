@@ -7,7 +7,6 @@ import React, {
 	useState,
 } from 'react';
 import {INPUT_BACKGROUND} from '../../helpers/colors';
-import {useZIndex} from '../../state/z-index';
 import type {RemInputStatus} from './RemInput';
 import {getInputBorderColor} from './RemInput';
 
@@ -32,7 +31,7 @@ const RemInputTypeColorForwardRef: React.ForwardRefRenderFunction<
 	const [isFocused, setIsFocused] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
-	const {tabIndex} = useZIndex();
+	const tabIndex = 0;
 
 	const style = useMemo(() => {
 		return {
@@ -42,6 +41,7 @@ const RemInputTypeColorForwardRef: React.ForwardRefRenderFunction<
 			...(props.style ?? {}),
 		};
 	}, [isFocused, isHovered, props.style, status]);
+    console.log(style)
 
 	useImperativeHandle(ref, () => {
 		return inputRef.current as HTMLInputElement;
@@ -79,7 +79,6 @@ const RemInputTypeColorForwardRef: React.ForwardRefRenderFunction<
 			tabIndex={tabIndex}
 			{...props}
 			name={props.name}
-			style={style}
 		/>
 	);
 };

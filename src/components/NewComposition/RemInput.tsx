@@ -1,3 +1,4 @@
+/*
 import type { PropsWithChildren } from "react";
 import React, {
   forwardRef,
@@ -122,3 +123,41 @@ const RemInputForwardRef: React.ForwardRefRenderFunction<
 };
 
 export const RemotionInput = forwardRef(RemInputForwardRef);
+
+*/
+
+type Props = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & {
+  readonly status: RemInputStatus;
+  readonly rightAlign: boolean;
+};
+
+
+export type RemInputStatus = "error" | "warning" | "ok";
+export const RemotionInput: React.FC<Props> = ({...props}) => {
+    console.log("RemotionInput: not implemented yet", props);
+    return <h1>RemInput</h1>;
+}
+
+
+export const getInputBorderColor = ({
+  status,
+  isFocused,
+  isHovered,
+}: {
+  status: "error" | "warning" | "ok";
+  isFocused: boolean;
+  isHovered: boolean;
+}) => {
+    console.log("getInputBorderColor: not implemented yet", status, isFocused, isHovered);
+}
+
+export const inputBaseStyle: React.CSSProperties = {
+  padding: `4px 10px`,
+  color: "white",
+  borderStyle: "solid",
+  borderWidth: 1,
+  fontSize: 14,
+};

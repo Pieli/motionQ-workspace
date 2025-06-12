@@ -1,9 +1,11 @@
-import type {ZodTypesType} from '../components/get-zod-if-possible';
+import * as zodTypes from "@remotion/zod-types";
+
+type zodTypesType = typeof zodTypes;
 
 export const colorWithNewOpacity = (
 	color: string,
 	opacity: number,
-	zodTypes: ZodTypesType,
+	zodTypes: zodTypesType,
 ) => {
 	const {r, g, b} = zodTypes.ZodZypesInternals.parseColor(color);
 	if (opacity >= 255) {

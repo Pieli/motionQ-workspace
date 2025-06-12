@@ -22,7 +22,7 @@ export const InlineAction = ({
   disabled,
   title,
 }: InlineActionProps) => {
-  const { tabIndex } = useZIndex();
+  const tabIndex = useZIndex();
 
   const [hovered, setHovered] = useState(false);
 

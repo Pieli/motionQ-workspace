@@ -1,6 +1,8 @@
-import type {PointerEvent, SetStateAction} from 'react';
+import React from 'react';
+/*
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {INPUT_BORDER_COLOR_UNHOVERED} from '../../helpers/colors';
+import type {PointerEvent, SetStateAction} from 'react';
 import {useMobileLayout} from '../../helpers/mobile-layout';
 import {useKeybinding} from '../../helpers/use-keybinding';
 import {MenuDivider} from '../Menu/MenuDivider';
@@ -8,12 +10,14 @@ import type {MenuId} from '../Menu/MenuItem';
 import type {SubMenuActivated} from '../Menu/MenuSubItem';
 import {MenuSubItem} from '../Menu/MenuSubItem';
 import {VERTICAL_SCROLLBAR_CLASSNAME} from '../Menu/is-menu-item';
-import {
-	MAX_MENU_WIDTH,
-	MAX_MOBILE_MENU_WIDTH,
-	MENU_VERTICAL_PADDING,
-} from '../Menu/styles';
-import type {ComboboxValue} from './ComboBox';
+
+
+// defined by me
+const MAX_MENU_WIDTH = 400; 
+const MAX_MOBILE_MENU_WIDTH = 120;
+const MENU_VERTICAL_PADDING = 8;
+
+// import type {ComboboxValue} from './ComboBox';
 
 const BORDER_SIZE = 1;
 
@@ -28,6 +32,12 @@ const container: React.CSSProperties = {
 	maxWidth: MAX_MENU_WIDTH,
 };
 
+*/
+
+export const MenuContent: React.FC = () => {
+    return ( <h1>MenuContent</h1> );
+}
+    /*
 export const MenuContent: React.FC<{
 	readonly values: ComboboxValue[];
 	readonly onHide: () => void;
@@ -348,3 +358,4 @@ export const MenuContent: React.FC<{
 		</div>
 	);
 };
+    */

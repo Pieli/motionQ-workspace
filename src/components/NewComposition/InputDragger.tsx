@@ -6,11 +6,8 @@ import type {
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {interpolate} from 'remotion';
 import {BLUE} from '../../helpers/colors';
-import {noop} from '../../helpers/noop';
-import {getClickLock, setClickLock} from '../../state/input-dragger-click-lock';
-import {HigherZIndex} from '../../state/z-index';
 import type {RemInputStatus} from './RemInput';
-import {RemotionInput, inputBaseStyle} from './RemInput';
+import {inputBaseStyle} from './RemInput';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
 	readonly onValueChange: (newVal: number) => void;
@@ -20,9 +17,6 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 	readonly rightAlign: boolean;
 };
 
-const isInt = (num: number) => {
-	return num % 1 === 0;
-};
 
 const InputDraggerForwardRefFn: React.ForwardRefRenderFunction<
 	HTMLButtonElement,
@@ -34,11 +28,7 @@ const InputDraggerForwardRefFn: React.ForwardRefRenderFunction<
 		max: _max,
 		step: _step,
 		value,
-		onTextChange,
 		formatter = (q) => String(q),
-		status,
-		rightAlign,
-		...props
 	},
 	ref,
 ) => {
@@ -66,49 +56,10 @@ const InputDraggerForwardRefFn: React.ForwardRefRenderFunction<
 		[],
 	);
 
-	const onClick: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
-		if (!getClickLock()) {
-			e.stopPropagation();
-		}
-
-		if (getClickLock()) {
-			return;
-		}
-
+	const onClick: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
 		setInputFallback(true);
 	}, []);
 
-	const onEscape = useCallback(() => {
-		setInputFallback(false);
-	}, []);
-
-	const onBlur = useCallback(() => {
-		if (!fallbackRef.current) {
-			return;
-		}
-
-		const newValue = fallbackRef.current.value;
-		if (newValue.trim() === '') {
-			onEscape();
-			return;
-		}
-
-		if (fallbackRef.current.checkValidity()) {
-			onTextChange?.(newValue);
-			setInputFallback(false);
-		} else {
-			fallbackRef.current.reportValidity();
-		}
-	}, [onEscape, onTextChange]);
-
-	const onKeyPress: React.KeyboardEventHandler<HTMLInputElement> = useCallback(
-		(e) => {
-			if (e.key === 'Enter') {
-				fallbackRef.current?.blur();
-			}
-		},
-		[],
-	);
 
 	const roundToStep = (val: number, stepSize: number) => {
 		const factor = 1 / stepSize;
@@ -117,23 +68,16 @@ const InputDraggerForwardRefFn: React.ForwardRefRenderFunction<
 
 	const onPointerDown: PointerEventHandler = useCallback(
 		(e) => {
-			const {pageX, pageY, button} = e;
+			const {pageX, button} = e;
 			if (button !== 0) {
 				return;
 			}
 
 			const moveListener = (ev: MouseEvent) => {
 				const xDistance = ev.pageX - pageX;
-				const distanceFromStart = Math.sqrt(
-					xDistance ** 2 + (ev.pageY - pageY) ** 2,
-				);
 				const step = Number(_step ?? 1);
 				const min = Number(_min ?? 0);
 				const max = Number(_max ?? Infinity);
-
-				if (distanceFromStart > 4) {
-					setClickLock(true);
-				}
 
 				const diff = interpolate(
 					xDistance,
@@ -151,7 +95,6 @@ const InputDraggerForwardRefFn: React.ForwardRefRenderFunction<
 				() => {
 					window.removeEventListener('mousemove', moveListener);
 					setTimeout(() => {
-						setClickLock(false);
 					}, 2);
 				},
 				{
@@ -168,36 +111,10 @@ const InputDraggerForwardRefFn: React.ForwardRefRenderFunction<
 		}
 	}, [inputFallback]);
 
-	const deriveStep = useMemo(() => {
-		if (_step !== undefined) {
-			return _step;
-		}
-
-		if (typeof _min === 'number' && isInt(_min)) {
-			return 1;
-		}
-
-		return 0.0001;
-	}, [_min, _step]);
 
 	if (inputFallback) {
 		return (
-			<HigherZIndex onEscape={onEscape} onOutsideClick={noop}>
-				<RemotionInput
-					ref={fallbackRef}
-					autoFocus
-					onKeyPress={onKeyPress}
-					onBlur={onBlur}
-					min={_min}
-					max={_max}
-					step={deriveStep}
-					defaultValue={value}
-					status={status}
-					pattern={'[0-9]*[.]?[0-9]*'}
-					rightAlign={rightAlign}
-					{...props}
-				/>
-			</HigherZIndex>
+            <h1>fallback</h1>
 		);
 	}
 

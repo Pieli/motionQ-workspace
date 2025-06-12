@@ -1,9 +1,9 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {z} from 'zod';
 
-import {Checkmark} from '../../../icons/Checkmark';
-import type {ComboboxValue} from '../../NewComposition/ComboBox';
-import {Combobox} from '../../NewComposition/ComboBox';
+// import {Checkmark} from '../../../icons/Checkmark';
+// import type {ComboboxValue} from '../../NewComposition/ComboBox';
+// import {Combobox} from '../../NewComposition/ComboBox';
 import {Fieldset} from './Fieldset';
 import {SchemaLabel} from './SchemaLabel';
 import {ZodFieldValidation} from './ZodFieldValidation';
@@ -38,7 +38,7 @@ export const ZodEnumEditor: React.FC<{
 }) => {
 	const {
 		localValue,
-		onChange: setLocalValue,
+		// onChange: setLocalValue,
 		reset,
 	} = useLocalState({
 		schema,
@@ -56,6 +56,7 @@ export const ZodEnumEditor: React.FC<{
 
 	const isRoot = jsonPath.length === 0;
 
+    /*
 	const comboBoxValues = useMemo(() => {
 		return def.values.map((option: string): ComboboxValue => {
 			return {
@@ -73,6 +74,7 @@ export const ZodEnumEditor: React.FC<{
 			};
 		});
 	}, [def.values, setLocalValue, value]);
+    */
 
 	const save = useCallback(() => {
 		onSave(() => value, false, false);
@@ -95,7 +97,7 @@ export const ZodEnumEditor: React.FC<{
 			/>
 
 			<div style={isRoot ? undefined : container}>
-				<Combobox values={comboBoxValues} selectedId={value} title={value} />
+            {/* <Combobox values={comboBoxValues} selectedId={value} title={value} />*/}
 			</div>
 			<ZodFieldValidation path={jsonPath} localValue={localValue} />
 		</Fieldset>

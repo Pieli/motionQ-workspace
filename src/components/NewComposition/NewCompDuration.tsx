@@ -1,9 +1,15 @@
 import React, {useCallback} from 'react';
-import {validateCompositionDuration} from '../../helpers/validate-new-comp-data';
 import {label, optionRow, rightRow} from '../RenderModal/layout';
-import {Spacing} from '../layout';
 import {InputDragger} from './InputDragger';
 import {ValidationMessage} from './ValidationMessage';
+
+import { Spacing } from "@/components/ui/spacing";
+
+
+function validateCompositionDuration(durationInFrames: number): string | null {
+    console.log("validateCompositionDuration: not implemented yet", durationInFrames);
+    return null
+}
 
 export const NewCompDuration: React.FC<{
 	readonly durationInFrames: number;

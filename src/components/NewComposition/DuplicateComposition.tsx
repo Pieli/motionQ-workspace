@@ -1,3 +1,4 @@
+/*
 import type {RecastCodemod} from '@remotion/studio-shared';
 import type {ChangeEventHandler} from 'react';
 import React, {useCallback, useContext, useMemo, useState} from 'react';
@@ -37,6 +38,13 @@ const comboBoxStyle: React.CSSProperties = {
 
 export type CompType = 'composition' | 'still';
 
+*/
+
+export const DuplicateCompositionLoaded: React.FC = () => {
+    return <h1>DuplicateCompositionLoaded</h1>;
+}
+
+/*
 const DuplicateCompositionLoaded: React.FC<{
 	readonly initialType: CompType;
 }> = ({initialType}) => {
@@ -382,3 +390,4 @@ export const DuplicateComposition: React.FC<{
 		</DismissableModal>
 	);
 };
+*/

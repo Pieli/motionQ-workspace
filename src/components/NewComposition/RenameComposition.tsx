@@ -1,3 +1,4 @@
+/*
 import type {RecastCodemod} from '@remotion/studio-shared';
 import type {ChangeEventHandler} from 'react';
 import React, {useCallback, useContext, useMemo, useState} from 'react';
@@ -24,6 +25,14 @@ const content: React.CSSProperties = {
 	minWidth: 500,
 };
 
+import React from 'react';
+*/
+
+export const RenameComposition: React.FC = () => {
+    return <h1>RenameComposition</h1>;
+}
+
+/*
 const RenameCompositionLoaded: React.FC<{}> = () => {
 	const context = useContext(ResolvedCompositionContext);
 	if (!context) {
@@ -122,3 +131,4 @@ export const RenameComposition: React.FC<{
 		</DismissableModal>
 	);
 };
+*/

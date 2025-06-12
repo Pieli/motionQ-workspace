@@ -1,3 +1,4 @@
+/*
 import type {ProjectInfo, RecastCodemod} from '@remotion/studio-shared';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {ShortcutHint} from '../../error-overlay/remotion-overlay/ShortcutHint';
@@ -9,6 +10,16 @@ import {applyCodemod, getProjectInfo} from '../RenderQueue/actions';
 import {Flex, Row, Spacing} from '../layout';
 import type {CodemodStatus} from './DiffPreview';
 import {CodemodDiffPreview} from './DiffPreview';
+
+*/
+
+import React from 'react';
+
+export const CodemodFooter: React.FC = () => {
+    return <h1>CodemodFooter</h1>;
+}
+
+/*
 
 export const CodemodFooter: React.FC<{
 	readonly valid: boolean;
@@ -163,3 +174,4 @@ export const CodemodFooter: React.FC<{
 		</Row>
 	);
 };
+*/

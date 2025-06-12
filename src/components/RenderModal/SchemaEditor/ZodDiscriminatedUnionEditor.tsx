@@ -119,6 +119,7 @@ export const ZodDiscriminatedUnionEditor: React.FC<{
 							valid={localValue.zodValidation.success}
 						/>
 						<Combobox
+                            // @ts-expect-error not implemented
 							title="Select type"
 							values={comboBoxValues}
 							selectedId={value[typedSchema.discriminator] as string}

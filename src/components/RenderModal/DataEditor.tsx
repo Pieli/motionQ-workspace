@@ -1,15 +1,12 @@
 import React, {
-  useCallback,
-  useContext,
-  useEffect,
+  // useCallback,
+  // useContext,
+  // useEffect,
   useMemo,
   useState,
 } from "react";
 import type { _InternalTypes } from "remotion";
-import { Internals } from "remotion";
-
-import { z } from "zod";
-import * as zodTypes from "@remotion/zod-types";
+// import { Internals } from "remotion";
 
 /*
 import {
@@ -19,11 +16,6 @@ import {
 */
 
 import { SchemaEditor } from "@/components/RenderModal/SchemaEditor/SchemaEditor";
-import {
-  NoDefaultProps,
-  NoSchemaDefined,
-} from "@/components/RenderModal/SchemaEditor/SchemaErrorMessages";
-import { extractEnumJsonPaths } from "@/components/RenderModal/SchemaEditor/extract-enum-json-paths";
 
 import type { TypeCanSaveState } from "./get-render-modal-warnings";
 import { defaultTypeCanSaveState } from "./get-render-modal-warnings";
@@ -74,12 +66,10 @@ export const DataEditor: React.FC<{
   setDefaultProps,
   mayShowSaveButton,
   saving,
-  setSaving,
-  readOnlyStudio,
+  // setSaving,
+  // readOnlyStudio,
 }) => {
-  const { updateCompositionDefaultProps } = useContext(
-    Internals.CompositionSetters,
-  );
+  // const { updateCompositionDefaultProps } = useContext( Internals.CompositionSetters,);
 
   const schema = useMemo(() => {
     if (!unresolvedComposition.schema) {
@@ -107,6 +97,9 @@ export const DataEditor: React.FC<{
     useState<AllCompStates>({
       [unresolvedComposition.id]: defaultTypeCanSaveState,
     });
+    
+  // TODO remove this added to remove the error above
+  setCanSaveDefaultProps({[unresolvedComposition.id]: defaultTypeCanSaveState});
 
   const canSaveDefaultProps = useMemo(() => {
     return canSaveDefaultPropsObjectState[unresolvedComposition.id]
@@ -116,8 +109,9 @@ export const DataEditor: React.FC<{
 
   const showSaveButton = mayShowSaveButton && canSaveDefaultProps.canUpdate;
 
-  const { fastRefreshes } = useContext(Internals.NonceContext);
+  // const { fastRefreshes } = useContext(Internals.NonceContext);
 
+  /*
   const checkIfCanSaveDefaultProps = useCallback(async () => {
     try {
       const can = await canUpdateDefaultProps(
@@ -157,6 +151,7 @@ export const DataEditor: React.FC<{
   useEffect(() => {
     checkIfCanSaveDefaultProps();
   }, [checkIfCanSaveDefaultProps]);
+  */
 
   /*
   const onSave = useCallback(
@@ -240,18 +235,22 @@ export const DataEditor: React.FC<{
   return (
     <div style={outer}>
       {"Hello"}
+      {schema === "no-schema" || zodValidationResult === "no-schema" || unresolvedComposition === undefined ? (
+          "No schema defined "
+        ) : (
 
       <SchemaEditor
         unsavedDefaultProps={defaultProps}
         setValue={setDefaultProps}
         schema={schema}
         zodValidationResult={zodValidationResult}
-        savedDefaultProps={unresolvedComposition.defaultProps}
-        onSave={onSave}
+        savedDefaultProps={unresolvedComposition.defaultProps as Record<string, unknown>}
+        onSave={() => {console.log("onSave not implemented")}}
         showSaveButton={showSaveButton}
         saving={saving}
         saveDisabledByParent={!zodValidationResult.success}
-      />
+      />)
+      }
     </div>
   );
 };
