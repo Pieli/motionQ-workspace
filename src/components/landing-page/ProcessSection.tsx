@@ -43,14 +43,14 @@ const ProcessSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 px-6 bg-gradient-to-br from-emerald-50/70 via-teal-50/60 to-cyan-50/80">
+    <section className="pt-40 pb-32 px-6 bg-gradient-to-br from-emerald-50/70 via-teal-50/60 to-cyan-50/80">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            From Idea to Animation in 3 Steps
+            From Idea to Motion Graphic in One Step.
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our AI-powered workflow transforms your product descriptions into professional animated content in minutes
+          <p className="text-xl p-8 text-muted-foreground max-w-3xl mx-auto">
+             Moccasso is an  AI-powered animation tool that turns plain-text descriptions into videos without requiring any animation knowledge. 
           </p>
         </div>
         
