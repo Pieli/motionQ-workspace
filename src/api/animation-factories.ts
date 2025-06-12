@@ -31,13 +31,11 @@ export function schemaFactory(name: string) {
     return record[name]?.schema ?? null;
 }
 
-export function animationFactory<T extends EnumAvailableAnimationsType>(
-    name: T
-): React.FC<AnimationProps[T]> | null {
-    const record = animationMap as Record<string, { component: AnimationComponents }>;
-    return record[name]?.component ?? null;
+export function animationFactory<T extends keyof typeof animationMap>(
+  name: T
+): React.FC<AnimationProps[T]> {
+  return animationMap[name].component as React.FC<AnimationProps[T]>;
 }
-
 
 export function generateAnimationContext(bindings: AnimationBinding[]): string {
     return bindings.map(animation =>
