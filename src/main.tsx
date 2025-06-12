@@ -17,29 +17,22 @@ const isLoggedIn = () => {
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: isLoggedIn() ? Workspace : LandingPage, // Conditional rendering
+    Component: isLoggedIn() ? Workspace : () => (
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <LandingPage />
+      </ThemeProvider>
+    ),
   },
 ]);
-
-
-
-/*
-const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: App,
-    children: [
-      { index: true, Component: Workspace },
-      { path: "svg", Component: SvgPreviewer },
-    ],
-  },
-]);
-*/
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    {isLoggedIn() ? (
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    ) : (
       <RouterProvider router={router} />
-    </ThemeProvider>
+    )}
   </StrictMode>,
 );
