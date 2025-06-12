@@ -106,7 +106,7 @@ const WaitlistSection: React.FC = () => {
                   type="submit"
                   className="w-full bg-chart-4 hover:bg-chart-4/90 text-background font-semibold shadow-lg rounded-lg border-2 border-chart-4"
                 >
-                  Access AnimagicAI
+                  Access Moccasso 
                 </Button>
                 <p className="text-sm text-muted-foreground">
                   Have an invite code? Enter it above to get immediate access.

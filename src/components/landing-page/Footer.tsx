@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center border-2 border-primary">
                 <Sparkles className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-foreground">AnimagicAI</span>
+              <span className="text-xl font-bold text-foreground">Moccasso</span>
             </div>
             <p className="text-muted-foreground text-sm">
               Transform your ideas into stunning animated videos with the power of AI.
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 AnimagicAI. All rights reserved.
+            © 2024 Moccasso. All rights reserved.
           </p>
         </div>
       </div>
