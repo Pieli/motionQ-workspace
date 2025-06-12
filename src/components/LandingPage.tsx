@@ -1,11 +1,19 @@
 import React from "react";
 
+import Navigation from "@/components/landing-page/Navigation";
+import HeroSection from "@/components/landing-page/HeroSection";
+import ProcessSection from "@/components/landing-page/ProcessSection";
+import WaitlistSection from "@/components/landing-page/WaitlistSection";
+import Footer from "@/components/landing-page/Footer";
+
 const LandingPage: React.FC = () => {
   return (
-    <div className="landing-page">
-      <h1>Welcome to Imagine</h1>
-      <p>Please log in to access your workspace.</p>
-      {/* Add login functionality or navigation */}
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <HeroSection />
+      <ProcessSection />
+      <WaitlistSection />
+      <Footer />
     </div>
   );
 };
