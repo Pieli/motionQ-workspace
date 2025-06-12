@@ -5,9 +5,10 @@ const HeroSection: React.FC = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const texts = ['Product Launches', 'SaaS Demos', 'Brand Stories', 'Pitch Decks'];
   
   useEffect(() => {
+    const texts = ['Product Launches', 'SaaS Demos', 'Brand Stories', 'Pitch Decks'];
+
     const currentText = texts[currentTextIndex];
     let charIndex = 0;
     
