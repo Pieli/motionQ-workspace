@@ -1,6 +1,6 @@
-import React from 'react';
-import { Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Navigation: React.FC = () => {
   return (
@@ -13,23 +13,34 @@ const Navigation: React.FC = () => {
             </div>
             <span className="text-2xl font-bold text-foreground">Moccasso</span>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-foreground hover:text-primary transition-colors font-medium">Features</a>
-            <a href="#pricing" className="text-foreground hover:text-primary transition-colors font-medium">Pricing</a>
-            <a href="#examples" className="text-foreground hover:text-primary transition-colors font-medium">Examples</a>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              className="hidden md:inline-flex text-foreground hover:text-primary border-2 border-transparent hover:border-border"
+            <a
+              href="#process"
+              className="text-foreground hover:text-primary transition-colors font-medium"
             >
-              Sign In
-            </Button>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg border-2 border-primary">
-              Get Started
-            </Button>
+              How does it work?
+            </a>
+            <a
+              href="#examples"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Examples
+            </a>
+            <a
+              href="#contact"
+              className="text-foreground hover:text-primary transition-colors font-medium"
+            >
+              Contact
+            </a>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <a href="#waitlist">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg border-2 border-primary">
+                Get Started
+              </Button>
+            </a>
           </div>
         </div>
       </div>
@@ -38,4 +49,3 @@ const Navigation: React.FC = () => {
 };
 
 export default Navigation;
-

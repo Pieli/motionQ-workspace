@@ -43,7 +43,7 @@ const ProcessSection: React.FC = () => {
   ];
 
   return (
-    <section className="pt-40 pb-32 px-6 bg-gradient-to-br from-emerald-50/70 via-teal-50/60 to-cyan-50/80">
+    <section id="process" className="pt-40 pb-32 px-6 bg-gradient-to-br from-emerald-50/70 via-teal-50/60 to-cyan-50/80">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">

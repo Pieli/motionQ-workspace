@@ -10,18 +10,20 @@ import "./index.css";
 
 const isLoggedIn = () => {
   // Replace this with your actual authentication logic
-  return false;
+  return true;
   // return Boolean(localStorage.getItem("authToken"));
 };
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: isLoggedIn() ? Workspace : () => (
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <LandingPage />
-      </ThemeProvider>
-    ),
+    Component: isLoggedIn()
+      ? Workspace
+      : () => (
+          <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <LandingPage />
+          </ThemeProvider>
+        ),
   },
 ]);
 

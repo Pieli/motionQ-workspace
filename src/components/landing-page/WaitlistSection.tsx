@@ -25,7 +25,7 @@ const WaitlistSection: React.FC = () => {
   };
 
   return (
-    <section className="py-32 px-6 bg-gradient-to-br from-violet-50/70 via-purple-50/60 to-pink-50/80 flex items-center justify-center">
+    <section id="waitlist" className="py-32 px-6 bg-gradient-to-br from-violet-50/70 via-purple-50/60 to-pink-50/80 flex items-center justify-center">
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
