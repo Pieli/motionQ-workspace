@@ -32,6 +32,7 @@
     "@remotion/zod-types": "4.0.302",
     "@tailwindcss/vite": "^4.1.6",
     "@types/lodash": "^4.17.17",
+    "blobs": "2.3.0-beta.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
