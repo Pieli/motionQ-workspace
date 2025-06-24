@@ -41,13 +41,12 @@ export const TextShatterTransition: React.FC<z.infer<typeof textShatterSchema>> 
   });
 
   const maxWidth = 1536;
-  const fit = fitText({
+  const fontWeight = 550;
+  const { fontSize } = fitText({
     text,
-    font: fontFamily,
-    width: maxWidth,
-    height: 400,
-    maxFontSize: 180,
-    minFontSize: 20,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
   });
 
   // Container style using flex to align characters in a row
@@ -68,24 +67,34 @@ export const TextShatterTransition: React.FC<z.infer<typeof textShatterSchema>> 
     const offsetY = Math.cos(angle) * distance;
 
     return (
-      <h1
+      <span
         key={index}
         style={{
           transform: `translate(${offsetX}px, ${offsetY}px)`,
           opacity: interpolate(progress, [0, 1], [1, 0]),
           whiteSpace: 'pre',
-          fontSize: fit.fontSize,
-          fontFamily: fontFamily,
+          fontSize,
+          fontFamily,
+          fontWeight,
         }}
       >
         {char}
-      </h1>
+      </span>
     );
   });
 
   return (
     <AbsoluteFill style={container}>
-      <div style={{ width: maxWidth, margin: "0 auto", display: "flex", justifyContent: "center" }}>
+      <div style={{
+        width: maxWidth,
+        margin: "0 auto",
+        display: "flex",
+        justifyContent: "center",
+        fontSize,
+        fontFamily,
+        fontWeight,
+        textAlign: "center",
+      }}>
         {pieces}
       </div>
     </AbsoluteFill>

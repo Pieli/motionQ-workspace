@@ -11,6 +11,7 @@ import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const slideInSchema = z.object({
   text: z.string(),
@@ -42,16 +43,30 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
 
   const slideX = interpolate(progress, [0, 0.9, 1], [-1000, 80, 0]);
 
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
+
   const container: React.CSSProperties = useMemo(() => {
     return {
       opacity: Math.min(progress, 1),
       transform: `translateX(${slideX}px)`,
       color: textColor,
-      fontSize: 180,
+      fontSize,
       fontFamily,
-      fontWeight: 550,
+      fontWeight,
+      width: maxWidth,
+      margin: "0 auto",
+      textAlign: "center",
+      display: "flex",
+      justifyContent: "center",
     };
-  }, [progress, slideX, textColor]);
+  }, [progress, slideX, textColor, fontSize]);
 
   const outer: React.CSSProperties = {
     justifyContent: "center",
