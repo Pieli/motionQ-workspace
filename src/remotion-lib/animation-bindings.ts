@@ -1,5 +1,5 @@
-import { z } from "zod";
 import * as zodTypes from "@remotion/zod-types";
+import { z } from "zod";
 
 import {
     FadeInTransition,
@@ -21,7 +21,11 @@ import {
 import {
     ScaleUpDownTransition,
     scaleUpDownSchema,
-} from "@/remotion-lib/TextFades/ScaldeUpDowText"
+} from "@/remotion-lib/TextFades/ScaldeUpDowText";
+
+import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
+import { PlainBackground, PlainBackgroundSchema } from "./textures/PlainBackground";
+
 
 
 export interface AnimationBinding {
@@ -52,6 +56,18 @@ export const animationMap = {
 
 } as const;
 
+
+export const backgroundMap = {
+    gradientMesh: {
+        component: GradientMesh,
+        schema: GradientMeshPropsSchema
+    },
+    plainBackground: {
+        component: PlainBackground,
+        schema: PlainBackgroundSchema,
+    }
+} as const
+
 // add binding here and to the animation map
 export const bindings: AnimationBinding[] = [
     {
@@ -76,11 +92,28 @@ export const bindings: AnimationBinding[] = [
     },
 ];
 
+
+export const backgroundTexturesBindings: AnimationBinding[] = [
+    {
+        
+        name: "plainBackground",
+        usecase: "use this sparingly, it is just a simple background, if you use it use also other colors than white",
+        settings: getSchemaDescription(PlainBackgroundSchema)
+    },
+    {
+        name: "gradientMesh",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+        settings: getSchemaDescription(GradientMeshPropsSchema)
+    },
+
+]
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSchemaDescription(schema: z.ZodObject<any>) {
     return Object.entries(schema.shape).map(([key, value]) => {
 
         let type: string;
+        let constraints = "";
         if (value instanceof z.ZodType) {
             const typeName = value._def.typeName;
 
@@ -90,6 +123,13 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
                 break;
             case "ZodNumber":
                 type = "number";
+                // Add min/max for numbers only
+                if (value._def.minValue !== undefined) {
+                    constraints += `, min: ${value._def.minValue}`;
+                }
+                if (value._def.maxValue !== undefined) {
+                    constraints += `, max: ${value._def.maxValue}`;
+                }
                 break;
             case "ZodBoolean":
                 type = "boolean";
@@ -106,6 +146,6 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
             type = "unknown";
         }
 
-        return `${key}: ${type}`;
+        return `${key}: ${type}${constraints}`;
     }).join(', ');
 }

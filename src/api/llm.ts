@@ -2,15 +2,15 @@ import OpenAI from "openai";
 import { zodResponseFormat } from 'openai/helpers/zod';
 
 
+import { systemPrompt } from "@/api/system-prompt";
 import { Response } from "@/api/types";
-import { systemPrompt }  from "@/api/system-prompt"
 
-import type { ResponseType } from "./types";
-import type { LLMService } from "@/components/interfaces/llm";
+import type { AnimationComponents, BackgroundComponents } from "@/api/animation-factories";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
-import type { AnimationComponents } from "@/api/animation-factories";
+import type { LLMService } from "@/components/interfaces/llm";
+import type { ResponseType } from "./types";
 
-import { animationFactory, schemaFactory } from "./animation-factories";
+import { animationFactory, backgroundFactory, backgroundSchemaFactory, schemaFactory } from "./animation-factories";
 
 
 export class NullLLMService implements LLMService {
@@ -61,6 +61,13 @@ export class OpenAIService implements LLMService {
         schema: schemaFactory(comp.animationName),
         props: comp.animationSettings,
         duration: comp.duration,
+        background: {
+          id: `${comp.id}-background`,
+          component: backgroundFactory(comp.background.name) as BackgroundComponents,
+          schema: backgroundSchemaFactory(comp.background.name),
+          props: comp.background.settings,
+          duration: 1,
+        }
 
     }));
 

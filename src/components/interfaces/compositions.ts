@@ -8,4 +8,6 @@ export interface CompositionConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any>;
   duration: number;
+
+  background?: CompositionConfig; // Optional background composition
 }

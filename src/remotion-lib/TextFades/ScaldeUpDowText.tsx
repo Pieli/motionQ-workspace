@@ -7,7 +7,6 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
@@ -20,14 +19,17 @@ loadFont("normal", {
 
 export const scaleUpDownSchema = z.object({
   text: z.string(),
-  bgColor: zColor(),
 });
+
 
 export const ScaleUpDownTransition: React.FC<
   z.infer<typeof scaleUpDownSchema>
-> = ({ text, bgColor }) => {
+> = ({ text }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
+
+  // for the multiline bug
+  text += " ";
 
   const progress = spring({
     fps,
@@ -56,13 +58,10 @@ export const ScaleUpDownTransition: React.FC<
     };
   }, [scale]);
 
-  const outer: React.CSSProperties = useMemo(() => {
-    return {
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: bgColor,
-    };
-  }, [bgColor]);
+  const outer: React.CSSProperties = {
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
   return (
     <AbsoluteFill style={outer}>

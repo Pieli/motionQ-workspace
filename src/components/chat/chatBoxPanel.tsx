@@ -7,6 +7,7 @@ import type { LLMService } from "@/components/interfaces/llm";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,7 +53,7 @@ const composition: CompositionConfig[] = [
 let llm: LLMService = new NullLLMService();
 
 if (import.meta.env.VITE_APP_OPENAI_KEY !== undefined) {
-    llm = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
+  llm = new OpenAIService(import.meta.env.VITE_APP_OPENAI_KEY);
 }
 
 
@@ -195,6 +196,13 @@ export const ChatBoxPanel: React.FC<{
         ) : (
           <div className="text-muted-foreground p-4 text-center h-[calc(100vh-180px)] w-full">
             No history available
+          </div>
+        )}
+        {isGenerating && (
+          <div className="pr-4 pt-2 pb-0 text-right h-10">
+            <AnimatedGradientText className="text-lg semi-bold"  >
+              Generating Animation
+            </AnimatedGradientText>
           </div>
         )}
       </div>

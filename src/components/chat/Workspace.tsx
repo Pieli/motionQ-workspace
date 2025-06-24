@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import { Player, type PlayerRef } from "@remotion/player";
 import { createElement } from "react";
@@ -17,34 +17,59 @@ import { Spacing } from "@/components/ui/spacing";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { Timeline } from "@/components/timeline/Timeline";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { FPS } from "@/globals";
 
+
+
+type ParsedElement = {
+  prop: object, component: React.FC
+}
+
+function elementParser(comp?: CompositionConfig): ParsedElement {
+
+  if (!comp) {
+    return { prop: {}, component: React.Fragment }
+  }
+
+  const parsedProps = comp.schema.safeParse(comp.props)
+  if (!parsedProps.success) {
+    console.error(`Error parsing props for ${comp.id}:`, parsedProps.error);
+    return { prop: {}, component: React.Fragment }
+  }
+
+  return { prop: parsedProps.data, component: comp.component }
+}
+
+
 const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
 }) => {
-  const innerComp = comps.map(
-    ({ id, component, schema, props, duration }, index: number) => {
-      const parsedProps = schema.safeParse(props);
-      if (!parsedProps.success) {
-        console.error(`Error parsing props for ${id}:`, parsedProps.error);
-        return null;
-      }
 
-      const inner = createElement(component, { ...parsedProps.data, key: id });
+  console.log(comps)
+
+  const renderCompositions = useMemo(() => {
+    return comps.map((comp, index: number) => {
+
+      const parsedBack = elementParser(comp.background);
+      const parsedComp = elementParser(comp);
 
       return (
-        <Series.Sequence durationInFrames={duration} key={index}>
-          {inner}
+        <Series.Sequence durationInFrames={comp.duration} key={index}>
+          <>
+            {createElement(parsedBack.component, { ...parsedBack.prop, key: `background-${index}` })}
+            {createElement(parsedComp.component, { ...parsedComp.prop, key: `foreground-${index}` })}
+          </>
         </Series.Sequence>
       );
-    },
-  );
-  return <Series>{innerComp}</Series>;
+    });
+  }, [comps]);
+
+  return <Series>{renderCompositions}</Series>;
 };
 
 const Workspace = () => {

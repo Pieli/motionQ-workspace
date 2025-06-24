@@ -1,12 +1,16 @@
+import { EnumAvailableAnimations, EnumAvailableBackgrounds, UnionAvailableBackSchemas, UnionAvailableSchemas } from "@/api/animation-factories";
 import { z } from "zod";
-import { EnumAvailableAnimations, UnionAvailableSchemas } from "@/api/animation-factories";
 
-export const Composition = z.object({
+const Composition = z.object({
   id: z.string(),
   duration: z.number(),
   animationName: EnumAvailableAnimations,
   animationSettings: UnionAvailableSchemas, 
-  text: z.string()
+  text: z.string(),
+  background: z.object({
+    name: EnumAvailableBackgrounds,
+    settings: UnionAvailableBackSchemas,
+  }),
 });
 
 export const Response = z.object({

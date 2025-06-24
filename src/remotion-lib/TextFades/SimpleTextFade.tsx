@@ -7,7 +7,6 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
@@ -15,7 +14,6 @@ import { fitText } from "@remotion/layout-utils";
 
 export const simpleFadeSchema = z.object({
   text: z.string(),
-  bgColor: zColor(),
 });
 
 
@@ -29,7 +27,6 @@ const outer: React.CSSProperties = {};
 
 export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
   text,
-  bgColor,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -49,13 +46,10 @@ export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
 
   const maskImage = `linear-gradient(-45deg, transparent ${leftStop}%, black ${rightStop}%)`;
 
-  const container: React.CSSProperties = useMemo(() => {
-    return {
+  const container: React.CSSProperties =  {
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: bgColor,
     };
-  }, [bgColor]);
 
   const content: React.CSSProperties = useMemo(() => {
     return {

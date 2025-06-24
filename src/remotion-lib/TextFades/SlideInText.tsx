@@ -15,7 +15,6 @@ import { fitText } from "@remotion/layout-utils";
 
 export const slideInSchema = z.object({
   text: z.string(),
-  bgColor: zColor(),
   textColor: zColor(),
 });
 
@@ -26,7 +25,6 @@ loadFont("normal", {
 
 export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
   text,
-  bgColor,
   textColor,
 }) => {
   const { fps } = useVideoConfig();
@@ -71,7 +69,6 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
   const outer: React.CSSProperties = {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: bgColor,
   };
 
   return (

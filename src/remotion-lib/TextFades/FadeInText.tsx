@@ -15,7 +15,6 @@ import { fitText } from "@remotion/layout-utils";
 
 export const fadeInSchema = z.object({
   text: z.string(),
-  bgColor: zColor(),
   textColor: zColor(),
 });
 
@@ -27,11 +26,13 @@ loadFont("normal", {
 
 export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
   text,
-  bgColor,
   textColor,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
+
+  // for the multiline bug
+  text += " ";
 
   const progress = spring({
     fps,
@@ -48,16 +49,10 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
     return {
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: bgColor,
       opacity: opacity,
     };
-  }, [bgColor, opacity]);
+  }, [opacity]);
 
-  const outer: React.CSSProperties = useMemo(() => {
-    return {
-      backgroundColor: bgColor,
-    };
-  }, [bgColor]);
 
   const maxWidth = 1536;
   const fontWeight = 550;
@@ -69,7 +64,6 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
   });
 
   return (
-    <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
         <div style={{
           fontSize,
@@ -85,6 +79,5 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
           {text}
         </div>
       </AbsoluteFill>
-    </AbsoluteFill>
   );
 };

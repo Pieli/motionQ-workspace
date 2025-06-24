@@ -5,6 +5,12 @@ import { AbsoluteFill, random, useCurrentFrame, useVideoConfig } from "remotion"
 import { z } from "zod";
 
 export const GradientMeshPropsSchema = z.object({
+    speed: z.number().min(1).max(15).default(12),
+    backgroundColor: zColor().default("#1e1e1e"),
+});
+
+/*
+export const GradientMeshPropsSchema = z.object({
     extraPoints: z.number().min(0).default(8), 
     size: z.number().min(1).max(150).default(60),
     speed: z.number().min(0).default(1.0),
@@ -15,20 +21,24 @@ export const GradientMeshPropsSchema = z.object({
     backgroundColor: zColor().default("#1e1e1e"), // Default to black
 });
 
+
+*/
+
 export type GradientMeshProps = z.infer<typeof GradientMeshPropsSchema>;
 
 export const GradientMesh: React.FC<GradientMeshProps> = ({
-    extraPoints,
-    size,
-    speed,
-    blur,
-    edginess,
-    positionSeed,
-    directionSeed,
+    speed: movement_speed,
     backgroundColor,
 }) => {
     const frame = useCurrentFrame();
     const { width, height } = useVideoConfig();
+
+    const extraPoints = 14;
+    const size = 60;
+    const blur = 200;
+    const edginess = 25;
+    const positionSeed =  3;
+    const directionSeed = 47;
 
     const blobSize = useMemo(() => Math.max(width, height) * size / 100, [width, height, size]);
 
@@ -56,22 +66,22 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
     );
 
     return (
-        <AbsoluteFill style={{ backgroundColor }}> 
+        <AbsoluteFill style={{ backgroundColor }}>
             <div
                 style={{
                     position: "absolute",
                     width: "100%",
                     height: "100%",
                     filter: `blur(${blur}px)`,
-                    zIndex: 1,
+                    zIndex: 0,
                 }}
             >
                 {blobs.map((blob, index) => {
                     const directionX = random(`${directionSeed}-blob-direction-x-${index}`) * 2 - 1;
                     const directionY = random(`${directionSeed}-blob-direction-y-${index}`) * 2 - 1;
 
-                    const x = initialPositions[index].x + frame * speed * directionX;
-                    const y = initialPositions[index].y + frame * speed * directionY;
+                    const x = initialPositions[index].x + frame * movement_speed * directionX;
+                    const y = initialPositions[index].y + frame * movement_speed * directionY;
 
                     return (
                         <svg
@@ -82,7 +92,6 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
                                 position: "absolute",
                                 left: x,
                                 top: y,
-                                zIndex: index, // Assign z-index based on the blob's index
                             }}
                             xmlns="http://www.w3.org/2000/svg"
                         >

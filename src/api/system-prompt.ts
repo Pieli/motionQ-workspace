@@ -1,10 +1,10 @@
-import { bindings } from "@/remotion-lib/animation-bindings";
 import type { AnimationBinding } from "@/remotion-lib/animation-bindings";
+import { backgroundTexturesBindings, bindings } from "@/remotion-lib/animation-bindings";
 
 
 export function generateAnimationContext(bindings: AnimationBinding[]): string {
     return bindings.map(animation =>
-        `Animation: ${animation.name}\nUse case: ${animation.usecase}\nParameters: ${animation.settings}\n`
+        `Name: ${animation.name}\nUse case: ${animation.usecase}\nParameters: ${animation.settings}\n`
     ).join('\n');
 }
 
@@ -27,21 +27,32 @@ If the user prefers a different structure, follow their request.
 - If content exceeds 5 words, split it meaningfully across multiple slides.
 - Each composition must last no more than 1.5 seconds (i.e., 45 frames at 30 FPS).
 
-# Animations Available
+# Available Assets
+
 You can choose from the following animation components:
 ${generateAnimationContext(bindings)}
+
+For backgrounds following options exist: 
+${generateAnimationContext(backgroundTexturesBindings)}
+
+- IMPORTANT: think about the color you use for (foreground + background). Text needs to be readable.
+- IMPORTANT: it is prefereable to use more complex backgrounds than PlainBackground 
+
 
 # Output Format
 Return a JSON object containing:
 - An array called "composition" where each item includes:
   - "id": A unique, descriptive string for the composition
   - "text": The text to display on the slide
-  - "animation": One of the animation names provided
+  - "animationName": One of the animation names provided
+  - "animationSettings": The parameters of the animation
   - "duration": Frame length (max 45)
+  - "background": the background of each animation
 - A "commentary" field explaining the overall narrative
 
 # Notes
 - You do not need Internet access
 - Use animation settings appropriately according to the provided descriptions
 - Focus on storytelling, clarity, and audience persuasion
+- plan out the story and text first then create the animations
 `;

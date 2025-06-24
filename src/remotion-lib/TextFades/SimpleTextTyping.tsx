@@ -6,7 +6,6 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
@@ -14,7 +13,6 @@ import { fitText } from "@remotion/layout-utils";
 
 export const simpleTypingSchema = z.object({
   text: z.string(),
-  bgColor: zColor(),
 });
 
 loadFont("normal", {
@@ -26,7 +24,6 @@ const outer: React.CSSProperties = {};
 
 export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
   text,
-  bgColor,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -43,13 +40,10 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
   // Calculate how many characters should be visible by current frame
   const visibleCharacters = Math.floor(progress * text.length);
 
-  const container: React.CSSProperties = useMemo(() => {
-    return {
+  const container: React.CSSProperties = {
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: bgColor,
     };
-  }, [bgColor]);
 
   const maxWidth = 1536;
   const fontWeight = 550;
