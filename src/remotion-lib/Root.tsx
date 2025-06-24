@@ -1,4 +1,4 @@
-import { Composition } from "remotion";
+import { Composition, Folder } from "remotion";
 import { HelloWorld, myCompSchema } from "./HelloWorld";
 import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
 import { FadeInTransition, fadeInSchema } from "./TextFades/FadeInText";
@@ -26,6 +26,10 @@ import {
 } from "./TextFades/WaveEffectTransition";
 import { CountingStars, countingStarsSchema } from "./counting/counting-stars";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
+
+import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
+
+
 
 // import { ReactComponent as SaasOverview } from "./public/saas_overview.svg";
 // import { SvgTransition, svgTransitionSchema } from "./ProductPreview/SvgTransition";
@@ -209,6 +213,25 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
+
+      <Folder name="textures">
+        <Composition
+          id="GradientMesh"
+          component={GradientMesh}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={GradientMeshPropsSchema}
+          defaultProps={GradientMeshPropsSchema.parse({
+            extraPoints: 8,
+            size: 60,
+            speed: 1,
+          })}
+        />
+
+      </Folder>
+
 
       {/*
       <Composition
