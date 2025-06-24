@@ -76,7 +76,9 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
           {text.split("").map((char, index) => {
             const opacity = index <= visibleCharacters ? 1 : 0;
             return (
-              <span key={index} style={{ opacity }}>{char}</span>
+              <span key={index} style={{ opacity }}>{
+                char === " " ? "\u00A0" : char
+                }</span>
             );
           })}
         </div>
