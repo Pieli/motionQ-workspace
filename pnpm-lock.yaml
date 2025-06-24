@@ -53,6 +53,9 @@ importers:
       '@remotion/google-fonts':
         specifier: 4.0.302
         version: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@remotion/layout-utils':
+        specifier: ^4.0.318
+        version: 4.0.318
       '@remotion/media-utils':
         specifier: 4.0.302
         version: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1235,6 +1238,9 @@ packages:
 
   '@remotion/google-fonts@4.0.302':
     resolution: {integrity: sha512-kkKXtlUe8hEO+y4hY+7TGkqI7ae8zWwYNhvQ8Ex+No4rsgenskzw4IXbE+3AE0KptPcWYvOJZu2P5DBVrNmw3w==}
+
+  '@remotion/layout-utils@4.0.318':
+    resolution: {integrity: sha512-rrmPa3twGT7ocRfrEzcFjymlR55smOg6fjAPCTFJ3Ar/4mPAg7EQxEzsRdaGau3Yy6Y74BLyIEenrId4pAxjZA==}
 
   '@remotion/media-parser@4.0.302':
     resolution: {integrity: sha512-FTv7yx6tmnrflLbrkpNJE/AEFSB1a3+kKwZ7ohwB5YFB5kfnsDUIZjs6WxBDFDXwf+0vHINwHkzlpoPw5cRMLA==}
@@ -4066,14 +4072,14 @@ snapshots:
     dependencies:
       '@remotion/studio': 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@remotion/studio-shared': 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      css-loader: 5.2.7(webpack@5.96.1)
+      css-loader: 5.2.7(webpack@5.96.1(esbuild@0.25.0))
       esbuild: 0.25.0
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       react-refresh: 0.9.0
       remotion: 4.0.302(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       source-map: 0.7.3
-      style-loader: 4.0.0(webpack@5.96.1)
+      style-loader: 4.0.0(webpack@5.96.1(esbuild@0.25.0))
       webpack: 5.96.1(esbuild@0.25.0)
     transitivePeerDependencies:
       - '@swc/core'
@@ -4133,6 +4139,8 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
+
+  '@remotion/layout-utils@4.0.318': {}
 
   '@remotion/media-parser@4.0.302': {}
 
@@ -4767,7 +4775,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  css-loader@5.2.7(webpack@5.96.1):
+  css-loader@5.2.7(webpack@5.96.1(esbuild@0.25.0)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.3)
       loader-utils: 2.0.4
@@ -5833,7 +5841,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  style-loader@4.0.0(webpack@5.96.1):
+  style-loader@4.0.0(webpack@5.96.1(esbuild@0.25.0)):
     dependencies:
       webpack: 5.96.1(esbuild@0.25.0)
 

@@ -25,6 +25,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@remotion/cli": "4.0.302",
     "@remotion/google-fonts": "4.0.302",
+    "@remotion/layout-utils": "^4.0.318",
     "@remotion/media-utils": "4.0.302",
     "@remotion/player": "4.0.302",
     "@remotion/renderer": "4.0.302",
