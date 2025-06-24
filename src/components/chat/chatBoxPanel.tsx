@@ -66,7 +66,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
       <div
         className={
           (isUser
-            ? "w-9.5/10 rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left ml-auto"
+            ? "w-9/10 rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left ml-auto"
             : "w-fit rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
           " max-w-full"
         }
@@ -91,7 +91,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
 // ChatHistory component for rendering the chat history with a scrollbar
 const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
   return (
-    <ScrollArea className="h-[calc(100vh-180px)] w-full">
+    <ScrollArea className="h-[calc(100vh-130px)] w-full">
       <div className="p-4 space-y-4">
         {history.map((item, index) => (
           <ChatMessage key={index} message={item} />
@@ -202,7 +202,7 @@ export const ChatBoxPanel: React.FC<{
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-background relative">
+    <div className="flex flex-col h-full w-full px-2 bg-background relative">
       <div className="flex-1 overflow-y-auto pb-[60px]">
         {history.length > 0 ? (
           <ChatHistory history={history} />

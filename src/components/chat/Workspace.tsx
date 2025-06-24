@@ -124,7 +124,7 @@ const Workspace = () => {
                       <div className="flex-1  h-full">
                         <div className="isolate flex-1 h-full bg-secondary">
                           {inputProps ? (
-                            <div className="p-20">
+                            <div className="p-8">
                               <Player
                                 component={SequenceBuilder}
                                 durationInFrames={totalDuration || 1}
