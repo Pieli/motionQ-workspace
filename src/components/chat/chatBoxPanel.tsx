@@ -107,33 +107,46 @@ const ChatInput: React.FC<{
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
   onSend: () => void;
   isGenerating: boolean;
-}> = ({ prompt, setPrompt, onSend, isGenerating }) => (
-  <div className="pt-4 px-4 bg-background sticky bottom-0 z-10">
-    <div className="relative">
-      <Textarea
-        className="min-h-[60px] max-h-[120px] w-full pr-12 resize-none rounded-xl"
-        placeholder="Describe your animation..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        rows={1}
-        style={{ minHeight: "60px", maxHeight: "120px" }}
-        onInput={(e) => {
-          const target = e.target as HTMLTextAreaElement;
-          target.style.height = "auto";
-          target.style.height = `${target.scrollHeight}px`;
-        }}
-      />
-      <Button
-        className="absolute right-2 bottom-2"
-        size="sm"
-        onClick={onSend}
-        disabled={isGenerating || !prompt}
-      >
-        <SendHorizonal />
-      </Button>
+}> = ({ prompt, setPrompt, onSend, isGenerating }) => {
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // Auto-grow textarea height
+  React.useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [prompt]);
+
+  return (
+    <div className="absolute left-0 right-0 bottom-0 bg-background z-20 p-4 pointer-events-auto">
+        {isGenerating && (
+          <div className="pl-4 pt-2 pb-4 text-right">
+            <AnimatedGradientText className="text-lg">Generating Animation</AnimatedGradientText>
+          </div>
+        )}
+      <div className="relative w-full">
+        <Textarea
+          ref={textareaRef}
+          className="min-h-[60px] max-h-[200px] w-full pr-12 resize-none rounded-xl transition-[height] duration-150 box-border overflow-y-auto mb-0 block align-bottom"
+          placeholder="Describe your animation..."
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          rows={1}
+          style={{ minHeight: "60px", maxHeight: "200px" }}
+        />
+        <Button
+          className="absolute right-2 bottom-2"
+          size="sm"
+          onClick={onSend}
+          disabled={isGenerating || !prompt}
+        >
+          <SendHorizonal />
+        </Button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const ChatBoxPanel: React.FC<{
   setGeneratedComp: React.Dispatch<
@@ -189,20 +202,13 @@ export const ChatBoxPanel: React.FC<{
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-background ">
-      <div>
+    <div className="flex flex-col h-full w-full bg-background relative">
+      <div className="flex-1 overflow-y-auto pb-[60px]">
         {history.length > 0 ? (
           <ChatHistory history={history} />
         ) : (
           <div className="text-muted-foreground p-4 text-center h-[calc(100vh-180px)] w-full">
             No history available
-          </div>
-        )}
-        {isGenerating && (
-          <div className="pr-4 pt-2 pb-0 text-right h-10">
-            <AnimatedGradientText className="text-lg semi-bold"  >
-              Generating Animation
-            </AnimatedGradientText>
           </div>
         )}
       </div>
