@@ -2,16 +2,17 @@ import React, { useMemo } from "react";
 import {
   AbsoluteFill,
   interpolate,
+  random,
   spring,
   useCurrentFrame,
   useVideoConfig,
-  random,
 } from "remotion";
 
 import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const textShatterSchema = z.object({
   text: z.string(),
@@ -39,6 +40,16 @@ export const TextShatterTransition: React.FC<z.infer<typeof textShatterSchema>> 
     durationInFrames: 80,
   });
 
+  const maxWidth = 1536;
+  const fit = fitText({
+    text,
+    font: fontFamily,
+    width: maxWidth,
+    height: 400,
+    maxFontSize: 180,
+    minFontSize: 20,
+  });
+
   // Container style using flex to align characters in a row
   const container: React.CSSProperties = useMemo(() => ({
     justifyContent: "center",  // Center the content
@@ -48,7 +59,6 @@ export const TextShatterTransition: React.FC<z.infer<typeof textShatterSchema>> 
     flexDirection: "row",
     position: "relative",
   }), [bgColor]);
-
 
   // The pieces (characters) of the text
   const pieces = text.split("").map((char, index) => {
@@ -61,10 +71,10 @@ export const TextShatterTransition: React.FC<z.infer<typeof textShatterSchema>> 
       <h1
         key={index}
         style={{
-          transform: `translate(${offsetX}px, ${offsetY}px)`, // Apply scatter transform
-          opacity: interpolate(progress, [0, 1], [1, 0]), // Fade in and out
+          transform: `translate(${offsetX}px, ${offsetY}px)`,
+          opacity: interpolate(progress, [0, 1], [1, 0]),
           whiteSpace: 'pre',
-          fontSize: 100,
+          fontSize: fit.fontSize,
           fontFamily: fontFamily,
         }}
       >
@@ -75,7 +85,9 @@ export const TextShatterTransition: React.FC<z.infer<typeof textShatterSchema>> 
 
   return (
     <AbsoluteFill style={container}>
-      {pieces}
+      <div style={{ width: maxWidth, margin: "0 auto", display: "flex", justifyContent: "center" }}>
+        {pieces}
+      </div>
     </AbsoluteFill>
   );
 };

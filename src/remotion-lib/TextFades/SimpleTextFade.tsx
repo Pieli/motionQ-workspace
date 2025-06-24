@@ -7,10 +7,11 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
+import { z } from "zod";
 
-import { loadFont, fontFamily } from "@remotion/google-fonts/Inter";
+import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const simpleFadeSchema = z.object({
   text: z.string(),
@@ -26,7 +27,7 @@ loadFont("normal", {
 
 const outer: React.CSSProperties = {};
 
-export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema >> = ({
+export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
   text,
   bgColor,
 }) => {
@@ -63,14 +64,31 @@ export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema >> = ({
     };
   }, [maskImage]);
 
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
+
   return (
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
         <div style={content}>
-          <h1 style={{
-            fontSize: 100,
+          <div style={{
+            fontSize,
+            width: maxWidth,
+            margin: "0 auto",
             fontFamily,
-          }}> {text} </h1>
+            fontWeight,
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}>
+            {text}
+          </div>
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

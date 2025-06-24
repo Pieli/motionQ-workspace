@@ -7,10 +7,11 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
+import { z } from "zod";
 
-import { loadFont, fontFamily } from "@remotion/google-fonts/Inter";
+import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 loadFont("normal", {
   subsets: ["latin"],
@@ -40,12 +41,18 @@ export const ScaleUpDownTransition: React.FC<
   // Scale Up/Down Transition: Scale from 0.5 to 1
   const scale = interpolate(progress, [0, 1], [0.5, 1]);
 
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
+
   const container: React.CSSProperties = useMemo(() => {
     return {
       transform: `scale(${scale})`,
-      fontSize: 180,
-      fontWeight: 550,
-      fontFamily,
     };
   }, [scale]);
 
@@ -59,7 +66,23 @@ export const ScaleUpDownTransition: React.FC<
 
   return (
     <AbsoluteFill style={outer}>
-      <div style={container}> {text} </div>
+      <div style={container}>
+        <div
+          style={{
+            fontSize,
+            width: maxWidth,
+            margin: "0 auto",
+            fontFamily,
+            fontWeight,
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {text}
+        </div>
+
+      </div>
     </AbsoluteFill>
   );
 };

@@ -1,16 +1,16 @@
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
-  interpolate,
   spring,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 
-import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
+import { z } from "zod";
 
-import { loadFont, fontFamily } from "@remotion/google-fonts/Inter";
+import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const threeDTextSchema = z.object({
   text: z.string(),
@@ -38,22 +38,35 @@ export const ThreeDTextTransition: React.FC<z.infer<typeof threeDTextSchema>> = 
     durationInFrames: 80,
   });
 
-  const rotationX = interpolate(progress, [0, 1], [0, 30]);
-  const rotationY = interpolate(progress, [0, 1], [0, 30]);
-  const rotationZ = interpolate(progress, [0, 1], [0, 360]);
-
   const container: React.CSSProperties = useMemo(() => ({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: bgColor,
-    transform: `rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(${rotationZ}deg)`,
-  }), [bgColor, rotationX, rotationY, rotationZ]);
+  }), [bgColor]);
+
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
 
   return (
     <AbsoluteFill style={container}>
-      <h1 style={{ fontSize: 100, fontFamily }}>
+      <div style={{
+        fontSize,
+        width: maxWidth,
+        margin: "0 auto",
+        fontFamily,
+        fontWeight,
+        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+      }}>
         {text}
-      </h1>
+      </div>
     </AbsoluteFill>
   );
 };

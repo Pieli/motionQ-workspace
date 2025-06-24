@@ -6,10 +6,11 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
+import { z } from "zod";
 
-import { loadFont, fontFamily } from "@remotion/google-fonts/Inter";
+import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const simpleTypingSchema = z.object({
   text: z.string(),
@@ -50,20 +51,34 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
     };
   }, [bgColor]);
 
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
+
   return (
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
-        <div>
-          <h1 style={{ fontSize: 100, fontFamily }}>
-            {text.split("").map((char, index) => {
-              const opacity = index <= visibleCharacters ? 1 : 0;
-              return (
-                <span key={index} style={{ opacity, fontSize: 180, fontFamily, fontWeight: 550 }}>
-                  {char}
-                </span>
-              );
-            })}
-          </h1>
+        <div style={{
+          fontSize,
+          width: maxWidth,
+          margin: "0 auto",
+          fontFamily,
+          fontWeight,
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}>
+          {text.split("").map((char, index) => {
+            const opacity = index <= visibleCharacters ? 1 : 0;
+            return (
+              <span key={index} style={{ opacity }}>{char}</span>
+            );
+          })}
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

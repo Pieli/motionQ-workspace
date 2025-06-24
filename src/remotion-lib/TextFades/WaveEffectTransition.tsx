@@ -10,6 +10,7 @@ import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const waveEffectSchema = z.object({
   text: z.string(),
@@ -57,6 +58,16 @@ export const WaveEffectTransition: React.FC<z.infer<typeof waveEffectSchema>> = 
     return wave;
   };
 
+  const maxWidth = 1536;
+  const fit = fitText({
+    text,
+    font: fontFamily,
+    width: maxWidth,
+    height: 400,
+    maxFontSize: 180,
+    minFontSize: 20,
+  });
+
   const pieces = text.split("").map((char, index) => {
     return (
       <h1
@@ -64,9 +75,9 @@ export const WaveEffectTransition: React.FC<z.infer<typeof waveEffectSchema>> = 
         style={{
           position: "relative",
           transform: `translateY(${waveOffset(index)}px)`,
-          fontSize: 100,
+          fontSize: fit.fontSize,
           fontFamily: fontFamily,
-          whiteSpace: 'pre', 
+          whiteSpace: 'pre',
         }}
       >
         {char}
@@ -76,7 +87,9 @@ export const WaveEffectTransition: React.FC<z.infer<typeof waveEffectSchema>> = 
 
   return (
     <AbsoluteFill style={container}>
-      {pieces}
+      <div style={{ width: maxWidth, margin: "0 auto", display: "flex", justifyContent: "center" }}>
+        {pieces}
+      </div>
     </AbsoluteFill>
   );
 };

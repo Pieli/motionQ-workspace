@@ -11,6 +11,7 @@ import { zColor } from "@remotion/zod-types";
 import { z } from "zod";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const fadeInSchema = z.object({
   text: z.string(),
@@ -58,13 +59,31 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
     };
   }, [bgColor]);
 
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
 
   return (
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
-        <h1 style={{ fontSize: 180, fontFamily, fontWeight: 550, color: textColor }}>
+        <div style={{
+          fontSize,
+          width: maxWidth,
+          margin: "0 auto",
+          fontFamily,
+          fontWeight,
+          color: textColor,
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}>
           {text}
-        </h1>
+        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );
