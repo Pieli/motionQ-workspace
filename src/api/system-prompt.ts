@@ -36,7 +36,7 @@ For backgrounds following options exist:
 ${generateAnimationContext(backgroundTexturesBindings)}
 
 - IMPORTANT: think about the color you use for (foreground + background). Text needs to be readable.
-- IMPORTANT: it is prefereable to use more complex backgrounds than PlainBackground 
+- IMPORTANT: it is prefereable to use more complex backgrounds than PlainBackground, but still use it here and there.
 
 
 # Output Format

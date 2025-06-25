@@ -82,12 +82,12 @@ export const bindings: AnimationBinding[] = [
     },
     {
         name: "scaleUpDownTransition",
-        usecase: "Text scales up from the center. Text jumps out to present something.",
+        usecase: "Text scales up from the center. Text jumps out to present something. This is used to specifically emphazise a word.",
         settings: getSchemaDescription(scaleUpDownSchema)
     },
     {
         name: "simpleTextTyping",
-        usecase: "Reveals text gradually. For points that visualize typing, manual entry, but also to highlight the written text, because the viewers wait to see the content unveiled.",
+        usecase: "Reveals text gradually. For points that visualize typing, manual entry, but also to highlight the longer written text, because the viewers wait to see the content unveiled.",
         settings: getSchemaDescription(simpleTypingSchema)
     },
 ];
