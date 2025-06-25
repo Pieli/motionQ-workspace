@@ -67,7 +67,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
         className={
           (isUser
             ? "w-9/10 rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left ml-auto"
-            : "w-fit rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
+            : "w-8/10 rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
           " max-w-full"
         }
         style={{
@@ -122,22 +122,22 @@ const ChatInput: React.FC<{
     <div className="absolute left-0 right-0 bottom-0 bg-background z-20 p-4 pointer-events-auto">
         {isGenerating && (
           <div className="pl-4 pt-2 pb-4 text-right">
-            <AnimatedGradientText className="text-lg">Generating Animation</AnimatedGradientText>
+            <AnimatedGradientText className="text-lg font-semibold">Generating Animation</AnimatedGradientText>
           </div>
         )}
       <div className="relative w-full">
         <Textarea
           ref={textareaRef}
-          className="min-h-[60px] max-h-[200px] w-full pr-12 resize-none rounded-xl transition-[height] duration-150 box-border overflow-y-auto mb-0 block align-bottom"
+          className="min-h-[80px] max-h-[200px] w-full pr-12 resize-none rounded-xl transition-[height] duration-150 box-border overflow-y-auto mb-0 block align-bottom"
           placeholder="Describe your animation..."
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           rows={1}
-          style={{ minHeight: "60px", maxHeight: "200px" }}
+          style={{ minHeight: "80px", maxHeight: "200px" }}
         />
         <Button
           className="absolute right-2 bottom-2"
-          size="sm"
+          size="lg"
           onClick={onSend}
           disabled={isGenerating || !prompt}
         >

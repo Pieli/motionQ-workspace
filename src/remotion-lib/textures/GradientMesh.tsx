@@ -34,7 +34,7 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
     const { width, height } = useVideoConfig();
 
     const extraPoints = 14;
-    const size = 60;
+    const size = 30;
     const blur = 200;
     const edginess = 25;
     const positionSeed =  3;

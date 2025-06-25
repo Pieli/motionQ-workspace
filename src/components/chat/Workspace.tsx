@@ -110,7 +110,7 @@ const Workspace = () => {
                 direction="horizontal"
                 className="h-full w-full"
               >
-                <ResizablePanel defaultSize={25}>
+                <ResizablePanel defaultSize={40} id="chatbox">
                   <ChatBoxPanel
                     setGeneratedComp={setGeneratedComp}
                     setIsGenerating={setIsGenerating}
@@ -118,9 +118,9 @@ const Workspace = () => {
                   />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={75}>
+                <ResizablePanel defaultSize={60}>
                   <ResizablePanelGroup direction="vertical">
-                    <ResizablePanel defaultSize={70}>
+                    <ResizablePanel defaultSize={inputProps ? 70 : 100} id="player">
                       <div className="flex-1  h-full">
                         <div className="isolate flex-1 h-full bg-secondary">
                           {inputProps ? (
@@ -142,12 +142,12 @@ const Workspace = () => {
                               <Spacing y={1} />
                             </div>
                           ) : (
-                            <div style={{ color: "#888" }}>
+                            <div style={{ color: "#888", padding: "8px"}}>
                               Animation Preview will be shown here
                             </div>
                           )}
                           {isGenerating && (
-                            <div style={{ color: "#fff" }}>Loading…</div>
+                            <div style={{ color: "#888" }}>Loading…</div>
                           )}
                         </div>
                       </div>
@@ -155,7 +155,7 @@ const Workspace = () => {
                     {inputProps && (
                       <>
                         <ResizableHandle />
-                        <ResizablePanel defaultSize={30}>
+                        <ResizablePanel defaultSize={30} id="inputProps">
                           <div className="h-full overflow-hidden">
                             <Timeline
                               comps={GeneratedComp || []}
