@@ -28,6 +28,8 @@ import { CountingStars, countingStarsSchema } from "./counting/counting-stars";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
+import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
+import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
 
 
 
@@ -82,7 +84,6 @@ export const RemotionRoot: React.FC = () => {
         schema={simpleFadeSchema}
         defaultProps={{
           text: "Hello World" as const,
-          bgColor: "#fff" as const,
         }}
       />
 
@@ -96,7 +97,6 @@ export const RemotionRoot: React.FC = () => {
         schema={simpleTypingSchema}
         defaultProps={{
           text: "Hello World" as const,
-          bgColor: "#fff" as const,
         }}
       />
 
@@ -110,7 +110,6 @@ export const RemotionRoot: React.FC = () => {
         schema={slideInSchema}
         defaultProps={{
           text: "Hello World" as const,
-          bgColor: "#fff" as const,
           textColor: "#000" as const,
         }}
       />
@@ -125,7 +124,6 @@ export const RemotionRoot: React.FC = () => {
         schema={scaleUpDownSchema}
         defaultProps={{
           text: "Hello World" as const,
-          bgColor: "#fff" as const,
         }}
       />
 
@@ -140,7 +138,6 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           text: "Hello World" as const,
           textColor: "#000" as const,
-          bgColor: "#fff" as const,
         }}
       />
 
@@ -229,7 +226,30 @@ export const RemotionRoot: React.FC = () => {
             speed: 1,
           })}
         />
-
+        <Composition
+          id="TwinTexture"
+          component={TwinMesh}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={TwinMeshPropsSchema}
+          defaultProps={TwinMeshPropsSchema.parse({
+            backgroundColor: "#1e1e1e"
+          })}
+        />
+        <Composition
+          id="StairsTexture"
+          component={StairsMesh}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={StairsMeshPropsSchema}
+          defaultProps={StairsMeshPropsSchema.parse({
+            backgroundColor: "#1e1e1e"
+          })}
+        />
       </Folder>
 
 

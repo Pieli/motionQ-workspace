@@ -25,6 +25,8 @@ import {
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
 import { PlainBackground, PlainBackgroundSchema } from "./textures/PlainBackground";
+import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
+import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
 
 
 
@@ -48,7 +50,7 @@ export const animationMap = {
     simpleTextTyping: {
         component: SimpleTextTyping,
         schema: simpleTypingSchema,
-    }, 
+    },
     scaleUpDownTransition: {
         component: ScaleUpDownTransition,
         schema: scaleUpDownSchema,
@@ -65,6 +67,14 @@ export const backgroundMap = {
     plainBackground: {
         component: PlainBackground,
         schema: PlainBackgroundSchema,
+    },
+    twinTexture: {
+        component: TwinMesh,
+        schema: TwinMeshPropsSchema,
+    },
+    stairsTexture: {
+        component: StairsMesh,
+        schema: StairsMeshPropsSchema,
     }
 } as const
 
@@ -95,7 +105,7 @@ export const bindings: AnimationBinding[] = [
 
 export const backgroundTexturesBindings: AnimationBinding[] = [
     {
-        
+
         name: "plainBackground",
         usecase: "use this sparingly, it is just a simple background, if you use it use also other colors than white",
         settings: getSchemaDescription(PlainBackgroundSchema)
@@ -104,6 +114,16 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
         name: "gradientMesh",
         usecase: "gradients are aesthetic. more on the techy side. modern feel.",
         settings: getSchemaDescription(GradientMeshPropsSchema)
+    },
+    {
+        name: "twinTexture",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+        settings: getSchemaDescription(TwinMeshPropsSchema)
+    },
+    {
+        name: "stairsTexture",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+        settings: getSchemaDescription(StairsMeshPropsSchema)
     },
 
 ]
@@ -118,29 +138,29 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
             const typeName = value._def.typeName;
 
             switch (typeName) {
-            case "ZodString":
-                type = "string";
-                break;
-            case "ZodNumber":
-                type = "number";
-                // Add min/max for numbers only
-                if (value._def.minValue !== undefined) {
-                    constraints += `, min: ${value._def.minValue}`;
-                }
-                if (value._def.maxValue !== undefined) {
-                    constraints += `, max: ${value._def.maxValue}`;
-                }
-                break;
-            case "ZodBoolean":
-                type = "boolean";
-                break;
-            case "ZodEffects":
-                type = value._def.description === zodTypes.ZodZypesInternals.REMOTION_COLOR_BRAND
-                ? "color-hex"
-                : "unknown";
-                break;
-            default:
-                type = typeName.replace("Zod", "").toLowerCase();
+                case "ZodString":
+                    type = "string";
+                    break;
+                case "ZodNumber":
+                    type = "number";
+                    // Add min/max for numbers only
+                    if (value._def.minValue !== undefined) {
+                        constraints += `, min: ${value._def.minValue}`;
+                    }
+                    if (value._def.maxValue !== undefined) {
+                        constraints += `, max: ${value._def.maxValue}`;
+                    }
+                    break;
+                case "ZodBoolean":
+                    type = "boolean";
+                    break;
+                case "ZodEffects":
+                    type = value._def.description === zodTypes.ZodZypesInternals.REMOTION_COLOR_BRAND
+                        ? "color-hex"
+                        : "unknown";
+                    break;
+                default:
+                    type = typeName.replace("Zod", "").toLowerCase();
             }
         } else {
             type = "unknown";
