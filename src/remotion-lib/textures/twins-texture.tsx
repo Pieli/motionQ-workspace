@@ -20,22 +20,24 @@ export const TwinMesh: React.FC<TwinMeshProps> = ({
 
   const backColor = "#16191D";
 
-  const glow_color = "";
+  // const glow_color = "";
 
 
   const progress = spring({
-    fps,
     frame,
+    fps,
     config: {
       damping: 200,
     },
+    durationInFrames: 1 * fps
   });
-  const blob_1_tranform_x = interpolate(progress, [0, 1], [0, -70]);
-  const blob_1_tranform_y = interpolate(progress, [0, 1], [0, -70]);
-  const blob_1_scale = 1;
 
-  const blob_2_tranform_x = interpolate(progress, [0, 1], [50, 0]);
-  const blob_2_tranform_y = interpolate(progress, [0, 1], [50, 0]);
+  const blob_1_tranform_x = interpolate(progress, [0, 1], [0, 70]);
+  const blob_1_tranform_y = interpolate(progress, [0, 1], [0, 70]);
+  const blob_1_scale = 1
+
+  const blob_2_tranform_x = interpolate(progress, [0, 1], [0, -70]);
+  const blob_2_tranform_y = interpolate(progress, [0, 1], [0, -70]);
   const blob_2_scale = 1;
 
   return (

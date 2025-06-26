@@ -30,6 +30,8 @@ import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
 import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
+import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
+import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
 
 
 
@@ -247,6 +249,30 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={StairsMeshPropsSchema}
           defaultProps={StairsMeshPropsSchema.parse({
+            backgroundColor: "#1e1e1e"
+          })}
+        />
+        <Composition
+          id="StairsTextureV2"
+          component={StairsMeshV2}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={StairsMeshPropsSchemaV2}
+          defaultProps={StairsMeshPropsSchemaV2.parse({
+            backgroundColor: "#1e1e1e"
+          })}
+        />
+        <Composition
+          id="StairsTextureV3"
+          component={StairsMeshV3}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={StairsMeshPropsSchemaV3}
+          defaultProps={StairsMeshPropsSchemaV2.parse({
             backgroundColor: "#1e1e1e"
           })}
         />

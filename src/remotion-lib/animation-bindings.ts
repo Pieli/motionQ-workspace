@@ -27,6 +27,8 @@ import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
 import { PlainBackground, PlainBackgroundSchema } from "./textures/PlainBackground";
 import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
+import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
+import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
 
 
 
@@ -75,6 +77,14 @@ export const backgroundMap = {
     stairsTexture: {
         component: StairsMesh,
         schema: StairsMeshPropsSchema,
+    },
+    stairsTextureV2: {
+        component: StairsMeshV2,
+        schema: StairsMeshPropsSchemaV2,
+    },
+    stairsTextureV3: {
+        component: StairsMeshV3,
+        schema: StairsMeshPropsSchemaV3,
     }
 } as const
 
@@ -124,6 +134,16 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
         name: "stairsTexture",
         usecase: "gradients are aesthetic. more on the techy side. modern feel.",
         settings: getSchemaDescription(StairsMeshPropsSchema)
+    },
+    {
+        name: "stairsTextureV2",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+        settings: getSchemaDescription(StairsMeshPropsSchemaV2)
+    },
+    {
+        name: "stairsTextureV3",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+        settings: getSchemaDescription(StairsMeshPropsSchemaV3)
     },
 
 ]
