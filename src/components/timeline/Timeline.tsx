@@ -368,7 +368,7 @@ export const Timeline: React.FC<{
                 {timelineMarkers.map(({ key, time }) => (
                   <div
                     key={key}
-                    className="border-r-secondary text-muted-foreground flex items-start justify-end truncate border-r-[1px] pt-3 pr-1"
+                    className="border-r-secondary text-muted-foreground flex items-start justify-end truncate border-r-[1px] pt-3 pr-1 font-mono"
                     style={{
                       minWidth: Math.max(stepWidth, 35),
                       width: stepWidth,
