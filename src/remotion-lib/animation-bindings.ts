@@ -29,7 +29,7 @@ import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
 import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
 import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
-
+import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
 
 
 export interface AnimationBinding {
@@ -57,7 +57,6 @@ export const animationMap = {
         component: ScaleUpDownTransition,
         schema: scaleUpDownSchema,
     }
-
 } as const;
 
 
@@ -85,7 +84,11 @@ export const backgroundMap = {
     stairsTextureV3: {
         component: StairsMeshV3,
         schema: StairsMeshPropsSchemaV3,
-    }
+    },
+    growingDark: {
+        component: GrowingDark,
+        schema: GrowingDarkPropsSchema,
+    },
 } as const
 
 // add binding here and to the animation map
@@ -145,6 +148,12 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
         usecase: "gradients are aesthetic. more on the techy side. modern feel.",
         settings: getSchemaDescription(StairsMeshPropsSchemaV3)
     },
+    {
+        name: "growingDark",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel. Only use white fonts to write on it.",
+        settings: getSchemaDescription(GrowingDarkPropsSchema)
+    },
+
 
 ]
 

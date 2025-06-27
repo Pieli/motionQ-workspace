@@ -32,6 +32,7 @@ import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
 import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
 import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
+import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
 
 
 
@@ -273,6 +274,18 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={StairsMeshPropsSchemaV3}
           defaultProps={StairsMeshPropsSchemaV2.parse({
+            backgroundColor: "#1e1e1e"
+          })}
+        />
+        <Composition
+          id="GrowingDarkness"
+          component={GrowingDark}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={GrowingDarkPropsSchema}
+          defaultProps={GrowingDarkPropsSchema.parse({
             backgroundColor: "#1e1e1e"
           })}
         />

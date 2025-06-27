@@ -23,9 +23,10 @@ The default script structure should include:
 If the user prefers a different structure, follow their request.
 
 # Slide Constraints
-- Each slide may contain a maximum of 5 words. Fewer is better.
+- Each slide may contain a maximum of 6 words. Fewer is better.
 - If content exceeds 5 words, split it meaningfully across multiple slides.
-- Each composition must last no more than 1.5 seconds (i.e., 45 frames at 30 FPS).
+- Each composition must last no more than 2 seconds (i.e., 60 frames at 30 FPS).
+- Each composition must last no less than 1.5 seconds (i.e., 45 frames at 30 FPS).
 
 # Available Assets
 
