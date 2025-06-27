@@ -7,12 +7,14 @@ import {
 } from "remotion";
 
 import { z } from "zod";
+import { zColor } from "@remotion/zod-types";
 
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 import { fitText } from "@remotion/layout-utils";
 
 export const simpleTypingSchema = z.object({
-  text: z.string(),
+  text: z.string().default("Hello World"),
+  textColor: zColor().default("#fff"),
 });
 
 loadFont("normal", {
@@ -24,6 +26,7 @@ const outer: React.CSSProperties = {};
 
 export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
   text,
+  textColor
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -41,9 +44,9 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
   const visibleCharacters = Math.floor(progress * text.length);
 
   const container: React.CSSProperties = {
-      justifyContent: "center",
-      alignItems: "center",
-    };
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
   const maxWidth = 1536;
   const fontWeight = 550;
@@ -63,6 +66,7 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
           margin: "0 auto",
           fontFamily,
           fontWeight,
+          color: textColor,
           textAlign: "center",
           display: "flex",
           justifyContent: "center",
@@ -72,7 +76,7 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
             return (
               <span key={index} style={{ opacity }}>{
                 char === " " ? "\u00A0" : char
-                }</span>
+              }</span>
             );
           })}
         </div>

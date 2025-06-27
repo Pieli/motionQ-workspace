@@ -14,8 +14,8 @@ import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 import { fitText } from "@remotion/layout-utils";
 
 export const slideInSchema = z.object({
-  text: z.string(),
-  textColor: zColor(),
+  text: z.string().default("Hello World"),
+  textColor: zColor().default("#fff"),
 });
 
 loadFont("normal", {

@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Workspace from "@/components/chat/Workspace";
 import LandingPage from "@/components/LandingPage"; // Import your landing page component
 import { ThemeProvider } from "@/components/theme-provider";
+import DevAnimationTest from "./components/dev-mode/animation-tester";
 
 import "./index.css";
 
@@ -20,10 +21,14 @@ const router = createBrowserRouter([
     Component: isLoggedIn()
       ? Workspace
       : () => (
-          <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-            <LandingPage />
-          </ThemeProvider>
-        ),
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          <LandingPage />
+        </ThemeProvider>
+      ),
+  },
+  {
+    path: "/dev",
+    Component: DevAnimationTest,
   },
 ]);
 

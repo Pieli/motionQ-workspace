@@ -46,7 +46,7 @@ function elementParser(comp?: CompositionConfig): ParsedElement {
 }
 
 
-const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
+export const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
 }) => {
 
@@ -133,7 +133,7 @@ const Workspace = () => {
                                 compositionWidth={compositionWidth}
                                 compositionHeight={compositionHeight}
                                 inputProps={{ comps: inputProps }}
-                                style={{ width: "100%" }}
+                                style={{ width: "100%", borderRadius: "12px" }}
                                 acknowledgeRemotionLicense
                                 autoPlay
                                 controls
@@ -142,7 +142,7 @@ const Workspace = () => {
                               <Spacing y={1} />
                             </div>
                           ) : (
-                            <div style={{ color: "#888", padding: "8px"}}>
+                            <div style={{ color: "#888", padding: "8px" }}>
                               Animation Preview will be shown here
                             </div>
                           )}

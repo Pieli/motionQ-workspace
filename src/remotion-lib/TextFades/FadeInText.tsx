@@ -14,8 +14,8 @@ import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 import { fitText } from "@remotion/layout-utils";
 
 export const fadeInSchema = z.object({
-  text: z.string(),
-  textColor: zColor(),
+  text: z.string().default("Hello World"),
+  textColor: zColor().default("#fff"),
 });
 
 loadFont("normal", {
@@ -64,20 +64,20 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
   });
 
   return (
-      <AbsoluteFill style={container}>
-        <div style={{
-          fontSize,
-          width: maxWidth,
-          margin: "0 auto",
-          fontFamily,
-          fontWeight,
-          color: textColor,
-          textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-        }}>
-          {text}
-        </div>
-      </AbsoluteFill>
+    <AbsoluteFill style={container}>
+      <div style={{
+        fontSize,
+        width: maxWidth,
+        margin: "0 auto",
+        fontFamily,
+        fontWeight,
+        color: textColor,
+        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+      }}>
+        {text}
+      </div>
+    </AbsoluteFill>
   );
 };
