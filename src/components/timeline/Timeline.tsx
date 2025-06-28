@@ -66,10 +66,10 @@ const TrackItems: React.FC<{
           }}
         >
           <div
-            className="h-full w-full p-2 box-border cursor-pointer rounded-sm border border-black/80 select-none"
+            className="h-full w-full bg-primary p-2 box-border cursor-pointer rounded-sm border border-black/80 select-none"
             style={{
               color: "#ffffff",
-              backgroundColor: "#347ebf",
+              // backgroundColor: "#347ebf",
             }}
           >
             {item.id}
@@ -100,9 +100,9 @@ const TrackLines: React.FC<{
             <div
               className="absolute flex"
               style={{
-                height: 40,
+                height: 45,
                 left: stepWidth, // Remove the index-based offset since items have their own start times
-                top: 60 + 40 * index + index * 10,
+                top: 60 + 45 * index + index * 8,
                 overflow: "hidden",
                 zIndex: 0,
               }}
