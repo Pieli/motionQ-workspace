@@ -7,10 +7,11 @@ import { Row } from "@/components/ui/row";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
-
 import { colorWithNewOpacity } from "@/helpers/color-math";
+import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@radix-ui/react-accordion";
 
 export const OptionsPanelZ: React.FC<{
   compositions: CompositionConfig[];
@@ -24,8 +25,16 @@ export const OptionsPanelZ: React.FC<{
   useEffect(() => {
     setCompositions(comps);
   }, [comps, setCompositions]);
-
-  return <ZodEditor compositions={comps} setCompositions={setComps} />;
+  return (
+    <ScrollArea className="h-full w-full">
+      <Accordion
+        type="multiple"
+        className="w-full"
+      >
+        <ZodEditor compositions={comps} setCompositions={setComps} />;
+      </Accordion>
+    </ScrollArea>
+  )
 };
 
 interface ZodEditorProps {
@@ -50,7 +59,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
   };
 
   return (
-    <ScrollArea className="h-full w-full">
+    <>
       {compositions.map((comp, ind) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const shapeDef = (comp.schema as any)._def.shape() as Record<
@@ -58,27 +67,32 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
           z.ZodTypeAny
         >;
         return (
-          <div key={comp.id + ind} className="mb-8">
-            <h2 className="text-ml font-bold pb-2">{comp.id}</h2>
-            <div>
-              {Object.keys(shapeDef).map((key, index) => (
-                <div className="py-2" key={index}>
-                  <ZodSwitch
-                    key={index}
-                    comp={comp}
-                    fieldKey={key}
-                    onFieldChange={handleFieldChange}
-                  />
-                </div>
-              ))}
-            </div>
-            <Spacing />
-          </div>
+          <AccordionItem value={comp.id} key={comp.id + ind} className="mb-8">
+            <AccordionTrigger>
+              <h2 className="text-ml font-bold pb-2">{comp.id}</h2>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div>
+                {Object.keys(shapeDef).map((key, index) => (
+                  <div className="py-2" key={index}>
+                    <ZodSwitch
+                      key={index}
+                      comp={comp}
+                      fieldKey={key}
+                      onFieldChange={handleFieldChange}
+                    />
+                  </div>
+                ))}
+              </div>
+              <Spacing />
+            </AccordionContent>
+          </AccordionItem>
         );
       })}
-    </ScrollArea>
+    </>
   );
 };
+
 
 // Factory that picks the correct editor based on Zod type
 interface ZodSwitchProps {
