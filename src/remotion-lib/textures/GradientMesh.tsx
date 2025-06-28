@@ -6,7 +6,8 @@ import { z } from "zod";
 
 export const GradientMeshPropsSchema = z.object({
     speed: z.number().min(1).max(15).default(12),
-    backgroundColor: zColor().default("#1e1e1e"),
+    backgroundColor: zColor().default("#fff"),
+    // colors: z.array(zColor())
 });
 
 /*
@@ -37,9 +38,11 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
     const size = 30;
     const blur = 200;
     const edginess = 25;
-    const positionSeed =  3;
+    const positionSeed = 3;
     const directionSeed = 47;
 
+    const num_blobs = 5
+    const colors = ["6d213c", "946846", "baab68", "e3c16f","faff70"]
     const blobSize = useMemo(() => Math.max(width, height) * size / 100, [width, height, size]);
 
     const generateBlob = useMemo(
@@ -53,7 +56,7 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
         [extraPoints, edginess, blobSize]
     );
 
-    const blobs = useMemo(() => Array.from({ length: 5 }, (_, index) => generateBlob(index)), [generateBlob]);
+    const blobs = useMemo(() => Array.from({ length: num_blobs }, (_, index) => generateBlob(index)), [generateBlob]);
 
     const initialPositions = useMemo(
         () =>
@@ -97,7 +100,8 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
                         >
                             <path
                                 d={blob}
-                                fill={`hsl(${(index * 60) % 360}, 70%, 50%)`}
+                                // fill={`#${colors[index]}`}
+                                fill={"red"}
                             />
                         </svg>
                     );
