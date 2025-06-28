@@ -19,13 +19,14 @@ import {
 } from "@/components/ui/sidebar";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import {AssetBar} from "@/components/sidebar/asset-bar";
 
 // This is sample data
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/shadcn.jpg?w",
   },
   navMain: [
     {
@@ -70,7 +71,7 @@ export const AppSidebar: React.FC<{
       case "Transcript":
         return <Transcript GeneratedComp={comps} setGeneratedComp={setComps} />;
       case "Assets":
-        return <div className="p-4">Assets content goes here.</div>;
+        return <AssetBar/>;
       default:
         return <div className="p-4">Default content goes here.</div>;
     }
