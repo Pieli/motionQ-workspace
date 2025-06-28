@@ -12,7 +12,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/navbar/navbar";
 import { Spacing } from "@/components/ui/spacing";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";

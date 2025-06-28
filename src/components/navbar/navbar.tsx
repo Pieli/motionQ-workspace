@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ShareDialog } from "./share";
 
 export const Navbar = () => {
   return (
@@ -35,6 +36,8 @@ export const Navbar = () => {
           <SidebarIcon />
         </div>
         <div className="flex items-center gap-4">
+          <Button variant={"outline"}>Preview</Button>
+          <ShareDialog />
           <Button>Export</Button>
           <ModeToggle />
           <DropdownMenu>
