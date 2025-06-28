@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 
-import { logCompositionConfig } from "@/helpers/composition-logger";
+// import { logCompositionConfig } from "@/helpers/composition-logger";
 import { exampleComp } from "@/helpers/example-comp";
+import { toast } from "sonner";
 
 
 // keep service null if undefined env
@@ -88,8 +89,8 @@ const ChatInput: React.FC<{
   return (
     <div className="absolute left-0 right-0 bottom-0 bg-background z-20 p-4 pointer-events-auto">
       {isGenerating && (
-        <div className="pl-4 pt-2 pb-4 text-right">
-          <AnimatedGradientText className="text-lg font-semibold">Generating Animation</AnimatedGradientText>
+        <div className="pl-4 pt-2 pb-2 text-right">
+          <AnimatedGradientText className="text-sm font-semibold">Generating Animation</AnimatedGradientText>
         </div>
       )}
       <div className="relative w-full">
@@ -157,7 +158,8 @@ const generate = async () => {
       throw new Error("Failed to parse generated compositions");
     }
     setGeneratedComp(composition);
-    logCompositionConfig(composition)
+    toast.success("Animation has been generated.")
+    // logCompositionConfig(composition)
 
     // Append the agent's comment to the history
     setHistory((prev) => [...prev, `Agent: ${response.comment}`]);

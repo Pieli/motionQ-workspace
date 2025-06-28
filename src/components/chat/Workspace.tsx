@@ -80,7 +80,7 @@ const Workspace = () => {
   >(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const [loop, setLoop] = useState(false);
+  const [loop, setLoop] = useState(true);
 
   const totalDuration = useMemo(
     () =>

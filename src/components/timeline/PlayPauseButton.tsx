@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 export const PlayPauseButton: React.FC<{
   playerRef: React.RefObject<PlayerRef | null>;
 }> = ({ playerRef }) => {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
     const player = playerRef.current;

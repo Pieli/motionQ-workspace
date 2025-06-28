@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import DevAnimationTest from "./components/dev-mode/animation-tester";
 
 import "./index.css";
+import { Toaster } from "sonner";
 
 const isLoggedIn = () => {
   // Replace this with your actual authentication logic
@@ -37,6 +38,7 @@ createRoot(document.getElementById("root")!).render(
     {isLoggedIn() ? (
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
+        <Toaster position="top-center" /> 
       </ThemeProvider>
     ) : (
       <RouterProvider router={router} />
