@@ -136,7 +136,7 @@ const ControlMenu: React.FC<{
   zoom,
   setZoom,
 }) => {
-  const [isLoopActive, setIsLoopActive] = useState(false);
+    const [isLoopActive, setIsLoopActive] = useState(false);
 
   function frameToTime(frame: number): string {
     const secs = Math.floor(frame / FPS);
@@ -162,51 +162,51 @@ const ControlMenu: React.FC<{
     setZoom((prevZoom) => Math.max(prevZoom - 1, 1));
   };
 
-  return (
-    <div className="flex items-center justify-between border-b h-12 px-4">
-      {/* Left section - Loop button */}
-      <div className="flex-none">
-        <Button
-          variant="ghost"
-          size="icon"
-          className={`transition-colors duration-200 ${isLoopActive ? "bg-primary text-white" : "hover:bg-gray-100"}`}
-          onClick={handleLoopToggle}
-        >
-          <Repeat2 className="size-5" />
-        </Button>
-      </div>
+    return (
+      <div className="flex items-center justify-between border-b h-12 px-4">
+        {/* Left section - Loop button */}
+        <div className="flex-none">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`transition-colors duration-200 ${isLoopActive ? "bg-primary text-white" : "hover:bg-gray-100"}`}
+            onClick={handleLoopToggle}
+          >
+            <Repeat2 className="size-5" />
+          </Button>
+        </div>
 
-      {/* Center section - Play controls and time */}
-      <div className="flex items-center gap-4">
-        <PlayPauseButton playerRef={parentPlayerRef} />
-        <div className="border p-1 px-3 rounded-xl text-base font-mono">
-          {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} |{" "}
-          {frameToTime(totalDuration * FPS)}
+        {/* Center section - Play controls and time */}
+        <div className="flex items-center gap-4">
+          <PlayPauseButton playerRef={parentPlayerRef} />
+          <div className="border p-1 px-3 rounded-xl text-base font-mono">
+            {currentFrame !== null ? frameToTime(currentFrame) : "00:00:00"} |{" "}
+            {frameToTime(totalDuration * FPS)}
+          </div>
+        </div>
+
+        {/* Right section - Zoom controls */}
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={handleZoomOut}>
+            <Minus className="size-3" />
+          </Button>
+          <div className="w-28">
+            <Slider
+              defaultValue={[zoom]}
+              onValueChange={debounceZoomChange}
+              value={[zoom]}
+              max={6}
+              min={1}
+              step={1}
+            />
+          </div>
+          <Button variant="ghost" size="icon" onClick={handleZoomIn}>
+            <Plus className="size-3" />
+          </Button>
         </div>
       </div>
-
-      {/* Right section - Zoom controls */}
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" onClick={handleZoomOut}>
-          <Minus className="size-3" />
-        </Button>
-        <div className="w-28">
-          <Slider
-            defaultValue={[zoom]}
-            onValueChange={debounceZoomChange}
-            value={[zoom]}
-            max={6}
-            min={1}
-            step={1}
-          />
-        </div>
-        <Button variant="ghost" size="icon" onClick={handleZoomIn}>
-          <Plus className="size-3" />
-        </Button>
-      </div>
-    </div>
-  );
-};
+    );
+  };
 
 const Cursor: React.FC<{
   frame: number | null;
