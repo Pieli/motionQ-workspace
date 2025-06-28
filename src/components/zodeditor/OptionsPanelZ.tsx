@@ -93,13 +93,24 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
   fieldKey,
   onFieldChange,
 }) => {
-  const fieldSchema =
+  let fieldSchema =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ((comp.schema as any)._def.shape() as Record<string, z.ZodTypeAny>)[
-      fieldKey
+    fieldKey
     ];
-  const typeName = fieldSchema._def.typeName as z.ZodFirstPartyTypeKind;
-  const currentValue = comp.props?.[fieldKey] ?? "";
+  let typeName = fieldSchema._def.typeName as z.ZodFirstPartyTypeKind;
+  let currentValue = comp.props?.[fieldKey];
+
+  // If ZodDefault, unwrap and use the default value if not set
+  if (typeName === z.ZodFirstPartyTypeKind.ZodDefault) {
+    const innerType = fieldSchema._def.innerType;
+    const defaultValue = fieldSchema._def.defaultValue();
+    fieldSchema = innerType;
+    typeName = innerType._def.typeName;
+    currentValue = currentValue ?? defaultValue;
+  }
+
+  currentValue = currentValue ?? "";
 
   switch (typeName) {
     case z.ZodFirstPartyTypeKind.ZodString:
