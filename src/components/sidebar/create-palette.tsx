@@ -87,7 +87,7 @@ export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
                                 borderRadius: 8,
                                 position: "relative",
                                 color: fg,
-                                visibility: draggedIdx === idx ? "hidden" : undefined
+                                opacity: draggedIdx === idx ? 0.2 : 1,
                             }}
                             draggable
                             onDragStart={() => handleDragStart(idx)}
@@ -106,7 +106,7 @@ export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
                                 <span
                                     className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-mono px-1 rounded"
                                     style={{
-                                        background: isLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.4)",
+                                        background: "rgba(255,255,255,0.4)",
                                         color: fg,
                                     }}
                                 >

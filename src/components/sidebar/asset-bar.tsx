@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { CreatePalette } from "./create-palette";
+
+import { Button } from "@/components/ui/button";
+import { CreatePalette } from "@/components/sidebar/create-palette";
 
 type Palette = {
     name: string;
