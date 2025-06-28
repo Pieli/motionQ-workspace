@@ -50,7 +50,6 @@ export const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
   comps,
 }) => {
 
-  console.log(comps)
 
   const renderCompositions = useMemo(() => {
     return comps.map((comp, index: number) => {

@@ -8,8 +8,6 @@ export const ChatInput: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      console.log('User input:', input);
-      // Here you would typically send the input to your AI service
       setInput('');
     }
   };

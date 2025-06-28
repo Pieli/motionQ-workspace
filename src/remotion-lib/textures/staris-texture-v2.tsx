@@ -35,8 +35,6 @@ export const StairsMeshV2: React.FC<StairsMeshPropsV2> = ({ backgroundColor }) =
     const blob_1_tranform_y = interpolate(progress, [0, 0.6, 1], [400, 600, -900]);
     const blob_1_scale = 1;
 
-    console.log(blob_1_tranform_x);
-
     // const blob_2_tranform_x = interpolate(progress, [0, 1], [800, -800]);
     // const blob_2_tranform_y = interpolate(progress, [0, 1], [-800, 800]);
     const blob_2_tranform_x = interpolate(progress, [0, 0.6, 1], [400, -200, -600]);
