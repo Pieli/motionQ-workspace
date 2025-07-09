@@ -3,8 +3,6 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-import { SidebarIcon } from "lucide-react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +31,6 @@ export const Navbar = () => {
               <DropdownMenuItem>Recents</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <SidebarIcon />
         </div>
         <div className="flex items-center gap-4">
           <Button variant={"outline"}>Preview</Button>
