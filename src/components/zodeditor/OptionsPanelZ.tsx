@@ -29,6 +29,11 @@ export const OptionsPanelZ: React.FC<{
   useEffect(() => {
     setCompositions(comps);
   }, [comps, setCompositions]);
+
+  useEffect(() => {
+    setComps(compositions);
+  }, [compositions]);
+
   return (
     <ScrollArea className="h-full w-full">
       <Accordion type="multiple" className="w-full">
@@ -72,7 +77,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
           <AccordionItem
             value={comp.id}
             key={comp.id + ind}
-            className="mb-8 border"
+            className="mb-8 border p-2 rounded-xl "
           >
             <AccordionTrigger>
               <h2 className="text-ml font-bold pb-2">{comp.id}</h2>

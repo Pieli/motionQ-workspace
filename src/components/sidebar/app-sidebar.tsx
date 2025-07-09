@@ -1,5 +1,5 @@
 import { Captions, Command, Component, Folders } from "lucide-react";
-import * as React from "react";
+import React, { useMemo, useState } from "react";
 
 // TODO is the NavUser needed (decide later)
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -54,9 +54,9 @@ export const AppSidebar: React.FC<{
   comps: CompositionConfig[] | null;
   setComps: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
 }> = ({ comps, setComps }) => {
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0]);
+  const [activeItem, setActiveItem] = useState(data.navMain[0]);
 
-  const renderContent = () => {
+  const renderContent = useMemo(() => {
     switch (activeItem.title) {
       case "Properties":
         return (
@@ -75,7 +75,7 @@ export const AppSidebar: React.FC<{
       default:
         return <div className="p-4">Default content goes here.</div>;
     }
-  };
+  }, [comps, activeItem, setComps]);
 
   return (
     <Sidebar
@@ -143,7 +143,7 @@ export const AppSidebar: React.FC<{
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup className="px-0">
-              <SidebarGroupContent>{renderContent()}</SidebarGroupContent>
+              <SidebarGroupContent>{renderContent}</SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
         </Sidebar>
