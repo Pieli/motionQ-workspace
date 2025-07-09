@@ -11,7 +11,12 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { colorWithNewOpacity } from "@/helpers/color-math";
-import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@radix-ui/react-accordion";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionContent,
+  AccordionTrigger,
+} from "@radix-ui/react-accordion";
 
 export const OptionsPanelZ: React.FC<{
   compositions: CompositionConfig[];
@@ -27,14 +32,11 @@ export const OptionsPanelZ: React.FC<{
   }, [comps, setCompositions]);
   return (
     <ScrollArea className="h-full w-full">
-      <Accordion
-        type="multiple"
-        className="w-full"
-      >
+      <Accordion type="multiple" className="w-full">
         <ZodEditor compositions={comps} setCompositions={setComps} />;
       </Accordion>
     </ScrollArea>
-  )
+  );
 };
 
 interface ZodEditorProps {
@@ -93,7 +95,6 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
   );
 };
 
-
 // Factory that picks the correct editor based on Zod type
 interface ZodSwitchProps {
   comp: CompositionConfig;
@@ -110,7 +111,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
   let fieldSchema =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ((comp.schema as any)._def.shape() as Record<string, z.ZodTypeAny>)[
-    fieldKey
+      fieldKey
     ];
   let typeName = fieldSchema._def.typeName as z.ZodFirstPartyTypeKind;
   let currentValue = comp.props?.[fieldKey];
