@@ -77,12 +77,12 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
           <AccordionItem
             value={comp.id}
             key={comp.id + ind}
-            className="mb-8 border p-2 rounded-xl "
+            className="mb-8 border rounded-xl"
           >
             <AccordionTrigger>
-              <h2 className="text-ml font-bold pb-2">{comp.id}</h2>
+              <h2 className="text-ml font-bold p-2">{comp.id}</h2>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="p-2">
               <div>
                 {Object.keys(shapeDef).map((key, index) => (
                   <div className="py-2" key={index}>
