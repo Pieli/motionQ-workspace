@@ -5,9 +5,12 @@ export interface CompositionConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: React.FC<any>;
   schema: z.ZodTypeAny;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Record<string, any>;
+  props: Record<string, PropType>;
   duration: number;
 
   background?: CompositionConfig; // Optional background composition
 }
+
+
+
+export type PropType = string | number

@@ -8,7 +8,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spacing } from "@/components/ui/spacing";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { CompositionConfig } from "@/components/interfaces/compositions";
+import type {
+  CompositionConfig,
+  PropType,
+} from "@/components/interfaces/compositions";
 import { colorWithNewOpacity } from "@/helpers/color-math";
 import {
   Accordion,
@@ -16,6 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
+import { modifyPropsInTree } from "./tree-modifier";
 
 export const OptionsPanelZ: React.FC<{
   compositions: CompositionConfig[];
@@ -48,31 +52,49 @@ interface ZodEditorProps {
   setCompositions: React.Dispatch<React.SetStateAction<CompositionConfig[]>>;
 }
 
+const EditorElement: React.FC<{
+  composition: CompositionConfig;
+  handleChange: (compId: string, key: string, value: PropType) => void;
+}> = ({ composition, handleChange }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const shapeDef = (composition.schema as any)._def.shape() as Record<
+    string,
+    z.ZodTypeAny
+  >;
+
+  return (
+    <div>
+      {Object.keys(shapeDef).map((key, index) => (
+        <div className="py-2" key={index}>
+          <ZodSwitch
+            key={index}
+            comp={composition}
+            fieldKey={key}
+            onFieldChange={handleChange}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const ZodEditor: React.FC<ZodEditorProps> = ({
   compositions,
   setCompositions,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFieldChange = (compId: string, key: string, value: any) => {
-    setCompositions((prev) =>
-      prev.map((comp) => {
-        if (comp.id !== compId) return comp;
-        // update the composition's props for `key`
-        const newProps = { ...comp.props, [key]: value };
-        return { ...comp, props: newProps };
-      }),
-    );
-  };
+  const handleFieldChange = useCallback(
+    (nodeInfo: { parentId: string; level: number }) =>
+      (compId: string, key: string, value: PropType) => {
+        setCompositions(
+          modifyPropsInTree(compositions, nodeInfo, compId, key, value),
+        );
+      },
+    [compositions, setCompositions],
+  );
 
   return (
     <>
       {compositions.map((comp, ind) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const shapeDef = (comp.schema as any)._def.shape() as Record<
-          string,
-          z.ZodTypeAny
-        >;
-
         return (
           <AccordionItem
             value={comp.id}
@@ -83,19 +105,23 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
               <h2 className="text-ml font-bold p-2">{comp.id}</h2>
             </AccordionTrigger>
             <AccordionContent className="p-2">
-              <div>
-                {Object.keys(shapeDef).map((key, index) => (
-                  <div className="py-2" key={index}>
-                    <ZodSwitch
-                      key={index}
-                      comp={comp}
-                      fieldKey={key}
-                      onFieldChange={handleFieldChange}
-                    />
-                  </div>
-                ))}
-              </div>
+              <EditorElement
+                composition={comp}
+                handleChange={handleFieldChange({
+                  parentId: comp.id,
+                  level: 0,
+                })}
+              />
               <Spacing />
+              {comp.background && (
+                <EditorElement
+                  composition={comp.background}
+                  handleChange={handleFieldChange({
+                    parentId: comp.id,
+                    level: 1,
+                  })}
+                />
+              )}
             </AccordionContent>
           </AccordionItem>
         );
