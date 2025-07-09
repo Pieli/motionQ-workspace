@@ -1,20 +1,19 @@
-import { z } from "zod";
 import * as zodTypes from "@remotion/zod-types";
-import React, { useEffect, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { z } from "zod";
 
-import { Spacing } from "@/components/ui/spacing";
-import { Row } from "@/components/ui/row";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Row } from "@/components/ui/row";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Spacing } from "@/components/ui/spacing";
+import { Textarea } from "@/components/ui/textarea";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { colorWithNewOpacity } from "@/helpers/color-math";
 import {
   Accordion,
-  AccordionItem,
   AccordionContent,
+  AccordionItem,
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
 
@@ -33,7 +32,7 @@ export const OptionsPanelZ: React.FC<{
   return (
     <ScrollArea className="h-full w-full">
       <Accordion type="multiple" className="w-full">
-        <ZodEditor compositions={comps} setCompositions={setComps} />;
+        <ZodEditor compositions={comps} setCompositions={setComps} />
       </Accordion>
     </ScrollArea>
   );
@@ -68,8 +67,13 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
           string,
           z.ZodTypeAny
         >;
+
         return (
-          <AccordionItem value={comp.id} key={comp.id + ind} className="mb-8">
+          <AccordionItem
+            value={comp.id}
+            key={comp.id + ind}
+            className="mb-8 border"
+          >
             <AccordionTrigger>
               <h2 className="text-ml font-bold pb-2">{comp.id}</h2>
             </AccordionTrigger>

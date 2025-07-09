@@ -71,7 +71,7 @@ export const AppSidebar: React.FC<{
       case "Transcript":
         return <Transcript GeneratedComp={comps} setGeneratedComp={setComps} />;
       case "Assets":
-        return <AssetBar/>;
+        return <AssetBar />;
       default:
         return <div className="p-4">Default content goes here.</div>;
     }
