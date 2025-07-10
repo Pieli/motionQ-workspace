@@ -1,47 +1,56 @@
+import Workspace from "@/components/chat/Workspace";
+import LandingPage from "@/components/LandingPage";
+import LoginPage from "@/components/login/login-page";
+import { ProtectedRoute, PublicRoute } from "@/components/route-guards";
+import { ThemeProvider } from "@/components/theme-provider";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
-
-import Workspace from "@/components/chat/Workspace";
-import LandingPage from "@/components/LandingPage"; // Import your landing page component
-import { ThemeProvider } from "@/components/theme-provider";
-import DevAnimationTest from "./components/dev-mode/animation-tester";
-
-import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "sonner";
-
-const isLoggedIn = () => {
-  // Replace this with your actual authentication logic
-  return true;
-  // return Boolean(localStorage.getItem("authToken"));
-};
+import DevAnimationTest from "./components/dev-mode/animation-tester";
+import "./index.css";
+import { AuthProvider } from "./lib/AuthContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: isLoggedIn()
-      ? Workspace
-      : () => (
+    element: (
+      <ProtectedRoute>
+        <Workspace />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <PublicRoute>
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-          <LandingPage />
+          <LoginPage />
         </ThemeProvider>
-      ),
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/landing",
+    element: (
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <LandingPage />
+      </ThemeProvider>
+    ),
   },
   {
     path: "/dev",
-    Component: DevAnimationTest,
+    element: <DevAnimationTest />,
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {isLoggedIn() ? (
+    <AuthProvider>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
-        <Toaster position="top-center" /> 
+        <Toaster position="top-center" />
       </ThemeProvider>
-    ) : (
-      <RouterProvider router={router} />
-    )}
-  </StrictMode>,
+    </AuthProvider>
+  </StrictMode>
 );
