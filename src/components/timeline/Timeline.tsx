@@ -346,7 +346,7 @@ export const Timeline: React.FC<{
   }, [tracks]);
 
   return (
-    <>
+    <div className="rounded-md shadow-lg mb-4 bg-background">
       <ControlMenu
         debounceZoomChange={debouncedZoomChange}
         totalDuration={totalDuration}
@@ -356,7 +356,7 @@ export const Timeline: React.FC<{
         zoom={zoom}
         setZoom={setZoom}
       />
-      <div className="w-full h-full overflow-hidden rounded-md shadow-lg mb-4 bg-background">
+      <div className="w-full h-full overflow-hidden ">
         <div
           className="relative h-full w-full"
           style={{ height: Math.max(300, tracks.length * 50 + 100) }}
@@ -403,6 +403,6 @@ export const Timeline: React.FC<{
           </ScrollArea>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -124,7 +124,7 @@ const Workspace = () => {
                     backgroundColor: "unset",
                   }}
                 />
-                <ResizablePanel defaultSize={60} className="py-4 pr-4">
+                <ResizablePanel defaultSize={60} className="py-4">
                   <ResizablePanelGroup
                     direction="vertical"
                     className="rounded-lg"
@@ -147,6 +147,7 @@ const Workspace = () => {
                               compositionWidth={compositionWidth}
                               compositionHeight={compositionHeight}
                               inputProps={{ comps: inputProps }}
+                              className="shadow-xl"
                               style={{
                                 width: "100%",
                                 borderRadius: "12px",
@@ -172,7 +173,7 @@ const Workspace = () => {
                       <>
                         <ResizableHandle />
                         <ResizablePanel defaultSize={30} id="inputProps">
-                          <div className=" overflow-hidden p-4">
+                          <div className="overflow-hidden px-4 pb-4">
                             <Timeline
                               comps={GeneratedComp || []}
                               playerRef={playerRef}
