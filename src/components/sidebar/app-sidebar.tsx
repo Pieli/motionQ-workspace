@@ -81,7 +81,7 @@ export const AppSidebar: React.FC<{
     <Sidebar
       side="right"
       collapsible="icon"
-      className="top-12 !h-[calc(100svh-50px)] overflow-hidden"
+      className="top-12 !h-[calc(100svh-50px)] overflow-hidden border-none"
     >
       <div className="flex flex-row-reverse h-full w-full">
         <Sidebar
