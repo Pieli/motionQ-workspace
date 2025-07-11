@@ -62,7 +62,7 @@ const TrackItems: React.FC<{
           key={index}
           style={{
             width: calcWidth(item.duration),
-            marginLeft: calcWidth(item.start), // Add margin based on start time
+            marginLeft: 0, // calcWidth(item.start), // Add margin based on start time
           }}
         >
           <div
@@ -241,23 +241,22 @@ export const Timeline: React.FC<{
 
   useEffect(() => {
     let currentStartTime = 0;
-    setTracks(
-      comps?.map((com: CompositionConfig, index: number) => {
-        const item: BaseItem = {
-          id: com.id,
-          start: currentStartTime,
-          end: currentStartTime + com.duration,
-          duration: com.duration,
-        };
+    setTracks([
+      {
+        name: `A-0`,
+        items: comps?.map((com: CompositionConfig) => {
+          const item: BaseItem = {
+            id: com.id,
+            start: currentStartTime,
+            end: currentStartTime + com.duration,
+            duration: com.duration,
+          };
 
-        currentStartTime += com.duration; // Update start time for next track
-
-        return {
-          name: `A-${index + 1}`,
-          items: [item],
-        };
-      }),
-    );
+          currentStartTime += com.duration; // Update start time for next track
+          return item;
+        }),
+      },
+    ]);
   }, [comps]);
 
   const maxDuration: number = 120;
