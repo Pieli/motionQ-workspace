@@ -75,20 +75,20 @@ export const AssetBar: React.FC = () => {
           >
             <span className="font-medium min-w-[80px]">{p.name}</span>
             <span
-              className="inline-block rounded-full border"
+              className="inline-block rounded-full"
               style={{
-                width: 20,
-                height: 20,
+                width: 30,
+                height: 30,
                 background: p.primary,
                 marginRight: 4,
               }}
               title="Primary"
             />
             <span
-              className="inline-block rounded-full border"
+              className="inline-block rounded-full"
               style={{
-                width: 20,
-                height: 20,
+                width: 30,
+                height: 30,
                 background: p.secondary,
                 marginRight: 4,
               }}
@@ -97,10 +97,10 @@ export const AssetBar: React.FC = () => {
             {p.additional.map((color, i) => (
               <span
                 key={color + i}
-                className="inline-block rounded-full border"
+                className="inline-block rounded-full"
                 style={{
-                  width: 40,
-                  height: 20,
+                  width: 30,
+                  height: 30,
                   background: color,
                   marginRight: 4,
                 }}
