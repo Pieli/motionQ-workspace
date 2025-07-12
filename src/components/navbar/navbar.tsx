@@ -1,7 +1,6 @@
 "use client";
 
-import { ModeToggle } from "@/components/mode-toggle";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import type { ReactNode } from "react";
 
 import {
   DropdownMenu,
@@ -11,10 +10,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { ShareDialog } from "./share";
+import { NavUser } from "@/components/navbar/user-settings";
+import type React from "react";
 
-export const Navbar = () => {
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg?w",
+};
+
+export const Navbar: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary">
       <div className="flex h-12 w-full items-center justify-between gap-2 px-4">
@@ -33,25 +38,8 @@ export const Navbar = () => {
           </DropdownMenu>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant={"outline"}>Preview</Button>
-          <ShareDialog />
-          <Button>Export</Button>
-          <ModeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Avatar>
-                <AvatarFallback>PG</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {children}
+          <NavUser user={user} />
         </div>
       </div>
     </header>

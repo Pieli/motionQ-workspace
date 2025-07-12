@@ -4,6 +4,9 @@ import { Player, type PlayerRef } from "@remotion/player";
 import { createElement } from "react";
 import { Series } from "remotion";
 
+import { Button } from "@/components/ui/button";
+import { ShareDialog } from "@/components/navbar/share";
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -98,7 +101,11 @@ const Workspace = () => {
           className="flex flex-col"
           style={{ "--sidebar-width": "calc(30svw)" } as React.CSSProperties}
         >
-          <Navbar />
+          <Navbar>
+            <Button variant={"outline"}>Preview</Button>
+            <ShareDialog />
+            <Button>Export</Button>
+          </Navbar>
           <div className="flex flex-1">
             <SidebarInset>
               <ResizablePanelGroup
