@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NullLLMService, OpenAIService } from "@/api/llm";
 
-import type { LLMService } from "@/components/interfaces/llm";
-import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { ChatInput } from "@/components/chat/chat-input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import type { CompositionConfig } from "@/components/interfaces/compositions";
+import type { LLMService } from "@/components/interfaces/llm";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // import { logCompositionConfig } from "@/helpers/composition-logger";
-import { exampleComp } from "@/helpers/example-comp";
+import { exampleComp, exampleHistory } from "@/helpers/example-comp";
 import { toast } from "sonner";
 
 // keep service null if undefined env
@@ -69,58 +69,94 @@ export const ChatBoxPanel: React.FC<{
   >;
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
   isGenerating: boolean;
-}> = ({ setGeneratedComp, setIsGenerating, isGenerating }) => {
+  initialPrompt: string;
+  setInitialPrompt: React.Dispatch<React.SetStateAction<string>>;
+}> = ({
+  setGeneratedComp,
+  setIsGenerating,
+  isGenerating,
+  initialPrompt,
+  setInitialPrompt,
+}) => {
   const [history, setHistory] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
 
-  function devMode() {
-    setHistory([
-      "User: I have build an email client called Zero and I want to make a promo for that tool.  What is Zero ?  Zero is an open - source AI email solution that gives users the power to self - host their own email app while also integrating external services like Gmail and other email providers.Our goal is to modernize and improve emails through AI agents to truly modernize emails.  Why Zero ?  Most email services today are either closed - source, data - hungry, or too complex to self - host. 0.email is different: Open - Source – No hidden agendas, fully transparent.  AI Driven - Enhance your emails with Agents & LLMs.  Data Privacy First – Your emails, your data.Zero does not track, collect, or sell your data in any way.Please note: while we integrate with external services, the data passed through them is not under our control and falls under their respective privacy policies and terms of service.  Self - Hosting Freedom – Run your own email app with ease.  Unified Inbox – Connect multiple email providers like Gmail, Outlook, and more.  Customizable UI & Features – Tailor your email experience the way you want it.  Developer - Friendly – Built with extensibility and integrations in mind.",
-      "Agent: done so sire",
-    ]);
+  const initialPromptProcessedRef = React.useRef(false);
+
+  const devMode = React.useCallback(() => {
+    setHistory(exampleHistory);
     setGeneratedComp(exampleComp);
     setIsGenerating(false);
-  }
+  }, [setHistory, setGeneratedComp, setIsGenerating]);
 
-  const generate = async () => {
-    // Add the user prompt to history
-    setHistory((prev) => [...prev, `User: ${prompt}`]);
-    const currentPrompt = prompt;
-    setPrompt("");
-    setIsGenerating(true);
+  const generate = React.useCallback(
+    async (promptArg?: string) => {
+      let usedPrompt = prompt.trim();
 
-    if (prompt === "#dev") {
-      devMode();
-      return;
-    }
-
-    try {
-      const response = await llm.generateCompositions(currentPrompt);
-      if (!response) {
-        throw new Error("Failed to generate compositions");
+      if (promptArg !== undefined) {
+        usedPrompt = promptArg.trim();
+        setInitialPrompt("");
       }
-      const composition = llm.responseToGeneratedComposition(response);
-      if (!composition) {
-        throw new Error("Failed to parse generated compositions");
+
+      if (usedPrompt.length == 0) {
+        setIsGenerating(false);
+        return;
       }
-      setGeneratedComp(composition);
-      toast.success("Animation has been generated.");
-      // logCompositionConfig(composition)
 
-      // Append the agent's comment to the history
-      setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
-    } catch (e) {
-      console.error("Error during generation:", e);
-      setGeneratedComp(null);
-      // In case of error, you might also want to add an error message to history
-      setHistory((prev) => [
-        ...prev,
-        "Agent: An error occurred during generation.",
-      ]);
+      setHistory((prev) => [...prev, `User: ${usedPrompt}`]);
+      const currentPrompt = usedPrompt;
+      setPrompt("");
+      setIsGenerating(true);
+
+      if (usedPrompt === "#dev") {
+        devMode();
+        return;
+      }
+
+      try {
+        const response = await llm.generateCompositions(currentPrompt);
+        if (!response) {
+          throw new Error("Failed to generate compositions");
+        }
+        const composition = llm.responseToGeneratedComposition(response);
+        if (!composition) {
+          throw new Error("Failed to parse generated compositions");
+        }
+        setGeneratedComp(composition);
+        toast.success("Animation has been generated.");
+        // logCompositionConfig(composition)
+
+        // Append the agent's comment to the history
+        setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
+      } catch (e) {
+        console.error("Error during generation:", e);
+        setGeneratedComp(null);
+        // In case of error, you might also want to add an error message to history
+        setHistory((prev) => [
+          ...prev,
+          "Agent: An error occurred during generation.",
+        ]);
+      }
+
+      setIsGenerating(false);
+    },
+    [
+      prompt,
+      setHistory,
+      setGeneratedComp,
+      setIsGenerating,
+      devMode,
+      setInitialPrompt,
+    ],
+  );
+
+  useEffect(() => {
+    console.log(typeof initialPrompt, initialPrompt);
+    if (!initialPromptProcessedRef.current && initialPrompt.length > 0) {
+      initialPromptProcessedRef.current = true;
+      generate(initialPrompt);
     }
-
-    setIsGenerating(false);
-  };
+  }, [generate, initialPromptProcessedRef, initialPrompt]);
 
   return (
     <div className="flex flex-col h-full w-full px-2 bg-background relative">
@@ -145,7 +181,7 @@ export const ChatBoxPanel: React.FC<{
           <ChatInput
             prompt={prompt}
             setPrompt={setPrompt}
-            onSend={generate}
+            onSend={() => generate()}
             isGenerating={isGenerating}
           />
         </div>

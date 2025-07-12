@@ -57,8 +57,9 @@ export const ChatInput: React.FC<{
           </Button>
         </TooltipTrigger>
         <TooltipContent sideOffset={8}>
-          Press <kbd>Enter</kbd> to send and <kbd>Shift</kbd>+<kbd>Enter</kbd>{" "}
-          for a linebreak.
+          Press <kbd>Enter</kbd> to send
+          <br />
+          and <kbd>Shift</kbd>+<kbd>Enter</kbd> for a linebreak.
         </TooltipContent>
       </Tooltip>
     </div>

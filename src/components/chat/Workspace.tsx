@@ -1,8 +1,9 @@
 import React, { useMemo, useRef, useState } from "react";
 
-import { Player, type PlayerRef } from "@remotion/player";
-import { createElement } from "react";
 import { Series } from "remotion";
+import { createElement } from "react";
+import { useLocation } from "react-router-dom";
+import { Player, type PlayerRef } from "@remotion/player";
 
 import { Button } from "@/components/ui/button";
 import { ShareDialog } from "@/components/navbar/share";
@@ -74,10 +75,15 @@ const Workspace = () => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
 
+  const location = useLocation();
+
+  const [initialPrompt, setInitialPrompt] = useState<string>(
+    location.state.initialPrompt || "",
+  );
   const [GeneratedComp, setGeneratedComp] = useState<
     CompositionConfig[] | null
   >(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(location.state || false);
 
   const [loop, setLoop] = useState(true);
 
@@ -123,6 +129,8 @@ const Workspace = () => {
                     setGeneratedComp={setGeneratedComp}
                     setIsGenerating={setIsGenerating}
                     isGenerating={isGenerating}
+                    initialPrompt={initialPrompt}
+                    setInitialPrompt={setInitialPrompt}
                   />
                 </ResizablePanel>
                 <ResizableHandle
