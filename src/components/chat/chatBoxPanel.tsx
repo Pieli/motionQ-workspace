@@ -1,21 +1,12 @@
 import React, { useState } from "react";
 
-import { SendHorizonal } from "lucide-react";
-
 import { NullLLMService, OpenAIService } from "@/api/llm";
+
 import type { LLMService } from "@/components/interfaces/llm";
-
 import type { CompositionConfig } from "@/components/interfaces/compositions";
-
-import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
-import { Button } from "@/components/ui/button";
+import { ChatInput } from "@/components/chat/chat-input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 
 // import { logCompositionConfig } from "@/helpers/composition-logger";
 import { exampleComp } from "@/helpers/example-comp";
@@ -69,71 +60,6 @@ const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
         ))}
       </div>
     </ScrollArea>
-  );
-};
-
-// ChatInput component for the input area
-const ChatInput: React.FC<{
-  prompt: string;
-  setPrompt: React.Dispatch<React.SetStateAction<string>>;
-  onSend: () => void;
-  isGenerating: boolean;
-}> = ({ prompt, setPrompt, onSend, isGenerating }) => {
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-
-  // Auto-grow textarea height
-  React.useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  }, [prompt]);
-
-  return (
-    <div className="absolute left-0 right-0 bottom-0 bg-background z-20 p-4 pointer-events-auto">
-      {isGenerating && (
-        <div className="pl-4 pt-2 pb-2 text-right">
-          <AnimatedGradientText className="text-sm font-semibold">
-            Generating Animation
-          </AnimatedGradientText>
-        </div>
-      )}
-      <div className="relative w-full">
-        <Textarea
-          ref={textareaRef}
-          className="min-h-[80px] max-h-[200px] w-full pr-12 resize-none rounded-xl transition-[height] duration-150 box-border overflow-y-auto mb-0 block align-bottom"
-          placeholder="Describe your animation..."
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          rows={1}
-          style={{ minHeight: "80px", maxHeight: "200px" }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              if (!isGenerating && prompt) {
-                onSend();
-              }
-            }
-          }}
-        />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              className="absolute right-2 bottom-2"
-              size="lg"
-              onClick={onSend}
-              disabled={isGenerating || !prompt}
-            >
-              <SendHorizonal />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent sideOffset={8}>
-            Press <kbd>Enter</kbd> to send and <kbd>Shift</kbd>+<kbd>Enter</kbd>{" "}
-            for a linebreak.
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    </div>
   );
 };
 
@@ -207,12 +133,23 @@ export const ChatBoxPanel: React.FC<{
           </div>
         )}
       </div>
-      <ChatInput
-        prompt={prompt}
-        setPrompt={setPrompt}
-        onSend={generate}
-        isGenerating={isGenerating}
-      />
+      <div className="absolute left-0 right-0 bottom-0 bg-background z-20 p-4 pointer-events-auto">
+        {isGenerating && (
+          <div className="pl-4 pt-2 pb-2 text-right">
+            <AnimatedGradientText className="text-sm font-semibold">
+              Generating Animation
+            </AnimatedGradientText>
+          </div>
+        )}
+        <div className="block align-bottom">
+          <ChatInput
+            prompt={prompt}
+            setPrompt={setPrompt}
+            onSend={generate}
+            isGenerating={isGenerating}
+          />
+        </div>
+      </div>
     </div>
   );
 };

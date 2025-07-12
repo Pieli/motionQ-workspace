@@ -1,5 +1,6 @@
 import Workspace from "@/components/chat/Workspace";
-import LandingPage from "@/components/LandingPage";
+import LandingPage from "@/components/landing-page/LandingPage";
+import StartPage from "@/components/start-page/page";
 import LoginPage from "@/components/login/login-page";
 import { ProtectedRoute, PublicRoute } from "@/components/route-guards";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -14,6 +15,14 @@ import { AuthProvider } from "./lib/AuthContext";
 const router = createBrowserRouter([
   {
     path: "/",
+    element: (
+      <ProtectedRoute>
+        <StartPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/workspace",
     element: (
       <ProtectedRoute>
         <Workspace />
@@ -52,5 +61,5 @@ createRoot(document.getElementById("root")!).render(
         <Toaster position="top-center" />
       </ThemeProvider>
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );
