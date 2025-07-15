@@ -1,10 +1,10 @@
 import React, { useMemo, useRef, useState } from "react";
 
-import { useLocation } from "react-router-dom";
 import { Player, type PlayerRef } from "@remotion/player";
+import { useLocation } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import { ShareDialog } from "@/components/navbar/share";
+import { Button } from "@/components/ui/button";
 
 import {
   ResizableHandle,
@@ -14,12 +14,13 @@ import {
 
 import { ChatBoxPanel } from "@/components/chat/chatBoxPanel";
 import { Navbar } from "@/components/navbar/navbar";
-import { Spacing } from "@/components/ui/spacing";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Timeline } from "@/components/timeline/Timeline";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Spacing } from "@/components/ui/spacing";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import type { BaseItem } from "@/components/timeline/Timeline";
 import { FPS } from "@/globals";
 
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
@@ -40,6 +41,11 @@ const Workspace = () => {
   const [isGenerating, setIsGenerating] = useState(location.state || false);
 
   const [loop, setLoop] = useState(true);
+
+  // Initialize sidebar state as closed
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [sidebarTab, setSidebarTab] = useState<string>("properties");
+  const [propertiesItem, setPropertiesItem] = useState<BaseItem | null>(null);
 
   const totalDuration = useMemo(
     () =>
@@ -147,6 +153,9 @@ const Workspace = () => {
                               comps={GeneratedComp || []}
                               playerRef={playerRef}
                               setLoop={setLoop}
+                              setSidebarOpen={setSidebarOpen}
+                              setSidebarTab={setSidebarTab}
+                              setPropertiesItem={setPropertiesItem}
                             />
                           </div>
                         </ResizablePanel>
@@ -156,7 +165,13 @@ const Workspace = () => {
                 </ResizablePanel>
               </ResizablePanelGroup>
             </SidebarInset>
-            <AppSidebar setComps={setGeneratedComp} comps={GeneratedComp} />
+            <AppSidebar
+              setComps={setGeneratedComp}
+              comps={GeneratedComp}
+              sidebarOpen={sidebarOpen}
+              sidebarTab={sidebarTab}
+              propertiesItem={propertiesItem}
+            />
           </div>
         </SidebarProvider>
       </div>

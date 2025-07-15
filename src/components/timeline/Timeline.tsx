@@ -14,7 +14,7 @@ import { PlayPauseButton } from "@/components/timeline/PlayPauseButton";
 import { useCurrentPlayerFrame } from "@/components/timeline/user-current-player-frame";
 import { FPS } from "@/globals";
 
-type BaseItem = {
+export type BaseItem = {
   id: string;
   start: number;
   end: number;
@@ -54,7 +54,8 @@ const useWindowDimensions = () => {
 const TrackItems: React.FC<{
   items: BaseItem[];
   calcWidth: (duration: number) => number;
-}> = ({ items, calcWidth }) => {
+  onItemClick?: (item: BaseItem) => void;
+}> = ({ items, calcWidth, onItemClick }) => {
   return (
     <div className="flex" style={{ gap: "1px" }}>
       {items.map((item: BaseItem, index) => (
@@ -64,6 +65,7 @@ const TrackItems: React.FC<{
             width: calcWidth(item.duration),
             marginLeft: 0, // calcWidth(item.start), // Add margin based on start time
           }}
+          onClick={() => onItemClick?.(item)}
         >
           <div
             className="h-full w-full bg-primary p-2 box-border cursor-pointer rounded-sm border border-black/80 select-none"
@@ -84,7 +86,8 @@ const TrackLines: React.FC<{
   tracks: Track[];
   stepWidth: number;
   stepTime: number;
-}> = ({ tracks, stepWidth, stepTime }) => {
+  onItemClick?: (item: BaseItem) => void;
+}> = ({ tracks, stepWidth, stepTime, onItemClick }) => {
   const calculateTrackItemWidth = useCallback(
     (duration: number) => (duration / (FPS * stepTime)) * stepWidth,
     [stepWidth, stepTime],
@@ -101,7 +104,7 @@ const TrackLines: React.FC<{
               className="absolute flex"
               style={{
                 height: 45,
-                left: stepWidth, // Remove the index-based offset since items have their own start times
+                left: stepWidth,
                 top: 60 + 45 * index + index * 8,
                 overflow: "hidden",
                 zIndex: 0,
@@ -110,6 +113,7 @@ const TrackLines: React.FC<{
               <TrackItems
                 items={track.items}
                 calcWidth={calculateTrackItemWidth}
+                onItemClick={onItemClick}
               />
             </div>
           </div>
@@ -234,7 +238,10 @@ export const Timeline: React.FC<{
   comps: CompositionConfig[];
   playerRef: React.RefObject<PlayerRef | null>;
   setLoop: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ comps, playerRef, setLoop }) => {
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSidebarTab: React.Dispatch<React.SetStateAction<string>>;
+  setPropertiesItem: React.Dispatch<React.SetStateAction<BaseItem | null>>;
+}> = ({ comps, playerRef, setLoop, setSidebarOpen, setSidebarTab, setPropertiesItem }) => {
   const [tracks, setTracks] = useState<Track[]>([]);
 
   const frame = useCurrentPlayerFrame(playerRef);
@@ -344,6 +351,12 @@ export const Timeline: React.FC<{
     return 0;
   }, [tracks]);
 
+  const handleTrackItemClick = useCallback((item: BaseItem) => {
+    setSidebarOpen(true); // Expand sidebar
+    setSidebarTab("properties"); // Switch to properties tab
+    setPropertiesItem(item); // Set the selected item for the properties panel
+  }, [setSidebarOpen, setSidebarTab, setPropertiesItem]);
+
   return (
     <div className="rounded-md shadow-lg mb-4 bg-background">
       <ControlMenu
@@ -396,6 +409,7 @@ export const Timeline: React.FC<{
                 tracks={tracks}
                 stepWidth={stepWidth}
                 stepTime={stepToSecs(zoom)}
+                onItemClick={handleTrackItemClick}
               />
             </div>
             <ScrollBar orientation="horizontal" />

@@ -1,5 +1,5 @@
 import { Captions, Command, Component, Folders } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 // TODO is the NavUser needed (decide later)
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -16,6 +16,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 import type { CompositionConfig } from "@/components/interfaces/compositions";
@@ -53,16 +54,34 @@ const data = {
 export const AppSidebar: React.FC<{
   comps: CompositionConfig[] | null;
   setComps: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
-}> = ({ comps, setComps }) => {
-  const [activeItem, setActiveItem] = useState(data.navMain[0]);
+  sidebarOpen: boolean;
+  sidebarTab: string;
+  propertiesItem: BaseItem | null;
+}> = ({ comps, setComps, sidebarOpen, sidebarTab, propertiesItem }) => {
+  const [activeItem, setActiveItem] = useState(() => {
+    const foundItem = data.navMain.find(item => item.title.toLowerCase() === sidebarTab.toLowerCase());
+    return foundItem || data.navMain[0];
+  });
+
+  useEffect(() => {
+    // Keep activeItem in sync with sidebarTab
+    const foundItem = data.navMain.find(item => item.title.toLowerCase() === sidebarTab.toLowerCase());
+    if (foundItem) {
+      setActiveItem(foundItem);
+    }
+  }, [sidebarTab]);
 
   const renderContent = useMemo(() => {
     switch (activeItem.title) {
       case "Properties":
         return (
           <div className="p-4">
-            {comps && comps.length > 0 ? (
-              <OptionsPanelZ compositions={comps} setCompositions={setComps} />
+            {comps && comps.length > 0 && propertiesItem ? (
+              <OptionsPanelZ 
+                compositions={comps} 
+                setCompositions={setComps}
+                selectedItem={propertiesItem}
+              />
             ) : (
               <span>Select a composition to edit its properties</span>
             )}
@@ -75,7 +94,14 @@ export const AppSidebar: React.FC<{
       default:
         return <div className="p-4">Default content goes here.</div>;
     }
-  }, [comps, activeItem, setComps]);
+  }, [comps, activeItem, setComps, propertiesItem]);
+
+  const { setOpen } = useSidebar();
+
+  // Keep sidebar state in sync
+  useEffect(() => {
+    setOpen(sidebarOpen);
+  }, [sidebarOpen, setOpen]);
 
   return (
     <Sidebar

@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spacing } from "@/components/ui/spacing";
 import { Textarea } from "@/components/ui/textarea";
 
+import type { BaseItem } from "@/components/timeline/Timeline";
 import type {
   CompositionConfig,
   PropType,
@@ -26,9 +27,11 @@ export const OptionsPanelZ: React.FC<{
   setCompositions: React.Dispatch<
     React.SetStateAction<CompositionConfig[] | null>
   >;
-}> = ({ compositions, setCompositions }) => {
-  // initialize local state from incoming compositions
+  selectedItem?: BaseItem | null;
+}> = ({ compositions, setCompositions, selectedItem }) => {
   const [comps, setComps] = React.useState(compositions);
+  const [selectedComp, setSelectedComp] =
+    React.useState<CompositionConfig | null>(null);
 
   useEffect(() => {
     setCompositions(comps);
@@ -38,18 +41,42 @@ export const OptionsPanelZ: React.FC<{
     setComps(compositions);
   }, [compositions]);
 
+  // When selectedItem changes, open its accordion section
+  useEffect(() => {
+    if (selectedItem) {
+      const selectedComp = comps.find((comp) => comp.id === selectedItem.id);
+      setSelectedComp(selectedComp || null);
+    }
+  }, [selectedItem, compositions, comps]);
+
   return (
-    <ScrollArea className="h-full w-full">
-      <Accordion type="multiple" className="w-full">
-        <ZodEditor compositions={comps} setCompositions={setComps} />
-      </Accordion>
-    </ScrollArea>
+    <>
+      {selectedComp ? (
+        <ScrollArea className="h-full w-full">
+          <Accordion
+            type="multiple"
+            className="w-full"
+            defaultValue={[selectedComp.id, ...(selectedComp.background ? [selectedComp.background.id] : [])]}
+            value={[selectedComp.id, ...(selectedComp.background ? [selectedComp.background.id] : [])]}
+          >
+            <ZodEditor
+              compositions={comps}
+              setCompositions={setComps}
+              selectedComp={selectedComp}
+            />
+          </Accordion>
+        </ScrollArea>
+      ) : (
+        <span>Select a composition to edit its properties</span>
+      )}
+    </>
   );
 };
 
 interface ZodEditorProps {
   compositions: CompositionConfig[];
   setCompositions: React.Dispatch<React.SetStateAction<CompositionConfig[]>>;
+  selectedComp: CompositionConfig;
 }
 
 const EditorElement: React.FC<{
@@ -81,6 +108,7 @@ const EditorElement: React.FC<{
 const ZodEditor: React.FC<ZodEditorProps> = ({
   compositions,
   setCompositions,
+  selectedComp,
 }) => {
   const handleFieldChange = useCallback(
     (nodeInfo: { parentId: string; level: number }) =>
@@ -94,38 +122,44 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
 
   return (
     <>
-      {compositions.map((comp, ind) => {
-        return (
-          <AccordionItem
-            value={comp.id}
-            key={comp.id + ind}
-            className="mb-8 border rounded-xl"
-          >
-            <AccordionTrigger>
-              <h2 className="text-ml font-bold p-2">{comp.id}</h2>
-            </AccordionTrigger>
-            <AccordionContent className="p-2">
-              <EditorElement
-                composition={comp}
-                handleChange={handleFieldChange({
-                  parentId: comp.id,
-                  level: 0,
-                })}
-              />
-              <Spacing />
-              {comp.background && (
-                <EditorElement
-                  composition={comp.background}
-                  handleChange={handleFieldChange({
-                    parentId: comp.id,
-                    level: 1,
-                  })}
-                />
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        );
-      })}
+      <AccordionItem
+        value={selectedComp.id}
+        key={selectedComp.id}
+        className="mb-8 border rounded-xl"
+      >
+        <AccordionTrigger>
+          <h2 className="text-ml font-bold p-2">Foreground</h2>
+        </AccordionTrigger>
+        <AccordionContent className="p-2">
+          <EditorElement
+            composition={selectedComp}
+            handleChange={handleFieldChange({
+              parentId: selectedComp.id,
+              level: 0,
+            })}
+          />
+        </AccordionContent>
+      </AccordionItem>
+      {selectedComp.background && (
+        <AccordionItem
+          value={selectedComp.background.id}
+          key={"background"}
+          className="mb-8 border rounded-xl"
+        >
+          <AccordionTrigger>
+            <h2 className="text-ml font-bold p-2">Background</h2>
+          </AccordionTrigger>
+          <AccordionContent className="p-2">
+            <EditorElement
+              composition={selectedComp.background}
+              handleChange={handleFieldChange({
+                parentId: selectedComp.id,
+                level: 1,
+              })}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      )}
     </>
   );
 };
@@ -251,8 +285,7 @@ export const ZodColorEditor: React.FC<{
 
   const onTextChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
-      const newValue = e.target.value;
-      onChange(compId, fieldKey, newValue);
+      onChange(compId, fieldKey, e.target.value);
     },
     [compId, fieldKey, onChange],
   );
@@ -266,17 +299,10 @@ export const ZodColorEditor: React.FC<{
         <Row align="center">
           <Input
             type="color"
-            style={{
-              height: 29,
-              width: 29,
-              borderRadius: "50%",
-              margin: 0,
-              padding: 4,
-              display: "inline-block",
-            }}
             value={rgb}
             onChange={onValueChange}
             name={fieldKey}
+            className="w-6 h-6 p-1 m-0 rounded-[50%] inline-block cursor-pointer"
           />
           <Spacing x={1} block />
           <Input value={value} placeholder={value} onChange={onTextChange} />
