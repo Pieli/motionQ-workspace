@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { ZodColorEditor } from "@/components/zodeditor/color-editor";
+import { ZodEnumEditor } from "@/components/zodeditor/enum-editor";
 import { ZodNumberEditor } from "@/components/zodeditor/number-editor";
 import { ZodTextEditor } from "@/components/zodeditor/text-editor";
 
@@ -218,6 +219,16 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
           fieldKey={fieldKey}
           value={Number(currentValue)}
           onChange={onFieldChange}
+        />
+      );
+    case z.ZodFirstPartyTypeKind.ZodEnum:
+      return (
+        <ZodEnumEditor
+          compId={comp.id}
+          fieldKey={fieldKey}
+          value={String(currentValue)}
+          onChange={onFieldChange}
+          schema={fieldSchema as z.ZodEnum<[string, ...string[]]>}
         />
       );
     case z.ZodFirstPartyTypeKind.ZodEffects: {
