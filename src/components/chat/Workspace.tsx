@@ -1,7 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
 
-import { Series } from "remotion";
-import { createElement } from "react";
 import { useLocation } from "react-router-dom";
 import { Player, type PlayerRef } from "@remotion/player";
 
@@ -24,52 +22,7 @@ import { Timeline } from "@/components/timeline/Timeline";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { FPS } from "@/globals";
 
-type ParsedElement = {
-  prop: object;
-  component: React.FC;
-};
-
-function elementParser(comp?: CompositionConfig): ParsedElement {
-  if (!comp) {
-    return { prop: {}, component: React.Fragment };
-  }
-
-  const parsedProps = comp.schema.safeParse(comp.props);
-  if (!parsedProps.success) {
-    console.error(`Error parsing props for ${comp.id}:`, parsedProps.error);
-    return { prop: {}, component: React.Fragment };
-  }
-
-  return { prop: parsedProps.data, component: comp.component };
-}
-
-export const SequenceBuilder: React.FC<{ comps: CompositionConfig[] }> = ({
-  comps,
-}) => {
-  const renderCompositions = useMemo(() => {
-    return comps.map((comp, index: number) => {
-      const parsedBack = elementParser(comp.background);
-      const parsedComp = elementParser(comp);
-
-      return (
-        <Series.Sequence durationInFrames={comp.duration} key={index}>
-          <>
-            {createElement(parsedBack.component, {
-              ...parsedBack.prop,
-              key: `background-${index}`,
-            })}
-            {createElement(parsedComp.component, {
-              ...parsedComp.prop,
-              key: `foreground-${index}`,
-            })}
-          </>
-        </Series.Sequence>
-      );
-    });
-  }, [comps]);
-
-  return <Series>{renderCompositions}</Series>;
-};
+import { SequenceBuilder } from "@/components/tree-builder/sequence";
 
 const Workspace = () => {
   const compositionWidth = 1920;
@@ -77,6 +30,7 @@ const Workspace = () => {
 
   const location = useLocation();
 
+  // when transitioning from the start to the workspace screen
   const [initialPrompt, setInitialPrompt] = useState<string>(
     location.state.initialPrompt || "",
   );

@@ -1,9 +1,10 @@
 import React from "react";
 import { Player } from "@remotion/player";
-import { SequenceBuilder } from "@/components/chat/Workspace";
 import { animationMap, backgroundMap } from "@/remotion-lib/animation-bindings";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { FPS } from "@/globals";
+
+import { SequenceBuilder } from "@/components/tree-builder/sequence";
 
 const compositionWidth = 1920;
 const compositionHeight = 1080;
@@ -11,7 +12,9 @@ const compositionHeight = 1080;
 const animationKeys = Object.keys(animationMap);
 const backgroundKeys = Object.keys(backgroundMap);
 
-const getCompositionsForBackground = (backgroundKey: string): CompositionConfig[] => {
+const getCompositionsForBackground = (
+  backgroundKey: string,
+): CompositionConfig[] => {
   const background = backgroundMap[backgroundKey];
   return animationKeys.map((animKey, idx) => {
     const anim = animationMap[animKey];
@@ -38,7 +41,9 @@ const getCompositionsForBackground = (backgroundKey: string): CompositionConfig[
 const DevAnimationTest: React.FC = () => {
   return (
     <div style={{ padding: 32 }}>
-      <h1 style={{ fontSize: 32, marginBottom: 32 }}>Animation & Background Dev Playground</h1>
+      <h1 style={{ fontSize: 32, marginBottom: 32 }}>
+        Animation & Background Dev Playground
+      </h1>
       {backgroundKeys.map((bgKey) => (
         <section key={bgKey} style={{ marginBottom: 64 }}>
           <h2 style={{ fontSize: 24, marginBottom: 16 }}>{bgKey}</h2>
@@ -49,7 +54,12 @@ const DevAnimationTest: React.FC = () => {
             compositionWidth={compositionWidth}
             compositionHeight={compositionHeight}
             inputProps={{ comps: getCompositionsForBackground(bgKey) }}
-            style={{ width: "100%", maxWidth: 900, borderRadius: 12, boxShadow: "0 2px 16px #0002" }}
+            style={{
+              width: "100%",
+              maxWidth: 900,
+              borderRadius: 12,
+              boxShadow: "0 2px 16px #0002",
+            }}
             acknowledgeRemotionLicense
             controls
             autoPlay
