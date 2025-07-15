@@ -1,3 +1,5 @@
+import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
@@ -6,27 +8,20 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-
-import { zColor } from "@remotion/zod-types";
-import { z } from "zod";
-
-import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
-import { fitText } from "@remotion/layout-utils";
-
-export const fadeInSchema = z.object({
-  text: z.string().default("Hello World"),
-  textColor: zColor().default("#fff"),
-});
+import type { FadeInProps } from "./schemas";
 
 loadFont("normal", {
   subsets: ["latin"],
   weights: ["400", "700"],
 });
 
-
-export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
+export const FadeInTransition: React.FC<FadeInProps> = ({
   text,
   textColor,
+  fontSize: customFontSize,
+  fontWeight = 550,
+  fontFamily: customFontFamily = fontFamily,
+  fadeDuration = 1.5,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -40,7 +35,7 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
     config: {
       damping: 200,
     },
-    durationInFrames: 1.5 * fps,
+    durationInFrames: fadeDuration * fps,
   });
 
   const opacity = interpolate(progress, [0, 1], [0, 1]);
@@ -53,23 +48,21 @@ export const FadeInTransition: React.FC<z.infer<typeof fadeInSchema>> = ({
     };
   }, [opacity]);
 
-
   const maxWidth = 1536;
-  const fontWeight = 550;
   const { fontSize } = fitText({
     text,
     withinWidth: maxWidth,
-    fontFamily,
+    fontFamily: customFontFamily,
     fontWeight,
   });
 
   return (
     <AbsoluteFill style={container}>
       <div style={{
-        fontSize,
+        fontSize: customFontSize || fontSize,
         width: maxWidth,
         margin: "0 auto",
-        fontFamily,
+        fontFamily: customFontFamily,
         fontWeight,
         color: textColor,
         textAlign: "center",

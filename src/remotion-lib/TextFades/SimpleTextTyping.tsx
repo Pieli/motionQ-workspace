@@ -1,21 +1,13 @@
-import React, { useMemo } from "react";
+import React from "react";
 import {
   AbsoluteFill,
   spring,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-
-import { z } from "zod";
-import { zColor } from "@remotion/zod-types";
-
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 import { fitText } from "@remotion/layout-utils";
-
-export const simpleTypingSchema = z.object({
-  text: z.string().default("Hello World"),
-  textColor: zColor().default("#fff"),
-});
+import type { SimpleTypingProps } from "./schemas";
 
 loadFont("normal", {
   subsets: ["latin"],
@@ -24,9 +16,14 @@ loadFont("normal", {
 
 const outer: React.CSSProperties = {};
 
-export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
+export const SimpleTextTyping: React.FC<SimpleTypingProps> = ({
   text,
-  textColor
+  textColor,
+  fontSize: customFontSize,
+  fontWeight = 550,
+  fontFamily: customFontFamily = fontFamily,
+  typingDuration,
+  damping,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -35,12 +32,11 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
     fps,
     frame,
     config: {
-      damping: 100,
+      damping,
     },
-    durationInFrames: 2 * fps,
+    durationInFrames: typingDuration,
   });
 
-  // Calculate how many characters should be visible by current frame
   const visibleCharacters = Math.floor(progress * text.length);
 
   const container: React.CSSProperties = {
@@ -49,11 +45,10 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
   };
 
   const maxWidth = 1536;
-  const fontWeight = 550;
   const { fontSize } = fitText({
     text,
     withinWidth: maxWidth,
-    fontFamily,
+    fontFamily: customFontFamily,
     fontWeight,
   });
 
@@ -61,10 +56,10 @@ export const SimpleTextTyping: React.FC<z.infer<typeof simpleTypingSchema>> = ({
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
         <div style={{
-          fontSize,
+          fontSize: customFontSize || fontSize,
           width: maxWidth,
           margin: "0 auto",
-          fontFamily,
+          fontFamily: customFontFamily,
           fontWeight,
           color: textColor,
           textAlign: "center",

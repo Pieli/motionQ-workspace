@@ -1,3 +1,5 @@
+import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
@@ -7,88 +9,74 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { z } from "zod";
-import { zColor } from "@remotion/zod-types";
-
-import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
-import { fitText } from "@remotion/layout-utils";
+import type { ScaleUpDownProps } from "@/remotion-lib/TextFades/schemas";
 
 loadFont("normal", {
   subsets: ["latin"],
   weights: ["400", "700"],
 });
 
-export const scaleUpDownSchema = z.object({
-  text: z.string().default("Hello World"),
-  textColor: zColor().default("#fff"),
-});
-
-
-export const ScaleUpDownTransition: React.FC<
-  z.infer<typeof scaleUpDownSchema>
-> = ({
+export const ScaleUpDownTransition: React.FC<ScaleUpDownProps> = ({
   text,
   textColor,
-
 }) => {
-    const { fps } = useVideoConfig();
-    const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const frame = useCurrentFrame();
 
-    // for the multiline bug
-    text += " ";
+  // for the multiline bug
+  text += " ";
 
-    const progress = spring({
-      fps,
-      frame,
-      config: {
-        damping: 100,
-      },
-      durationInFrames: 0.5 * fps,
-    });
+  const progress = spring({
+    fps,
+    frame,
+    config: {
+      damping: 100,
+    },
+    durationInFrames: 0.5 * fps,
+  });
 
-    // Scale Up/Down Transition: Scale from 0.5 to 1
-    const scale = interpolate(progress, [0, 1], [0.5, 1]);
+  // Scale Up/Down Transition: Scale from 0.5 to 1
+  const scale = interpolate(progress, [0, 1], [0.5, 1]);
 
-    const maxWidth = 1536;
-    const fontWeight = 550;
-    const { fontSize } = fitText({
-      text,
-      withinWidth: maxWidth,
-      fontFamily,
-      fontWeight,
-    });
+  const maxWidth = 1536;
+  const fontWeight = 550;
+  const { fontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
 
-    const container: React.CSSProperties = useMemo(() => {
-      return {
-        transform: `scale(${scale})`,
-      };
-    }, [scale]);
-
-    const outer: React.CSSProperties = {
-      justifyContent: "center",
-      alignItems: "center",
+  const container: React.CSSProperties = useMemo(() => {
+    return {
+      transform: `scale(${scale})`,
     };
+  }, [scale]);
 
-    return (
-      <AbsoluteFill style={outer}>
-        <div style={container}>
-          <div
-            style={{
-              fontSize,
-              width: maxWidth,
-              margin: "0 auto",
-              fontFamily,
-              color: textColor,
-              fontWeight,
-              textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {text}
-          </div>
-
-        </div>
-      </AbsoluteFill>
-    );
+  const outer: React.CSSProperties = {
+    justifyContent: "center",
+    alignItems: "center",
   };
+
+  return (
+    <AbsoluteFill style={outer}>
+      <div style={container}>
+        <div
+          style={{
+            fontSize,
+            width: maxWidth,
+            margin: "0 auto",
+            fontFamily,
+            color: textColor,
+            fontWeight,
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {text}
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};

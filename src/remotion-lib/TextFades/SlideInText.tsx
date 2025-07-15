@@ -7,25 +7,25 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import { zColor } from "@remotion/zod-types";
-import { z } from "zod";
-
+import type { SlideInProps } from "@/remotion-lib/TextFades/schemas";
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
-import { fitText } from "@remotion/layout-utils";
 
-export const slideInSchema = z.object({
-  text: z.string().default("Hello World"),
-  textColor: zColor().default("#fff"),
-});
+import { fitText } from "@remotion/layout-utils";
 
 loadFont("normal", {
   subsets: ["latin"],
   weights: ["400", "700"],
 });
 
-export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
+export const SlideInTransition: React.FC<SlideInProps> = ({
   text,
   textColor,
+  fontSize: customFontSize,
+  fontWeight = 550,
+  fontFamily: customFontFamily = fontFamily,
+  slideDistance,
+  slideDuration,
+  damping,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -34,19 +34,18 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
     fps,
     frame,
     config: {
-      damping: 400,
+      damping,
     },
-    durationInFrames: 1 * fps,
+    durationInFrames: slideDuration,
   });
 
-  const slideX = interpolate(progress, [0, 0.9, 1], [-1000, 80, 0]);
+  const slideX = interpolate(progress, [0, 0.9, 1], [-slideDistance, 80, 0]);
 
   const maxWidth = 1536;
-  const fontWeight = 550;
   const { fontSize } = fitText({
     text,
     withinWidth: maxWidth,
-    fontFamily,
+    fontFamily: customFontFamily,
     fontWeight,
   });
 
@@ -55,8 +54,8 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
       opacity: Math.min(progress, 1),
       transform: `translateX(${slideX}px)`,
       color: textColor,
-      fontSize,
-      fontFamily,
+      fontSize: customFontSize || fontSize,
+      fontFamily: customFontFamily,
       fontWeight,
       width: maxWidth,
       margin: "0 auto",
@@ -64,7 +63,15 @@ export const SlideInTransition: React.FC<z.infer<typeof slideInSchema>> = ({
       display: "flex",
       justifyContent: "center",
     };
-  }, [progress, slideX, textColor, fontSize]);
+  }, [
+    progress,
+    slideX,
+    textColor,
+    fontSize,
+    customFontSize,
+    customFontFamily,
+    fontWeight,
+  ]);
 
   const outer: React.CSSProperties = {
     justifyContent: "center",

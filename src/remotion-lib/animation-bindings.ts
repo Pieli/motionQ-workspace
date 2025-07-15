@@ -1,27 +1,17 @@
 import * as zodTypes from "@remotion/zod-types";
 import { z } from "zod";
 
+import { FadeInTransition } from "@/remotion-lib/TextFades/FadeInText";
+import { SlideInTransition } from "@/remotion-lib/TextFades/SlideInText";
+import { SimpleTextTyping } from "@/remotion-lib/TextFades/SimpleTextTyping";
+import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaldeUpDowText";
+
 import {
-    FadeInTransition,
     fadeInSchema,
-} from "@/remotion-lib/TextFades/FadeInText";
-
-import {
-    SlideInTransition,
     slideInSchema,
-} from "@/remotion-lib/TextFades/SlideInText";
-
-
-import {
-    SimpleTextTyping,
     simpleTypingSchema,
-} from "@/remotion-lib/TextFades/SimpleTextTyping";
-
-
-import {
-    ScaleUpDownTransition,
     scaleUpDownSchema,
-} from "@/remotion-lib/TextFades/ScaldeUpDowText";
+} from "@/remotion-lib/TextFades/schemas";
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
 import { PlainBackground, PlainBackgroundSchema } from "./textures/PlainBackground";

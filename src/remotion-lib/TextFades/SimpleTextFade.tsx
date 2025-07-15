@@ -6,27 +6,25 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-
-import { z } from "zod";
-
 import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
 import { fitText } from "@remotion/layout-utils";
-
-export const simpleFadeSchema = z.object({
-  text: z.string(),
-});
-
+import type { SimpleFadeProps } from "./schemas";
 
 loadFont("normal", {
   subsets: ["latin"],
   weights: ["400", "700"],
 });
 
-
 const outer: React.CSSProperties = {};
 
-export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
+export const SimpleTextFade: React.FC<SimpleFadeProps> = ({
   text,
+  textColor,
+  fontSize: customFontSize,
+  fontWeight = 550,
+  fontFamily: customFontFamily = fontFamily,
+  fadeDuration,
+  fadeAngle,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -37,19 +35,17 @@ export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
     config: {
       damping: 200,
     },
-    durationInFrames: 80,
+    durationInFrames: fadeDuration,
   });
 
   const rightStop = interpolate(progress, [0, 1], [200, 0]);
-
   const leftStop = Math.max(0, rightStop - 60);
+  const maskImage = `linear-gradient(${fadeAngle}deg, transparent ${leftStop}%, black ${rightStop}%)`;
 
-  const maskImage = `linear-gradient(-45deg, transparent ${leftStop}%, black ${rightStop}%)`;
-
-  const container: React.CSSProperties =  {
-      justifyContent: "center",
-      alignItems: "center",
-    };
+  const container: React.CSSProperties = {
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
   const content: React.CSSProperties = useMemo(() => {
     return {
@@ -59,11 +55,10 @@ export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
   }, [maskImage]);
 
   const maxWidth = 1536;
-  const fontWeight = 550;
   const { fontSize } = fitText({
     text,
     withinWidth: maxWidth,
-    fontFamily,
+    fontFamily: customFontFamily,
     fontWeight,
   });
 
@@ -72,11 +67,12 @@ export const SimpleTextFade: React.FC<z.infer<typeof simpleFadeSchema>> = ({
       <AbsoluteFill style={container}>
         <div style={content}>
           <div style={{
-            fontSize,
+            fontSize: customFontSize || fontSize,
             width: maxWidth,
             margin: "0 auto",
-            fontFamily,
+            fontFamily: customFontFamily,
             fontWeight,
+            color: textColor,
             textAlign: "center",
             display: "flex",
             justifyContent: "center",
