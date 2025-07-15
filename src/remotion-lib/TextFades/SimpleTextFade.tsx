@@ -6,9 +6,9 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
-import { fitText } from "@remotion/layout-utils";
+import { loadFont } from "@remotion/google-fonts/Inter";
 import type { SimpleFadeProps } from "./schemas";
+import { Typography } from "@/components/Typography/Typography";
 
 loadFont("normal", {
   subsets: ["latin"],
@@ -17,15 +17,8 @@ loadFont("normal", {
 
 const outer: React.CSSProperties = {};
 
-export const SimpleTextFade: React.FC<SimpleFadeProps> = ({
-  text,
-  textColor,
-  fontSize: customFontSize,
-  fontWeight = 550,
-  fontFamily: customFontFamily = fontFamily,
-  fadeDuration,
-  fadeAngle,
-}) => {
+export const SimpleTextFade: React.FC<SimpleFadeProps> = (props) => {
+  const { fadeDuration, fadeAngle, ...typoProps } = props;
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
 
@@ -54,31 +47,11 @@ export const SimpleTextFade: React.FC<SimpleFadeProps> = ({
     };
   }, [maskImage]);
 
-  const maxWidth = 1536;
-  const { fontSize } = fitText({
-    text,
-    withinWidth: maxWidth,
-    fontFamily: customFontFamily,
-    fontWeight,
-  });
-
   return (
     <AbsoluteFill style={outer}>
       <AbsoluteFill style={container}>
         <div style={content}>
-          <div style={{
-            fontSize: customFontSize || fontSize,
-            width: maxWidth,
-            margin: "0 auto",
-            fontFamily: customFontFamily,
-            fontWeight,
-            color: textColor,
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-          }}>
-            {text}
-          </div>
+          <Typography {...typoProps} />
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

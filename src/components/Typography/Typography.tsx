@@ -1,7 +1,8 @@
-import React from 'react';
-import { z } from 'zod';
+import React from "react";
+import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 import { fontFamily as defaultFontFamily } from "@remotion/google-fonts/Inter";
+import { fitText } from "@remotion/layout-utils";
 
 export const typographySchema = z.object({
   text: z.string().default("Hello World"),
@@ -22,11 +23,19 @@ export const Typography: React.FC<TypographyProps> = ({
   fontFamily,
   textAlign,
 }) => {
+  const maxWidth = 1536;
+  const { fontSize: fittedFontSize } = fitText({
+    text,
+    withinWidth: maxWidth,
+    fontFamily,
+    fontWeight,
+  });
+
   return (
     <div
       style={{
         color: textColor,
-        fontSize,
+        fontSize: fontSize || fittedFontSize,
         fontWeight,
         fontFamily,
         textAlign,

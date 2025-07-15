@@ -1,5 +1,4 @@
-import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
-import { fitText } from "@remotion/layout-utils";
+import { loadFont } from "@remotion/google-fonts/Inter";
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
@@ -10,21 +9,20 @@ import {
 } from "remotion";
 
 import type { ScaleUpDownProps } from "@/remotion-lib/TextFades/schemas";
+import { Typography } from "@/components/Typography/Typography";
 
 loadFont("normal", {
   subsets: ["latin"],
   weights: ["400", "700"],
 });
 
-export const ScaleUpDownTransition: React.FC<ScaleUpDownProps> = ({
-  text,
-  textColor,
-}) => {
+export const ScaleUpDownTransition: React.FC<ScaleUpDownProps> = (props) => {
+  const { ...typoProps } = props;
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
 
   // for the multiline bug
-  text += " ";
+  typoProps.text += " ";
 
   const progress = spring({
     fps,
@@ -37,15 +35,6 @@ export const ScaleUpDownTransition: React.FC<ScaleUpDownProps> = ({
 
   // Scale Up/Down Transition: Scale from 0.5 to 1
   const scale = interpolate(progress, [0, 1], [0.5, 1]);
-
-  const maxWidth = 1536;
-  const fontWeight = 550;
-  const { fontSize } = fitText({
-    text,
-    withinWidth: maxWidth,
-    fontFamily,
-    fontWeight,
-  });
 
   const container: React.CSSProperties = useMemo(() => {
     return {
@@ -61,21 +50,7 @@ export const ScaleUpDownTransition: React.FC<ScaleUpDownProps> = ({
   return (
     <AbsoluteFill style={outer}>
       <div style={container}>
-        <div
-          style={{
-            fontSize,
-            width: maxWidth,
-            margin: "0 auto",
-            fontFamily,
-            color: textColor,
-            fontWeight,
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {text}
-        </div>
+        <Typography {...typoProps} />
       </div>
     </AbsoluteFill>
   );

@@ -8,25 +8,16 @@ import {
 } from "remotion";
 
 import type { SlideInProps } from "@/remotion-lib/TextFades/schemas";
-import { fontFamily, loadFont } from "@remotion/google-fonts/Inter";
-
-import { fitText } from "@remotion/layout-utils";
+import { Typography } from "@/components/Typography/Typography";
+import { loadFont } from "@remotion/google-fonts/Inter";
 
 loadFont("normal", {
   subsets: ["latin"],
   weights: ["400", "700"],
 });
 
-export const SlideInTransition: React.FC<SlideInProps> = ({
-  text,
-  textColor,
-  fontSize: customFontSize,
-  fontWeight = 550,
-  fontFamily: customFontFamily = fontFamily,
-  slideDistance,
-  slideDuration,
-  damping,
-}) => {
+export const SlideInTransition: React.FC<SlideInProps> = (props) => {
+  const { slideDistance, slideDuration, damping, ...typoProps } = props;
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
 
@@ -41,37 +32,17 @@ export const SlideInTransition: React.FC<SlideInProps> = ({
 
   const slideX = interpolate(progress, [0, 0.9, 1], [-slideDistance, 80, 0]);
 
-  const maxWidth = 1536;
-  const { fontSize } = fitText({
-    text,
-    withinWidth: maxWidth,
-    fontFamily: customFontFamily,
-    fontWeight,
-  });
-
   const container: React.CSSProperties = useMemo(() => {
     return {
       opacity: Math.min(progress, 1),
       transform: `translateX(${slideX}px)`,
-      color: textColor,
-      fontSize: customFontSize || fontSize,
-      fontFamily: customFontFamily,
-      fontWeight,
-      width: maxWidth,
+      width: 1536,
       margin: "0 auto",
       textAlign: "center",
       display: "flex",
       justifyContent: "center",
     };
-  }, [
-    progress,
-    slideX,
-    textColor,
-    fontSize,
-    customFontSize,
-    customFontFamily,
-    fontWeight,
-  ]);
+  }, [progress, slideX]);
 
   const outer: React.CSSProperties = {
     justifyContent: "center",
@@ -80,7 +51,9 @@ export const SlideInTransition: React.FC<SlideInProps> = ({
 
   return (
     <AbsoluteFill style={outer}>
-      <div style={container}>{text}</div>
+      <div style={container}>
+        <Typography {...typoProps} />
+      </div>
     </AbsoluteFill>
   );
 };
