@@ -15,7 +15,9 @@ export const ZodTextEditor: React.FC<ZodTextEditorProps> = ({
 }) => {
   return (
     <div>
-      <label className="block text-sm font-medium mb-1">{fieldKey}</label>
+      <label className="block text-sm text-foreground font-medium mb-1">
+        {fieldKey}
+      </label>
       <Textarea
         value={value}
         onChange={(e) => onChange(compId, fieldKey, e.currentTarget.value)}

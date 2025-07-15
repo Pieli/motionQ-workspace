@@ -55,7 +55,8 @@ const TrackItems: React.FC<{
   items: BaseItem[];
   calcWidth: (duration: number) => number;
   onItemClick?: (item: BaseItem) => void;
-}> = ({ items, calcWidth, onItemClick }) => {
+  selectedItemId?: string | null;
+}> = ({ items, calcWidth, onItemClick, selectedItemId }) => {
   return (
     <div className="flex" style={{ gap: "1px" }}>
       {items.map((item: BaseItem, index) => (
@@ -68,11 +69,15 @@ const TrackItems: React.FC<{
           onClick={() => onItemClick?.(item)}
         >
           <div
-            className="h-full w-full bg-primary p-2 box-border cursor-pointer rounded-sm border border-black/80 select-none"
-            style={{
-              color: "#ffffff",
-              // backgroundColor: "#347ebf",
-            }}
+            className={`h-full w-full bg-muted text-muted-foreground p-2 box-border cursor-pointer rounded-sm border border-3 select-none ${
+              selectedItemId === item.id ? "border-primary" : "border-black/30"
+            }`}
+            style={
+              {
+                // color: "#ffffff",
+                // backgroundColor: "#347ebf",
+              }
+            }
           >
             {item.id}
           </div>
@@ -87,7 +92,8 @@ const TrackLines: React.FC<{
   stepWidth: number;
   stepTime: number;
   onItemClick?: (item: BaseItem) => void;
-}> = ({ tracks, stepWidth, stepTime, onItemClick }) => {
+  selectedItemId?: string | null;
+}> = ({ tracks, stepWidth, stepTime, onItemClick, selectedItemId }) => {
   const calculateTrackItemWidth = useCallback(
     (duration: number) => (duration / (FPS * stepTime)) * stepWidth,
     [stepWidth, stepTime],
@@ -114,6 +120,7 @@ const TrackLines: React.FC<{
                 items={track.items}
                 calcWidth={calculateTrackItemWidth}
                 onItemClick={onItemClick}
+                selectedItemId={selectedItemId}
               />
             </div>
           </div>
@@ -241,8 +248,16 @@ export const Timeline: React.FC<{
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarTab: React.Dispatch<React.SetStateAction<string>>;
   setPropertiesItem: React.Dispatch<React.SetStateAction<BaseItem | null>>;
-}> = ({ comps, playerRef, setLoop, setSidebarOpen, setSidebarTab, setPropertiesItem }) => {
+}> = ({
+  comps,
+  playerRef,
+  setLoop,
+  setSidebarOpen,
+  setSidebarTab,
+  setPropertiesItem,
+}) => {
   const [tracks, setTracks] = useState<Track[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const frame = useCurrentPlayerFrame(playerRef);
 
@@ -351,11 +366,15 @@ export const Timeline: React.FC<{
     return 0;
   }, [tracks]);
 
-  const handleTrackItemClick = useCallback((item: BaseItem) => {
-    setSidebarOpen(true); // Expand sidebar
-    setSidebarTab("properties"); // Switch to properties tab
-    setPropertiesItem(item); // Set the selected item for the properties panel
-  }, [setSidebarOpen, setSidebarTab, setPropertiesItem]);
+  const handleTrackItemClick = useCallback(
+    (item: BaseItem) => {
+      setSelectedItemId(item.id); // Set selected item for visual feedback
+      setSidebarOpen(true); // Expand sidebar
+      setSidebarTab("properties"); // Switch to properties tab
+      setPropertiesItem(item); // Set the selected item for the properties panel
+    },
+    [setSidebarOpen, setSidebarTab, setPropertiesItem],
+  );
 
   return (
     <div className="rounded-md shadow-lg mb-4 bg-background">
@@ -410,6 +429,7 @@ export const Timeline: React.FC<{
                 stepWidth={stepWidth}
                 stepTime={stepToSecs(zoom)}
                 onItemClick={handleTrackItemClick}
+                selectedItemId={selectedItemId}
               />
             </div>
             <ScrollBar orientation="horizontal" />

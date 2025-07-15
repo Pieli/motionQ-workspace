@@ -28,7 +28,9 @@ export const ZodEnumEditor: React.FC<ZodEnumEditorProps> = ({
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-1">{fieldKey}</label>
+      <label className="block text-sm text-foreground font-medium mb-1">
+        {fieldKey}
+      </label>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="w-full justify-between">

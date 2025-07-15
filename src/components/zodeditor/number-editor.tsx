@@ -15,11 +15,15 @@ export const ZodNumberEditor: React.FC<ZodNumberEditorProps> = ({
 }) => {
   return (
     <div>
-      <label className="block text-sm font-medium mb-1">{fieldKey}</label>
+      <label className="block text-sm text-foreground font-medium mb-1">
+        {fieldKey}
+      </label>
       <Input
         type="number"
         value={value}
-        onChange={(e) => onChange(compId, fieldKey, Number(e.currentTarget.value))}
+        onChange={(e) =>
+          onChange(compId, fieldKey, Number(e.currentTarget.value))
+        }
       />
     </div>
   );
