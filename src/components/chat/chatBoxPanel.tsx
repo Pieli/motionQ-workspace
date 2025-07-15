@@ -112,6 +112,7 @@ export const ChatBoxPanel: React.FC<{
         devMode();
         return;
       }
+      console.log("here");
 
       try {
         const response = await llm.generateCompositions(currentPrompt);
@@ -129,6 +130,7 @@ export const ChatBoxPanel: React.FC<{
         // Append the agent's comment to the history
         setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
       } catch (e) {
+        console.log("here");
         console.error("Error during generation:", e);
         setGeneratedComp(null);
         // In case of error, you might also want to add an error message to history

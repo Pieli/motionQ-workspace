@@ -21,7 +21,7 @@ export class NullLLMService implements LLMService {
         comment: "No LLM service configured.",
         };
     }
-    
+
     responseToGeneratedComposition(resp: ResponseType): CompositionConfig[] {
         console.log("No LLM service configured", resp);
         return [];
