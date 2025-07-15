@@ -1,16 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
+import { NavUser } from "@/components/navbar/user-settings";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { NavUser } from "@/components/navbar/user-settings";
 import type React from "react";
 
 const user = {
@@ -20,20 +19,21 @@ const user = {
 };
 
 export const Navbar: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary">
       <div className="flex h-12 w-full items-center justify-between gap-2 px-4">
         <div className="flex items-center gap-4">
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger disabled={isHome}>
               <span className="text-2xl font-semibold dm-mono">MotionQ</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Projects</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Files</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => navigate("/")}>Files</DropdownMenuItem>
               <DropdownMenuItem>Exports</DropdownMenuItem>
-              <DropdownMenuItem>Recents</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
