@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { ZodColorEditor } from "@/components/zodeditor/color-editor";
+import { ZodNumberEditor } from "@/components/zodeditor/number-editor";
 import { ZodTextEditor } from "@/components/zodeditor/text-editor";
 
 import type { BaseItem } from "@/components/timeline/Timeline";
@@ -207,6 +208,15 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
           compId={comp.id}
           fieldKey={fieldKey}
           value={String(currentValue)}
+          onChange={onFieldChange}
+        />
+      );
+    case z.ZodFirstPartyTypeKind.ZodNumber:
+      return (
+        <ZodNumberEditor
+          compId={comp.id}
+          fieldKey={fieldKey}
+          value={Number(currentValue)}
           onChange={onFieldChange}
         />
       );
