@@ -47,6 +47,10 @@ const Workspace = () => {
   const [sidebarTab, setSidebarTab] = useState<string>("properties");
   const [propertiesItem, setPropertiesItem] = useState<BaseItem | null>(null);
 
+  const clearSelectedProperty = React.useCallback(() => {
+    setPropertiesItem(null);
+  }, []);
+
   const totalDuration = useMemo(
     () =>
       GeneratedComp?.reduce((acc, comp) => {
@@ -55,6 +59,7 @@ const Workspace = () => {
       }, 0),
     [GeneratedComp],
   );
+
 
   const inputProps = useMemo(() => GeneratedComp, [GeneratedComp]);
 
@@ -91,6 +96,7 @@ const Workspace = () => {
                     isGenerating={isGenerating}
                     initialPrompt={initialPrompt}
                     setInitialPrompt={setInitialPrompt}
+                    preUpdateCleanup={clearSelectedProperty}
                   />
                 </ResizablePanel>
                 <ResizableHandle
@@ -135,7 +141,7 @@ const Workspace = () => {
                                 propertiesItem ? propertiesItem.start : null
                               }
                               outFrame={
-                                propertiesItem ? propertiesItem.end : null
+                                propertiesItem ? propertiesItem.end-1 : null
                               }
                             />
                             <Spacing y={1} />

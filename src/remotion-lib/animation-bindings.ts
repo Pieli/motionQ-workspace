@@ -28,24 +28,50 @@ export interface AnimationBinding {
     settings: string,
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getFilteredSchema(schema: z.ZodObject<any>): z.ZodObject<any> {
+    const blacklistedTypographyProps = ['fontSize', 'fontWeight', 'fontFamily', 'textAlign'];
+
+    const filteredShape = Object.entries(schema.shape)
+        .filter(([key]) => !blacklistedTypographyProps.includes(key))
+        .reduce((acc, [key, value ]) => {
+            let processedValue = value as z.ZodTypeAny;
+            
+            // Remove defaults
+            if (processedValue instanceof z.ZodDefault) {
+                processedValue = processedValue.removeDefault();
+            }
+            
+            // Remove optionals
+            if (processedValue instanceof z.ZodOptional) {
+                processedValue = processedValue.unwrap();
+            }
+            
+            acc[key] = processedValue;
+            return acc;
+        }, {} as Record<string, z.ZodTypeAny>);
+
+    return z.object(filteredShape);
+}
+
 
 // Create a map for animations
 export const animationMap = {
     slideInTransition: {
         component: SlideInTransition,
-        schema: slideInSchema,
+        schema: getFilteredSchema(slideInSchema),
     },
     fadeInTransition: {
         component: FadeInTransition,
-        schema: fadeInSchema,
+        schema: getFilteredSchema(fadeInSchema),
     },
     simpleTextTyping: {
         component: SimpleTextTyping,
-        schema: simpleTypingSchema,
+        schema: getFilteredSchema(simpleTypingSchema),
     },
     scaleUpDownTransition: {
         component: ScaleUpDownTransition,
-        schema: scaleUpDownSchema,
+        schema: getFilteredSchema(scaleUpDownSchema),
     }
 } as const;
 
@@ -147,12 +173,38 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
 
 ]
 
+function getDefault(zodType: z.ZodTypeAny): unknown {
+  if (zodType instanceof z.ZodDefault) {
+    return zodType._def.defaultValue();
+  }
+  // If wrapped (e.g. .optional().default()), unwrap recursively
+  if ("innerType" in zodType._def) {
+    return getDefault(zodType._def.innerType);
+  }
+  return undefined;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSchemaDescription(schema: z.ZodObject<any>) {
     return Object.entries(schema.shape).map(([key, value]) => {
 
         let type: string;
         let constraints = "";
+
+        // If it's a ZodDefault, unwrap it and use the inner type
+        if (value instanceof z.ZodDefault) {
+            const defaultValue = getDefault(value); 
+            constraints = `default: ${defaultValue}`;
+            let inner = value.removeDefault() as z.ZodAny;
+
+            // remove optional
+            if (inner instanceof z.ZodOptional) {
+                inner = inner.unwrap();
+                constraints += `, optional: true`;
+            }
+            value = inner;
+        }
+
         if (value instanceof z.ZodType) {
             const typeName = value._def.typeName;
 
@@ -197,92 +249,3 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
     }).join(', ');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getFilteredSchemaDescription(schema: z.ZodObject<any>) {
-    const blacklistedTypographyProps = ['fontSize', 'fontWeight', 'fontFamily', 'textAlign'];
-
-    return Object.entries(schema.shape)
-        .filter(([key]) => !blacklistedTypographyProps.includes(key))
-        .map(([key, value]) => {
-            let type: string;
-            let constraints = "";
-            if (value instanceof z.ZodType) {
-                const typeName = value._def.typeName;
-
-                switch (typeName) {
-                    case "ZodString":
-                        type = "string";
-                        break;
-                    case "ZodNumber":
-                        type = "number";
-                        if (value._def.minValue !== undefined) {
-                            constraints += `, min: ${value._def.minValue}`;
-                        }
-                        if (value._def.maxValue !== undefined) {
-                            constraints += `, max: ${value._def.maxValue}`;
-                        }
-                        break;
-                    case "ZodBoolean":
-                        type = "boolean";
-                        break;
-                    case "ZodEffects":
-                        type = value._def.description === zodTypes.ZodZypesInternals.REMOTION_COLOR_BRAND
-                            ? "color-hex"
-                            : "unknown";
-                        break;
-                    default:
-                        type = typeName.replace("Zod", "").toLowerCase();
-                }
-
-                // Add default value if present
-                if (value._def.defaultValue !== undefined) {
-                    const defaultValue = typeof value._def.defaultValue === 'function' 
-                        ? value._def.defaultValue() 
-                        : value._def.defaultValue;
-                    constraints += `, default: ${defaultValue}`;
-                }
-            } else {
-                type = "unknown";
-            }
-
-            return `${key}: ${type}${constraints}`;
-        }).join(', ');
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function removeDefaultsFromSchema(schema: z.ZodObject<any>): z.ZodObject<any> {
-    const newShape: Record<string, z.ZodType> = {};
-    
-    Object.entries(schema.shape).forEach(([key, value]) => {
-        if (value instanceof z.ZodType) {
-            // Create a new schema without the default value
-            const newValue = { ...value };
-            if (newValue._def.defaultValue !== undefined) {
-                delete newValue._def.defaultValue;
-            }
-            newShape[key] = newValue;
-        } else {
-            newShape[key] = value;
-        }
-    });
-    
-    return z.object(newShape);
-}
-
-export function getFilteredAnimationBindings(): AnimationBinding[] {
-    return bindings.map(binding => ({
-        ...binding,
-        settings: getFilteredSchemaDescription(animationMap[binding.name as keyof typeof animationMap].schema)
-    }));
-}
-
-export function getFilteredAnimationBindingsWithoutDefaults(): AnimationBinding[] {
-    return bindings.map(binding => {
-        const originalSchema = animationMap[binding.name as keyof typeof animationMap].schema;
-        const schemaWithoutDefaults = removeDefaultsFromSchema(originalSchema);
-        return {
-            ...binding,
-            settings: getFilteredSchemaDescription(schemaWithoutDefaults)
-        };
-    });
-}

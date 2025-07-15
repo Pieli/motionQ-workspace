@@ -71,12 +71,14 @@ export const ChatBoxPanel: React.FC<{
   isGenerating: boolean;
   initialPrompt: string;
   setInitialPrompt: React.Dispatch<React.SetStateAction<string>>;
+  preUpdateCleanup: () => void;
 }> = ({
   setGeneratedComp,
   setIsGenerating,
   isGenerating,
   initialPrompt,
   setInitialPrompt,
+  preUpdateCleanup,
 }) => {
   const [history, setHistory] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
@@ -85,9 +87,10 @@ export const ChatBoxPanel: React.FC<{
 
   const devMode = React.useCallback(() => {
     setHistory(exampleHistory);
+    preUpdateCleanup();
     setGeneratedComp(exampleComp);
     setIsGenerating(false);
-  }, [setHistory, setGeneratedComp, setIsGenerating]);
+  }, [setHistory, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
 
   const generate = React.useCallback(
     async (promptArg?: string) => {
@@ -112,7 +115,6 @@ export const ChatBoxPanel: React.FC<{
         devMode();
         return;
       }
-      console.log("here");
 
       try {
         const response = await llm.generateCompositions(currentPrompt);
@@ -123,6 +125,7 @@ export const ChatBoxPanel: React.FC<{
         if (!composition) {
           throw new Error("Failed to parse generated compositions");
         }
+        preUpdateCleanup();
         setGeneratedComp(composition);
         toast.success("Animation has been generated.");
         // logCompositionConfig(composition)
@@ -130,8 +133,8 @@ export const ChatBoxPanel: React.FC<{
         // Append the agent's comment to the history
         setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
       } catch (e) {
-        console.log("here");
         console.error("Error during generation:", e);
+        preUpdateCleanup();
         setGeneratedComp(null);
         // In case of error, you might also want to add an error message to history
         setHistory((prev) => [
@@ -149,11 +152,11 @@ export const ChatBoxPanel: React.FC<{
       setIsGenerating,
       devMode,
       setInitialPrompt,
+      preUpdateCleanup,
     ],
   );
 
   useEffect(() => {
-    console.log(typeof initialPrompt, initialPrompt);
     if (!initialPromptProcessedRef.current && initialPrompt.length > 0) {
       initialPromptProcessedRef.current = true;
       generate(initialPrompt);
