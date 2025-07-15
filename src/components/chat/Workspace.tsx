@@ -131,6 +131,12 @@ const Workspace = () => {
                               autoPlay
                               controls
                               loop={loop}
+                              inFrame={
+                                propertiesItem ? propertiesItem.start : null
+                              }
+                              outFrame={
+                                propertiesItem ? propertiesItem.end : null
+                              }
                             />
                             <Spacing y={1} />
                           </div>
