@@ -11,11 +11,10 @@
 
 "use client";
 
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { useCurrentFrame } from "remotion";
 
 export default function GlitchText() {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const glitchIntensity = Math.sin(frame / 10) * 10;
   const rgbOffset = Math.sin(frame / 5) * 5;

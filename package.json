@@ -28,6 +28,7 @@
     "@remotion/google-fonts": "4.0.302",
     "@remotion/layout-utils": "^4.0.318",
     "@remotion/media-utils": "4.0.302",
+    "@remotion/paths": "^4.0.324",
     "@remotion/player": "4.0.302",
     "@remotion/renderer": "4.0.302",
     "@remotion/zod-types": "4.0.302",

@@ -20,8 +20,8 @@ export const StairsMesh: React.FC<StairsMeshProps> = ({ backgroundColor }) => {
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
 
-    const backColor = "#16191D";
-    const glow_color = "";
+    // const backColor = "#16191D";
+    // const glow_color = "";
 
     const progress = spring({
         fps,

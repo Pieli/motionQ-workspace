@@ -61,7 +61,7 @@ const Cursor: React.FC = () => (
 
 export const Click: React.FC = () => {
   const frame = useCurrentFrame();
-  const { durationInFrames, width, height, fps } = useVideoConfig();
+  const { width, height, fps } = useVideoConfig();
 
   const text = "find the relevant KEYWORDS for you,";
   const selected_index = 3; // index of word to be clicked (0-based)

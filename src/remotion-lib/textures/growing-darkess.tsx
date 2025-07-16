@@ -21,8 +21,8 @@ export const GrowingDark: React.FC<GrowingDarkProps> = ({ backgroundColor }) => 
     const frame = useCurrentFrame();
     const { fps, width, height } = useVideoConfig();
 
-    const backColor = "#16191D";
-    const glow_color = "";
+    // const backColor = "#16191D";
+    // const glow_color = "";
 
     const progress = spring({
         fps,

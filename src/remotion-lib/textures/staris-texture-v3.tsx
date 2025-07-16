@@ -18,10 +18,10 @@ export type StairsMeshPropsV3 = z.infer<typeof StairsMeshPropsSchemaV3>;
 
 export const StairsMeshV3: React.FC<StairsMeshPropsV3> = ({ backgroundColor }) => {
     const frame = useCurrentFrame();
-    const { fps, width, height } = useVideoConfig();
+    const { fps, width } = useVideoConfig();
 
-    const backColor = "#16191D";
-    const glow_color = "";
+    // const backColor = "#16191D";
+    // const glow_color = "";
 
     const progress = spring({
         fps,

@@ -42,7 +42,7 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
     const directionSeed = 47;
 
     const num_blobs = 5
-    const colors = ["6d213c", "946846", "baab68", "e3c16f","faff70"]
+    // const colors = ["6d213c", "946846", "baab68", "e3c16f","faff70"]
     const blobSize = useMemo(() => Math.max(width, height) * size / 100, [width, height, size]);
 
     const generateBlob = useMemo(

@@ -1,4 +1,5 @@
-import { ComponentPropsWithoutRef, CSSProperties, FC } from "react";
+import React from "react";
+import type { ComponentPropsWithoutRef, CSSProperties} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -7,7 +8,7 @@ export interface AnimatedShinyTextProps
   shimmerWidth?: number;
 }
 
-export const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
+export const AnimatedShinyText: React.FC<AnimatedShinyTextProps> = ({
   children,
   className,
   shimmerWidth = 100,
