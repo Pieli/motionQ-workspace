@@ -5,6 +5,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { Transcript } from "@/components/sidebar/transcript";
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
+import type { BaseItem } from "@/components/timeline/Timeline";
 
 import {
   Sidebar,
