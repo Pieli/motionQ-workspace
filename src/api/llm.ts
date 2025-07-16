@@ -2,15 +2,15 @@ import OpenAI from "openai";
 import { zodResponseFormat } from 'openai/helpers/zod';
 
 
-import { systemPrompt } from "@/api/system-prompt";
 import { Response } from "@/api/llm-types";
+import { systemPrompt } from "@/api/system-prompt";
 
-import type { AnimationComponents, BackgroundComponents } from "@/api/animation-factories";
+import type { ResponseType } from "@/api/llm-types";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { LLMService } from "@/components/interfaces/llm";
-import type { ResponseType } from "./llm-types";
+import type { AnimationComponents, BackgroundComponents } from "@/remotion-lib/animation-factories";
 
-import { animationFactory, backgroundFactory, backgroundSchemaFactory, schemaFactory } from "./animation-factories";
+import { animationFactory, backgroundFactory, backgroundSchemaFactory, schemaFactory } from "@/remotion-lib/animation-factories";
 
 
 export class NullLLMService implements LLMService {
