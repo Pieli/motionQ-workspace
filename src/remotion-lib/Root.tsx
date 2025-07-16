@@ -1,17 +1,11 @@
 import { Composition, Folder } from "remotion";
 import { HelloWorld, myCompSchema } from "./HelloWorld";
 import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
-import { FadeInTransition, fadeInSchema } from "./TextFades/FadeInText";
-import {
-  ScaleUpDownTransition,
-  scaleUpDownSchema,
-} from "./TextFades/ScaleUpDownText";
-import { SimpleTextFade, simpleFadeSchema } from "./TextFades/SimpleTextFade";
-import {
-  SimpleTextTyping,
-  simpleTypingSchema,
-} from "./TextFades/SimpleTextTyping";
-import { SlideInTransition, slideInSchema } from "./TextFades/SlideInText";
+import { FadeInTransition } from "./TextFades/FadeInText";
+import { ScaleUpDownTransition } from "./TextFades/ScaleUpDownText";
+import { SimpleTextFade } from "./TextFades/SimpleTextFade";
+import { SimpleTextTyping } from "./TextFades/SimpleTextTyping";
+import { SlideInTransition } from "./TextFades/SlideInText";
 import {
   TextShatterTransition,
   textShatterSchema,
@@ -25,6 +19,13 @@ import {
   waveEffectSchema,
 } from "./TextFades/WaveEffectTransition";
 import { CountingStars, countingStarsSchema } from "./counting/counting-stars";
+import {
+  fadeInSchema,
+  scaleUpDownSchema,
+  simpleFadeSchema,
+  simpleTypingSchema,
+  slideInSchema,
+} from "./TextFades/schemas";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
@@ -273,7 +274,7 @@ export const RemotionRoot: React.FC = () => {
           width={1920}
           height={1080}
           schema={StairsMeshPropsSchemaV3}
-          defaultProps={StairsMeshPropsSchemaV2.parse({
+          defaultProps={StairsMeshPropsSchemaV3.parse({
             backgroundColor: "#1e1e1e"
           })}
         />
