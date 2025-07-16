@@ -5,7 +5,7 @@ import { FadeInTransition, fadeInSchema } from "./TextFades/FadeInText";
 import {
   ScaleUpDownTransition,
   scaleUpDownSchema,
-} from "./TextFades/ScaldeUpDowText";
+} from "./TextFades/ScaleUpDownText";
 import { SimpleTextFade, simpleFadeSchema } from "./TextFades/SimpleTextFade";
 import {
   SimpleTextTyping,
@@ -28,11 +28,11 @@ import { CountingStars, countingStarsSchema } from "./counting/counting-stars";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
-import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
+import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
 import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
 import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
 import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
-import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
+import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 
 
 

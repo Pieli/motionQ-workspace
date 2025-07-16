@@ -1,20 +1,20 @@
 
-import { FadeInTransition } from "@/remotion-lib/TextFades/FadeInText";
-import { PlainBackground, PlainBackgroundSchema } from "@/remotion-lib/textures/PlainBackground";
-import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaldeUpDowText";
-import { GradientMesh, GradientMeshPropsSchema } from "@/remotion-lib/textures/GradientMesh";
-import { SlideInTransition } from "@/remotion-lib/TextFades/SlideInText";
-import { SimpleTextTyping } from "@/remotion-lib/TextFades/SimpleTextTyping";
-import { GrowingDark, GrowingDarkPropsSchema } from "@/remotion-lib/textures/growing-darkess";
-import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "@/remotion-lib/textures/staris-texture-v2";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import { FadeInTransition } from "@/remotion-lib/TextFades/FadeInText";
+import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaleUpDownText";
+import { SimpleTextTyping } from "@/remotion-lib/TextFades/SimpleTextTyping";
+import { SlideInTransition } from "@/remotion-lib/TextFades/SlideInText";
+import { GradientMesh, GradientMeshPropsSchema } from "@/remotion-lib/textures/GradientMesh";
+import { GrowingDark, GrowingDarkPropsSchema } from "@/remotion-lib/textures/growing-darkess";
+import { PlainBackground, PlainBackgroundSchema } from "@/remotion-lib/textures/PlainBackground";
+import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "@/remotion-lib/textures/staris-texture-v2";
 
 
 import {
-    fadeInSchema,
-    slideInSchema,
-    simpleTypingSchema,
-    scaleUpDownSchema,
+  fadeInSchema,
+  scaleUpDownSchema,
+  simpleTypingSchema,
+  slideInSchema,
 } from "@/remotion-lib/TextFades/schemas";
 
 

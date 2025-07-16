@@ -2,24 +2,24 @@ import * as zodTypes from "@remotion/zod-types";
 import { z } from "zod";
 
 import { FadeInTransition } from "@/remotion-lib/TextFades/FadeInText";
-import { SlideInTransition } from "@/remotion-lib/TextFades/SlideInText";
+import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaleUpDownText";
 import { SimpleTextTyping } from "@/remotion-lib/TextFades/SimpleTextTyping";
-import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaldeUpDowText";
+import { SlideInTransition } from "@/remotion-lib/TextFades/SlideInText";
 
 import {
-    fadeInSchema,
-    slideInSchema,
-    simpleTypingSchema,
-    scaleUpDownSchema,
+  fadeInSchema,
+  scaleUpDownSchema,
+  simpleTypingSchema,
+  slideInSchema,
 } from "@/remotion-lib/TextFades/schemas";
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
+import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
 import { PlainBackground, PlainBackgroundSchema } from "./textures/PlainBackground";
-import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
 import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
 import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
-import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
+import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
 
 
 export interface AnimationBinding {
