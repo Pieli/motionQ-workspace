@@ -86,9 +86,9 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         schema={simpleFadeSchema}
-        defaultProps={{
+        defaultProps={simpleFadeSchema.parse({
           text: "Hello World" as const,
-        }}
+        })}
       />
 
       <Composition
@@ -99,9 +99,9 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         schema={simpleTypingSchema}
-        defaultProps={{
+        defaultProps={simpleTypingSchema.parse({
           text: "Hello World" as const,
-        }}
+        })}
       />
 
       <Composition
@@ -112,10 +112,10 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         schema={slideInSchema}
-        defaultProps={{
+        defaultProps={slideInSchema.parse({
           text: "Hello World" as const,
           textColor: "#000" as const,
-        }}
+        })}
       />
 
       <Composition
@@ -126,9 +126,9 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         schema={scaleUpDownSchema}
-        defaultProps={{
+        defaultProps={scaleUpDownSchema.parse({
           text: "Hello World" as const,
-        }}
+        })}
       />
 
       <Composition
@@ -139,10 +139,10 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         schema={fadeInSchema}
-        defaultProps={{
+        defaultProps={fadeInSchema.parse({
           text: "Hello World" as const,
           textColor: "#000" as const,
-        }}
+        })}
       />
 
       <Composition

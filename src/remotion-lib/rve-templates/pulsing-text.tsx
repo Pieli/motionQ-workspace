@@ -11,11 +11,10 @@
 
 "use client";
 
-import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { interpolate, useCurrentFrame } from "remotion";
 
 export default function PulsingText() {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const text = "Pulse";
 
   return (

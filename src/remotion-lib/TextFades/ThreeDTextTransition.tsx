@@ -1,9 +1,6 @@
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
-  spring,
-  useCurrentFrame,
-  useVideoConfig,
 } from "remotion";
 
 import { zColor } from "@remotion/zod-types";
@@ -26,9 +23,8 @@ export const ThreeDTextTransition: React.FC<z.infer<typeof threeDTextSchema>> = 
   text,
   bgColor,
 }) => {
-  const { fps } = useVideoConfig();
-  const frame = useCurrentFrame();
 
+  /*
   const progress = spring({
     fps,
     frame,
@@ -37,6 +33,7 @@ export const ThreeDTextTransition: React.FC<z.infer<typeof threeDTextSchema>> = 
     },
     durationInFrames: 80,
   });
+  */
 
   const container: React.CSSProperties = useMemo(() => ({
     justifyContent: "center",

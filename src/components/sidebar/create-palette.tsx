@@ -107,9 +107,7 @@ export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
               <div
                 className="w-full h-full flex flex-col justify-end items-center"
                 style={{ minHeight: 64, height: "100%" }}
-                onClick={() => {
-                  const input = document.getElementById(`color-input-${idx}`);
-                }}
+                onClick={() => {}}
               >
                 <span
                   className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-mono px-1 rounded"

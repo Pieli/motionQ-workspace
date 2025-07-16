@@ -61,11 +61,8 @@ export const WaveEffectTransition: React.FC<z.infer<typeof waveEffectSchema>> = 
   const maxWidth = 1536;
   const fit = fitText({
     text,
-    font: fontFamily,
-    width: maxWidth,
-    height: 400,
-    maxFontSize: 180,
-    minFontSize: 20,
+    fontFamily: fontFamily,
+    withinWidth: maxWidth,
   });
 
   const pieces = text.split("").map((char, index) => {

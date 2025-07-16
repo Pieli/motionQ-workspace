@@ -1,6 +1,6 @@
 import { zColor } from "@remotion/zod-types";
-import React, { useMemo } from "react";
-import { AbsoluteFill, random, useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
+import React from "react";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 import { z } from "zod";
 
 export const TwinMeshPropsSchema = z.object({

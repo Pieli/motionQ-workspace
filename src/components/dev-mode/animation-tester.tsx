@@ -9,14 +9,14 @@ import { SequenceBuilder } from "@/components/tree-builder/sequence";
 const compositionWidth = 1920;
 const compositionHeight = 1080;
 
-const animationKeys = Object.keys(animationMap);
-const backgroundKeys = Object.keys(backgroundMap);
+const animationKeys = Object.keys(animationMap) as (keyof typeof animationMap)[];
+const backgroundKeys = Object.keys(backgroundMap) as (keyof typeof backgroundMap)[];
 
 const getCompositionsForBackground = (
-  backgroundKey: string,
+  backgroundKey: keyof typeof backgroundMap,
 ): CompositionConfig[] => {
   const background = backgroundMap[backgroundKey];
-  return animationKeys.map((animKey, idx) => {
+  return animationKeys.map((animKey) => {
     const anim = animationMap[animKey];
     // Use default props from schema if possible, else empty
     const animProps = anim.schema.safeParse({}).success ? {} : {};
