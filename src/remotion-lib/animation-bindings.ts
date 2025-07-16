@@ -194,7 +194,7 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
         // If it's a ZodDefault, unwrap it and use the inner type
         if (value instanceof z.ZodDefault) {
             const defaultValue = getDefault(value); 
-            constraints = `default: ${defaultValue}`;
+            constraints = `[default: ${defaultValue}]`;
             let inner = value.removeDefault() as z.ZodAny;
 
             // remove optional
@@ -245,7 +245,7 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
             type = "unknown";
         }
 
-        return `${key}: ${type}${constraints}`;
+        return `${key}: ${type} ${constraints}`;
     }).join(', ');
 }
 

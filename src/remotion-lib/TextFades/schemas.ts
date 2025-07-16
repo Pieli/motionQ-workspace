@@ -23,7 +23,7 @@ export const simpleTypingSchema = typographySchema.extend({
 
 export const slideInSchema = typographySchema.extend({
   slideDistance: z.number().default(1000),
-  slideDuration: z.number().default(30),
+  slideDuration: z.number().min(1).default(30),
   damping: z.number().default(400),
 });
 
