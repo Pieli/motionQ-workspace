@@ -3,12 +3,12 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 
 
 import { systemPrompt } from "@/api/system-prompt";
-import { Response } from "@/api/types";
+import { Response } from "@/api/llm-types";
 
 import type { AnimationComponents, BackgroundComponents } from "@/api/animation-factories";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { LLMService } from "@/components/interfaces/llm";
-import type { ResponseType } from "./types";
+import type { ResponseType } from "./llm-types";
 
 import { animationFactory, backgroundFactory, backgroundSchemaFactory, schemaFactory } from "./animation-factories";
 

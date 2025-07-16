@@ -1,5 +1,5 @@
-import { EnumAvailableAnimations, EnumAvailableBackgrounds, UnionAvailableBackSchemas, UnionAvailableSchemas } from "@/api/animation-factories";
 import { z } from "zod";
+import { EnumAvailableAnimations, EnumAvailableBackgrounds, UnionAvailableBackSchemas, UnionAvailableSchemas } from "@/api/animation-types";
 
 const Composition = z.object({
   id: z.string(),
