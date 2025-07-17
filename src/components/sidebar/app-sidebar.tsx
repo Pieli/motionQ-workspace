@@ -1,4 +1,4 @@
-import { Captions, Command, Component, Folders } from "lucide-react";
+import { Captions, Command, Component, Folders, ListMusic } from "lucide-react";
 import React, { useMemo, useState, useEffect } from "react";
 
 // TODO is the NavUser needed (decide later)
@@ -49,6 +49,12 @@ const data = {
       title: "Assets",
       url: "#",
       icon: Folders,
+      isActive: false,
+    },
+    {
+      title: "Music",
+      url: "#",
+      icon: ListMusic,
       isActive: false,
     },
   ],
