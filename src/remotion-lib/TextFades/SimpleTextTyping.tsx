@@ -30,14 +30,14 @@ export const SimpleTextTyping: React.FC<SimpleTypingProps> = (props) => {
     durationInFrames: typingDuration,
   });
 
-  const visibleCharacters = Math.floor(progress * typoProps.text.length);
+  const visibleCharacters = Math.floor(progress * typoProps.typo_text.length);
 
   const maxWidth = 1536;
   const { fontSize } = fitText({
-    text: typoProps.text,
+    text: typoProps.typo_text,
     withinWidth: maxWidth,
-    fontFamily: typoProps.fontFamily,
-    fontWeight: typoProps.fontWeight,
+    fontFamily: typoProps.typo_fontFamily,
+    fontWeight: typoProps.typo_fontWeight,
   });
 
   const container: React.CSSProperties = {
@@ -45,7 +45,7 @@ export const SimpleTextTyping: React.FC<SimpleTypingProps> = (props) => {
     alignItems: "center",
   };
 
-  const typingText = typoProps.text.split("").map((char, index) => {
+  const typingText = typoProps.typo_text.split("").map((char, index) => {
     const opacity = index <= visibleCharacters ? 1 : 0;
     return (
       <span key={index} style={{ opacity }}>
@@ -59,11 +59,11 @@ export const SimpleTextTyping: React.FC<SimpleTypingProps> = (props) => {
       <AbsoluteFill style={container}>
         <div
           style={{
-            color: typoProps.textColor,
-            fontSize: typoProps.fontSize || fontSize,
-            fontWeight: typoProps.fontWeight,
-            fontFamily: typoProps.fontFamily,
-            textAlign: typoProps.textAlign,
+            color: typoProps.typo_textColor,
+            fontSize: typoProps.typo_fontSize || fontSize,
+            fontWeight: typoProps.typo_fontWeight,
+            fontFamily: typoProps.typo_fontFamily,
+            textAlign: typoProps.typo_textAlign,
             width: maxWidth,
             margin: "0 auto",
             display: "flex",

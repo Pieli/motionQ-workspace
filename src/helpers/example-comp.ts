@@ -31,8 +31,8 @@ export const exampleComp: CompositionConfig[] = [
         component: FadeInTransition,
         schema: fadeInSchema,
         props: {
-            text: "Meet Zero: Your Open-Source Email Solution",
-            textColor: "#ffffff"
+            typo_text: "Meet Zero: Your Open-Source Email Solution",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -52,8 +52,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "Closed-Source Email Services",
-            textColor: "#ffffff"
+            typo_text: "Closed-Source Email Services",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -73,8 +73,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "Data-Hungry and Complex",
-            textColor: "#ffffff"
+            typo_text: "Data-Hungry and Complex",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -94,8 +94,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "Limited Control and Privacy",
-            textColor: "#ffffff"
+            typo_text: "Limited Control and Privacy",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -115,8 +115,8 @@ export const exampleComp: CompositionConfig[] = [
         component: FadeInTransition,
         schema: fadeInSchema,
         props: {
-            text: "Zero: Open, AI-Powered, Self-Hosting",
-            textColor: "#ffffff"
+            typo_text: "Zero: Open, AI-Powered, Self-Hosting",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -136,8 +136,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SimpleTextTyping,
         schema: simpleTypingSchema,
         props: {
-            text: "What Zero Offers",
-            textColor: "#ffffff"
+            typo_text: "What Zero Offers",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -157,8 +157,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "Open-Source & Transparent",
-            textColor: "#ffffff"
+            typo_text: "Open-Source & Transparent",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -178,8 +178,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "AI Agents to Enhance Emails",
-            textColor: "#ffffff"
+            typo_text: "AI Agents to Enhance Emails",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -199,8 +199,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "Your Data, Your Privacy",
-            textColor: "#ffffff"
+            typo_text: "Your Data, Your Privacy",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -220,8 +220,8 @@ export const exampleComp: CompositionConfig[] = [
         component: SlideInTransition,
         schema: slideInSchema,
         props: {
-            text: "Self-Hosting Made Easy",
-            textColor: "#ffffff"
+            typo_text: "Self-Hosting Made Easy",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {
@@ -241,8 +241,8 @@ export const exampleComp: CompositionConfig[] = [
         component: ScaleUpDownTransition,
         schema: scaleUpDownSchema,
         props: {
-            text: "Join Zero Today!",
-            textColor: "#ffffff"
+            typo_text: "Join Zero Today!",
+            typo_textColor: "#ffffff"
         },
         duration: 45,
         background: {

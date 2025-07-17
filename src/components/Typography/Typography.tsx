@@ -1,47 +1,37 @@
 import React from "react";
 import { z } from "zod";
-import { zColor } from "@remotion/zod-types";
-import { fontFamily as defaultFontFamily } from "@remotion/google-fonts/Inter";
 import { fitText } from "@remotion/layout-utils";
-
-export const typographySchema = z.object({
-  text: z.string().default("Hello World"),
-  textColor: zColor().default("#fff"),
-  fontSize: z.number().optional(),
-  fontWeight: z.number().default(550),
-  fontFamily: z.string().default(defaultFontFamily),
-  textAlign: z.enum(["left", "center", "right"]).default("center"),
-});
+import { typographySchema } from "@/remotion-lib/TextFades/schemas";
 
 export type TypographyProps = z.infer<typeof typographySchema>;
 
 export const Typography: React.FC<TypographyProps> = ({
-  text,
-  textColor,
-  fontSize,
-  fontWeight,
-  fontFamily,
-  textAlign,
+  typo_text,
+  typo_textColor,
+  typo_fontSize,
+  typo_fontWeight,
+  typo_fontFamily,
+  typo_textAlign,
 }) => {
   const maxWidth = 1536;
   const { fontSize: fittedFontSize } = fitText({
-    text,
+    text: typo_text,
     withinWidth: maxWidth,
-    fontFamily,
-    fontWeight,
+    fontFamily: typo_fontFamily,
+    fontWeight: typo_fontWeight,
   });
 
   return (
     <div
       style={{
-        color: textColor,
-        fontSize: fontSize || fittedFontSize,
-        fontWeight,
-        fontFamily,
-        textAlign,
+        color: typo_textColor,
+        fontSize: typo_fontSize || fittedFontSize,
+        fontWeight: typo_fontWeight,
+        fontFamily: typo_fontFamily,
+        textAlign: typo_textAlign,
       }}
     >
-      {text}
+      {typo_text}
     </div>
   );
 };

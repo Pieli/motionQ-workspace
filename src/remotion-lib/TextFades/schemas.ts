@@ -3,12 +3,12 @@ import { zColor } from "@remotion/zod-types";
 import { z } from 'zod';
 
 export const typographySchema = z.object({
-  text: z.string().default("Hello World"),
-  textColor: zColor().default("#fff"),
-  fontSize: z.number().optional(),
-  fontWeight: z.number().default(550),
-  fontFamily: z.string().default(defaultFontFamily),
-  textAlign: z.enum(["left", "center", "right"]).default("center"),
+  typo_text: z.string().default("Hello World"),
+  typo_textColor: zColor().default("#fff"),
+  typo_fontSize: z.number().optional(),
+  typo_fontWeight: z.number().default(550),
+  typo_fontFamily: z.string().default(defaultFontFamily),
+  typo_textAlign: z.enum(["left", "center", "right"]).default("center"),
 });
 
 export const simpleFadeSchema = typographySchema.extend({

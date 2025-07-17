@@ -16,18 +16,18 @@ loadFont("normal", {
 });
 
 export const FadeInTransition: React.FC<FadeInProps> = ({
-  text,
-  textColor,
-  fontSize: customFontSize,
-  fontWeight = 550,
-  fontFamily: customFontFamily = fontFamily,
+  typo_text,
+  typo_textColor,
+  typo_fontSize: customFontSize,
+  typo_fontWeight = 550,
+  typo_fontFamily: customFontFamily = fontFamily,
   fadeDuration = 1.5,
 }) => {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
 
   // for the multiline bug
-  text += " ";
+  typo_text += " ";
 
   const progress = spring({
     fps,
@@ -50,26 +50,28 @@ export const FadeInTransition: React.FC<FadeInProps> = ({
 
   const maxWidth = 1536;
   const { fontSize } = fitText({
-    text,
+    text: typo_text,
     withinWidth: maxWidth,
     fontFamily: customFontFamily,
-    fontWeight,
+    fontWeight: typo_fontWeight,
   });
 
   return (
     <AbsoluteFill style={container}>
-      <div style={{
-        fontSize: customFontSize || fontSize,
-        width: maxWidth,
-        margin: "0 auto",
-        fontFamily: customFontFamily,
-        fontWeight,
-        color: textColor,
-        textAlign: "center",
-        display: "flex",
-        justifyContent: "center",
-      }}>
-        {text}
+      <div
+        style={{
+          fontSize: customFontSize || fontSize,
+          width: maxWidth,
+          margin: "0 auto",
+          fontFamily: customFontFamily,
+          fontWeight: typo_fontWeight,
+          color: typo_textColor,
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {typo_text}
       </div>
     </AbsoluteFill>
   );

@@ -22,7 +22,7 @@ export const ScaleUpDownTransition: React.FC<ScaleUpDownProps> = (props) => {
   const frame = useCurrentFrame();
 
   // for the multiline bug
-  typoProps.text += " ";
+  typoProps.typo_text += " ";
 
   const progress = spring({
     fps,

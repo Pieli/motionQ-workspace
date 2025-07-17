@@ -56,7 +56,7 @@ export const Transcript: React.FC<TranscriptProps> = ({
           ...comp,
           props: {
             ...comp.props,
-            text: editedText[id] || comp.props.text,
+            text: editedText[id] || comp.props.typo_text,
           },
         };
       }
@@ -114,15 +114,15 @@ export const Transcript: React.FC<TranscriptProps> = ({
               >
                 {editingId === comp.id ? (
                   <textarea
-                    value={editedText[comp.id] || comp.props.text || ""}
+                    value={editedText[comp.id] || comp.props.typo_text || ""}
                     onChange={(e) => handleTextChange(comp.id, e.target.value)}
                     placeholder="Edit text here"
                     className="w-full p-2 border rounded"
                   />
                 ) : (
-                    <div className="text-base font-medium">
-                    {editedText[comp.id] || comp.props.text || ""}
-                    </div>
+                  <div className="text-base font-medium">
+                    {editedText[comp.id] || comp.props.typo_text || ""}
+                  </div>
                 )}
               </div>
               {editingId !== comp.id && (
