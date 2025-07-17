@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { ShareDialog } from "@/components/navbar/share";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 import {
   ResizableHandle,
@@ -33,9 +34,9 @@ const Workspace = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-  if (!location.state) {
-      navigate("/")
-  }  
+    if (!location.state) {
+      navigate("/");
+    }
   }, [location.state, navigate]);
 
   // when transitioning from the start to the workspace screen
@@ -66,7 +67,6 @@ const Workspace = () => {
       }, 0),
     [GeneratedComp],
   );
-
 
   const inputProps = useMemo(() => GeneratedComp, [GeneratedComp]);
 
@@ -124,44 +124,59 @@ const Workspace = () => {
                       defaultSize={inputProps ? 70 : 100}
                       id="player"
                     >
-                      <div className="isolate flex-1 h-full">
-                        {inputProps ? (
-                          <div className="p-8">
-                            <Player
-                              component={SequenceBuilder}
-                              durationInFrames={totalDuration || 1}
-                              fps={FPS}
-                              ref={playerRef}
-                              compositionWidth={compositionWidth}
-                              compositionHeight={compositionHeight}
-                              inputProps={{ comps: inputProps }}
-                              className="shadow-xl"
-                              style={{
-                                width: "100%",
-                                borderRadius: "12px",
-                              }}
-                              acknowledgeRemotionLicense
-                              autoPlay
-                              controls
-                              loop={loop}
-                              inFrame={
-                                propertiesItem ? propertiesItem.start : null
-                              }
-                              outFrame={
-                                propertiesItem ? propertiesItem.end-1 : null
-                              }
-                            />
-                            <Spacing y={1} />
-                          </div>
-                        ) : (
-                          <div style={{ color: "#888", padding: "8px" }}>
-                            Animation Preview will be shown here
-                          </div>
-                        )}
-                        {isGenerating && (
-                          <div style={{ color: "#888" }}>Loading…</div>
-                        )}
-                      </div>
+                      <>
+                        <div className="isolate flex-1 h-full">
+                          {inputProps ? (
+                            <div className="p-8">
+                              <Player
+                                component={SequenceBuilder}
+                                durationInFrames={totalDuration || 1}
+                                fps={FPS}
+                                ref={playerRef}
+                                compositionWidth={compositionWidth}
+                                compositionHeight={compositionHeight}
+                                inputProps={{ comps: inputProps }}
+                                className="shadow-xl"
+                                style={{
+                                  width: "100%",
+                                  borderRadius: "12px",
+                                }}
+                                acknowledgeRemotionLicense
+                                autoPlay
+                                controls
+                                loop={loop}
+                                inFrame={
+                                  propertiesItem ? propertiesItem.start : null
+                                }
+                                outFrame={
+                                  propertiesItem ? propertiesItem.end - 1 : null
+                                }
+                              />
+                              <Spacing y={1} />
+                              <div className="flex justify-center items-center px-4">
+                                {inputProps && propertiesItem && (
+                                  <Button
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      setPropertiesItem(null);
+                                    }}
+                                  >
+                                    <X />
+                                    Sequence Loop
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          ) : (
+                            <div style={{ color: "#888", padding: "8px" }}>
+                              Animation Preview will be shown here
+                            </div>
+                          )}
+                          {isGenerating && (
+                            <div style={{ color: "#888" }}>Loading…</div>
+                          )}
+                        </div>
+                      </>
                     </ResizablePanel>
                     {inputProps && (
                       <>
@@ -174,7 +189,8 @@ const Workspace = () => {
                               setLoop={setLoop}
                               setSidebarOpen={setSidebarOpen}
                               setSidebarTab={setSidebarTab}
-                              setPropertiesItem={setPropertiesItem}
+                              selectedItem={propertiesItem}
+                              setSelectedItem={setPropertiesItem}
                             />
                           </div>
                         </ResizablePanel>

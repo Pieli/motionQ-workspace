@@ -23,4 +23,4 @@ export const Subtitle: React.FC = () => {
       Edit <code style={codeStyle}>src/Root.tsx</code> and save to reload.
     </div>
   );
-};
+}

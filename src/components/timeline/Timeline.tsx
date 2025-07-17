@@ -247,17 +247,18 @@ export const Timeline: React.FC<{
   setLoop: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarTab: React.Dispatch<React.SetStateAction<string>>;
-  setPropertiesItem: React.Dispatch<React.SetStateAction<BaseItem | null>>;
+  selectedItem: BaseItem | null;
+  setSelectedItem: React.Dispatch<React.SetStateAction<BaseItem | null>>;
 }> = ({
   comps,
   playerRef,
   setLoop,
   setSidebarOpen,
   setSidebarTab,
-  setPropertiesItem,
+  selectedItem,
+  setSelectedItem,
 }) => {
   const [tracks, setTracks] = useState<Track[]>([]);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const frame = useCurrentPlayerFrame(playerRef);
 
@@ -368,12 +369,11 @@ export const Timeline: React.FC<{
 
   const handleTrackItemClick = useCallback(
     (item: BaseItem) => {
-      setSelectedItemId(item.id); // Set selected item for visual feedback
+      setSelectedItem(item); // Set the selected item for the properties panel
       setSidebarOpen(true); // Expand sidebar
       setSidebarTab("properties"); // Switch to properties tab
-      setPropertiesItem(item); // Set the selected item for the properties panel
     },
-    [setSidebarOpen, setSidebarTab, setPropertiesItem],
+    [setSidebarOpen, setSidebarTab, setSelectedItem],
   );
 
   return (
@@ -429,7 +429,7 @@ export const Timeline: React.FC<{
                 stepWidth={stepWidth}
                 stepTime={stepToSecs(zoom)}
                 onItemClick={handleTrackItemClick}
-                selectedItemId={selectedItemId}
+                selectedItemId={selectedItem?.id}
               />
             </div>
             <ScrollBar orientation="horizontal" />
