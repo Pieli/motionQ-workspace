@@ -170,7 +170,22 @@ export const AppSidebar: React.FC<{
                         }}
                         isActive={activeItem?.title === item.title}
                         className="px-2.5 md:px-2"
-                        onClick={() => setActiveItem(item)}
+                        onClick={() => {
+                            if (!sidebarOpen) {
+                                setSidebarOpen(true);
+                            }
+
+                            if (activeItem?.title === item.title) {
+                                if (sidebarOpen) {
+                                    setSidebarOpen(false);
+                                    return;
+                                }
+                                return;
+                            }
+
+                            setActiveItem(item)
+
+                        }}
                       >
                         <item.icon />
                         <span>{item.title}</span>
