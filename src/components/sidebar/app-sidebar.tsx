@@ -7,6 +7,8 @@ import { Transcript } from "@/components/sidebar/transcript";
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import type { BaseItem } from "@/components/timeline/Timeline";
 
+const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
 import {
   Sidebar,
   SidebarContent,
@@ -55,14 +57,44 @@ const data = {
 export const AppSidebar: React.FC<{
   comps: CompositionConfig[] | null;
   setComps: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
   sidebarTab: string;
   propertiesItem: BaseItem | null;
-}> = ({ comps, setComps, sidebarOpen, sidebarTab, propertiesItem }) => {
+}> = ({ comps, setComps, setSidebarOpen, sidebarOpen, sidebarTab, propertiesItem }) => {
   const [activeItem, setActiveItem] = useState(() => {
     const foundItem = data.navMain.find(item => item.title.toLowerCase() === sidebarTab.toLowerCase());
     return foundItem || data.navMain[0];
   });
+
+  const { toggleSidebar, state } = useSidebar();
+
+  const isStateOpen = useMemo(() => state === "expanded", [state]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+        (event.metaKey || event.ctrlKey)
+      ) {
+        event.preventDefault();
+        // let the sidebar the other useEffect open it  
+        setSidebarOpen(!sidebarOpen);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleSidebar, setSidebarOpen, sidebarOpen]);
+
+
+  useEffect(() => {
+      if (sidebarOpen !== isStateOpen) {
+          console.log("here")
+          toggleSidebar();
+      }
+  }, [sidebarOpen, toggleSidebar, isStateOpen]);
+
 
   useEffect(() => {
     // Keep activeItem in sync with sidebarTab
@@ -96,13 +128,6 @@ export const AppSidebar: React.FC<{
         return <div className="p-4">Default content goes here.</div>;
     }
   }, [comps, activeItem, setComps, propertiesItem]);
-
-  const { setOpen } = useSidebar();
-
-  // Keep sidebar state in sync
-  useEffect(() => {
-    setOpen(sidebarOpen);
-  }, [sidebarOpen, setOpen]);
 
   return (
     <Sidebar

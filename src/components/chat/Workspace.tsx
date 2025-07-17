@@ -181,6 +181,7 @@ const Workspace = () => {
               setComps={setGeneratedComp}
               comps={GeneratedComp}
               sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
               sidebarTab={sidebarTab}
               propertiesItem={propertiesItem}
             />
