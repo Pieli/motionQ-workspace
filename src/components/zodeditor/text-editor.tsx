@@ -19,7 +19,7 @@ export const ZodTextEditor: React.FC<ZodTextEditorProps> = ({
         {fieldKey}
       </label>
       <Textarea
-        value={value}
+        defaultValue={value}
         onChange={(e) => onChange(compId, fieldKey, e.currentTarget.value)}
       />
     </div>
