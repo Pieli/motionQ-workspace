@@ -96,7 +96,6 @@ export const AppSidebar: React.FC<{
 
   useEffect(() => {
       if (sidebarOpen !== isStateOpen) {
-          console.log("here")
           toggleSidebar();
       }
   }, [sidebarOpen, toggleSidebar, isStateOpen]);

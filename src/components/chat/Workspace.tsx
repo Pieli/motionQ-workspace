@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 
 import { Player, type PlayerRef } from "@remotion/player";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { ShareDialog } from "@/components/navbar/share";
 import { Button } from "@/components/ui/button";
@@ -30,10 +30,17 @@ const Workspace = () => {
   const compositionHeight = 1080;
 
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+  if (!location.state) {
+      navigate("/")
+  }  
+  }, [location.state, navigate]);
 
   // when transitioning from the start to the workspace screen
   const [initialPrompt, setInitialPrompt] = useState<string>(
-    location.state.initialPrompt || "",
+    location?.state?.initialPrompt || "",
   );
   const [GeneratedComp, setGeneratedComp] = useState<
     CompositionConfig[] | null
