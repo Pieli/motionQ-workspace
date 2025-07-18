@@ -20,7 +20,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
-import { modifyPropsInTree } from "./tree-modifier";
+import { modifyPropsInTree } from "@/components/zodeditor/tree-modifier";
+import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg-editor";
 
 export const OptionsPanelZ: React.FC<{
   compositions: CompositionConfig[];
@@ -89,8 +90,7 @@ const EditorElement: React.FC<{
   composition: CompositionConfig;
   handleChange: (compId: string, key: string, value: PropType) => void;
 }> = ({ composition, handleChange }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const shapeDef = (composition.schema as any)._def.shape() as Record<
+  const shapeDef = (composition.schema as z.ZodTypeAny)._def.shape() as Record<
     string,
     z.ZodTypeAny
   >;
@@ -128,6 +128,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
 
   return (
     <>
+      <TypoAggregateEditor />
       <AccordionItem
         value={selectedComp.id}
         key={selectedComp.id}
@@ -184,8 +185,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
   onFieldChange,
 }) => {
   let fieldSchema =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ((comp.schema as any)._def.shape() as Record<string, z.ZodTypeAny>)[
+    ((comp.schema as z.ZodTypeAny)._def.shape() as Record<string, z.ZodTypeAny>)[
       fieldKey
     ];
   let typeName = fieldSchema._def.typeName as z.ZodFirstPartyTypeKind;
@@ -232,8 +232,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
         />
       );
     case z.ZodFirstPartyTypeKind.ZodEffects: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const desc = (fieldSchema as any)._def.description;
+      const desc = (fieldSchema as z.ZodTypeAny)._def.description;
       if (desc == zodTypes.ZodZypesInternals.REMOTION_COLOR_BRAND) {
         return (
           <ZodColorEditor
