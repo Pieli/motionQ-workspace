@@ -67,9 +67,18 @@ export const AppSidebar: React.FC<{
   sidebarOpen: boolean;
   sidebarTab: string;
   propertiesItem: BaseItem | null;
-}> = ({ comps, setComps, setSidebarOpen, sidebarOpen, sidebarTab, propertiesItem }) => {
+}> = ({
+  comps,
+  setComps,
+  setSidebarOpen,
+  sidebarOpen,
+  sidebarTab,
+  propertiesItem,
+}) => {
   const [activeItem, setActiveItem] = useState(() => {
-    const foundItem = data.navMain.find(item => item.title.toLowerCase() === sidebarTab.toLowerCase());
+    const foundItem = data.navMain.find(
+      (item) => item.title.toLowerCase() === sidebarTab.toLowerCase(),
+    );
     return foundItem || data.navMain[0];
   });
 
@@ -84,7 +93,7 @@ export const AppSidebar: React.FC<{
         (event.metaKey || event.ctrlKey)
       ) {
         event.preventDefault();
-        // let the sidebar the other useEffect open it  
+        // let the sidebar the other useEffect open it
         setSidebarOpen(!sidebarOpen);
       }
     };
@@ -93,17 +102,17 @@ export const AppSidebar: React.FC<{
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [toggleSidebar, setSidebarOpen, sidebarOpen]);
 
-
   useEffect(() => {
-      if (sidebarOpen !== isStateOpen) {
-          toggleSidebar();
-      }
+    if (sidebarOpen !== isStateOpen) {
+      toggleSidebar();
+    }
   }, [sidebarOpen, toggleSidebar, isStateOpen]);
-
 
   useEffect(() => {
     // Keep activeItem in sync with sidebarTab
-    const foundItem = data.navMain.find(item => item.title.toLowerCase() === sidebarTab.toLowerCase());
+    const foundItem = data.navMain.find(
+      (item) => item.title.toLowerCase() === sidebarTab.toLowerCase(),
+    );
     if (foundItem) {
       setActiveItem(foundItem);
     }
@@ -115,8 +124,8 @@ export const AppSidebar: React.FC<{
         return (
           <div className="p-4">
             {comps && comps.length > 0 && propertiesItem ? (
-              <OptionsPanelZ 
-                compositions={comps} 
+              <OptionsPanelZ
+                compositions={comps}
                 setCompositions={setComps}
                 selectedItem={propertiesItem}
               />
@@ -176,20 +185,19 @@ export const AppSidebar: React.FC<{
                         isActive={activeItem?.title === item.title}
                         className="px-2.5 md:px-2"
                         onClick={() => {
-                            if (!sidebarOpen) {
-                                setSidebarOpen(true);
+                          if (!sidebarOpen) {
+                            setSidebarOpen(true);
+                          }
+
+                          if (activeItem?.title === item.title) {
+                            if (sidebarOpen) {
+                              setSidebarOpen(false);
+                              return;
                             }
+                            return;
+                          }
 
-                            if (activeItem?.title === item.title) {
-                                if (sidebarOpen) {
-                                    setSidebarOpen(false);
-                                    return;
-                                }
-                                return;
-                            }
-
-                            setActiveItem(item)
-
+                          setActiveItem(item);
                         }}
                       >
                         <item.icon />

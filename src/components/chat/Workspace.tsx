@@ -77,7 +77,7 @@ const Workspace = () => {
       <div>
         <SidebarProvider
           className="flex flex-col"
-          style={{ "--sidebar-width": "calc(30svw)" } as React.CSSProperties}
+          style={{ "--sidebar-width": "calc(28rem)" } as React.CSSProperties}
         >
           <Navbar>
             <Button variant={"outline"}>Preview</Button>
