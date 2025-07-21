@@ -22,6 +22,8 @@ import type {
   PropType,
 } from "@/components/interfaces/compositions";
 
+import { FontCombobox } from "@/components/zodeditor/language-combobox";
+
 const AlignmentSelectHorizontal: React.FC<{
   readonly compId: string;
   readonly fieldKey: string;
@@ -119,21 +121,14 @@ export const TypoAggregateEditor: React.FC<{
   return (
     <>
       <div className="p-4 space-y-4 border rounded-md bg-white mb-8">
-        <div>
           <h4 className="text-sm font-medium mb-4">Typography</h4>
 
-          {/* Font Family */}
-          <Select onValueChange={() => {}}>
-            <SelectTrigger className="w-full h-8">
-              <SelectValue placeholder="Roboto" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="roboto">Roboto</SelectItem>
-              <SelectItem value="inter">Inter</SelectItem>
-              <SelectItem value="sans">Sans</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          <FontCombobox 
+              compId={composition.id}
+              value="Inter"
+              fieldKey="typo_fontFamily"
+              onChange={handleChange} 
+          />
 
         {/* Font Weight and Size */}
         <div className="flex gap-2">

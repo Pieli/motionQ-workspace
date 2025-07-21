@@ -24,7 +24,6 @@ import { modifyPropsInTree } from "@/components/zodeditor/tree-modifier";
 import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg-editor";
 
 import { typographySchema } from "@/remotion-lib/TextFades/schemas";
-import { filter } from "lodash";
 
 export const OptionsPanelZ: React.FC<{
   compositions: CompositionConfig[];

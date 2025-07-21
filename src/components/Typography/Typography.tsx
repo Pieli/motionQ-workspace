@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { fitText } from "@remotion/layout-utils";
 import { typographySchema } from "@/remotion-lib/TextFades/schemas";
 
+import { top250 as fonts } from "@/remotion-lib/popular-fonts";
+import { fontFamily as defaultFontFamily } from "@remotion/google-fonts/Inter";
 export type TypographyProps = z.infer<typeof typographySchema>;
 
 export const Typography: React.FC<TypographyProps> = ({
@@ -16,10 +18,34 @@ export const Typography: React.FC<TypographyProps> = ({
   typo_verticalAlign,
 }) => {
   const maxWidth = 1536;
+
+  const [fontFamily, setFontFamily] = useState<string>(defaultFontFamily);
+
+  useEffect(() => {
+    async function loadFont(fontName: string): Promise<string> {
+      try {
+        const selectedFont = fonts.find((font) => font.family === fontName);
+        if (!selectedFont) {
+          return defaultFontFamily;
+        }
+        const imported = await selectedFont.load();
+        const { fontFamily } = imported?.loadFont() ?? {
+          fontFamily: defaultFontFamily,
+        };
+        return fontFamily;
+      } catch (error) {
+        console.warn(`Failed to load font ${fontName}:`, error);
+        return defaultFontFamily;
+      }
+    }
+
+    loadFont(typo_fontFamily).then(setFontFamily);
+  }, [typo_fontFamily]);
+
   const { fontSize: fittedFontSize } = fitText({
     text: typo_text,
     withinWidth: maxWidth,
-    fontFamily: typo_fontFamily,
+    fontFamily: fontFamily,
     fontWeight: typo_fontWeight,
   });
 
@@ -29,7 +55,7 @@ export const Typography: React.FC<TypographyProps> = ({
         color: typo_textColor,
         fontSize: typo_fontSize || fittedFontSize,
         fontWeight: typo_fontWeight,
-        fontFamily: typo_fontFamily,
+        fontFamily: fontFamily,
         textAlign: typo_textAlign,
         letterSpacing: typo_letter_spacing * (typo_fontSize || fittedFontSize),
         verticalAlign: typo_verticalAlign,
