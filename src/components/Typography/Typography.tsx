@@ -12,6 +12,7 @@ export const Typography: React.FC<TypographyProps> = ({
   typo_fontWeight,
   typo_fontFamily,
   typo_textAlign,
+  typo_letter_spacing,
 }) => {
   const maxWidth = 1536;
   const { fontSize: fittedFontSize } = fitText({
@@ -29,6 +30,7 @@ export const Typography: React.FC<TypographyProps> = ({
         fontWeight: typo_fontWeight,
         fontFamily: typo_fontFamily,
         textAlign: typo_textAlign,
+        letterSpacing: typo_letter_spacing * (typo_fontSize || fittedFontSize),
       }}
     >
       {typo_text}
