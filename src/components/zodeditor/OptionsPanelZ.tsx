@@ -1,6 +1,6 @@
-import * as zodTypes from "@remotion/zod-types";
-import React, { useCallback, useEffect } from "react";
 import { z } from "zod";
+import * as zodTypes from "@remotion/zod-types";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -22,6 +22,9 @@ import {
 } from "@radix-ui/react-accordion";
 import { modifyPropsInTree } from "@/components/zodeditor/tree-modifier";
 import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg-editor";
+
+import { typographySchema } from "@/remotion-lib/TextFades/schemas";
+import { filter } from "lodash";
 
 export const OptionsPanelZ: React.FC<{
   compositions: CompositionConfig[];
@@ -126,9 +129,41 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
     [compositions, setCompositions],
   );
 
+  const filteredComps = useMemo(() => {
+    const targetFields = Object.keys(typographySchema.shape);
+    const excessKeys = Object.keys(
+      (selectedComp.schema as z.AnyZodObject).shape,
+    ).filter((key) => !targetFields.includes(key));
+
+    // filter out scheme
+    const typoShape = (selectedComp.schema as z.AnyZodObject).omit(
+      Object.fromEntries(excessKeys.map((key) => [key, true])),
+    );
+
+    const typoKeysFilter = Object.fromEntries(
+      Object.keys(typoShape.shape).map((key) => [key, true]),
+    ) as Record<string, true>;
+
+    const nonTypoShape = (selectedComp.schema as z.AnyZodObject).omit(
+      typoKeysFilter,
+    );
+
+    return {
+      typo: { ...selectedComp, schema: typoShape },
+      nonTypo: { ...selectedComp, schema: nonTypoShape },
+    };
+  }, [selectedComp]);
+
   return (
     <>
-      <TypoAggregateEditor />
+      <TypoAggregateEditor
+        composition={filteredComps.typo}
+        handleChange={handleFieldChange({
+          parentId: selectedComp.id,
+          level: 0,
+        })}
+      />
+
       <AccordionItem
         value={selectedComp.id}
         key={selectedComp.id}
@@ -139,7 +174,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
         </AccordionTrigger>
         <AccordionContent className="p-2">
           <EditorElement
-            composition={selectedComp}
+            composition={filteredComps.nonTypo}
             handleChange={handleFieldChange({
               parentId: selectedComp.id,
               level: 0,
@@ -184,10 +219,9 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
   fieldKey,
   onFieldChange,
 }) => {
-  let fieldSchema =
-    ((comp.schema as z.ZodTypeAny)._def.shape() as Record<string, z.ZodTypeAny>)[
-      fieldKey
-    ];
+  let fieldSchema = (
+    (comp.schema as z.ZodTypeAny)._def.shape() as Record<string, z.ZodTypeAny>
+  )[fieldKey];
   let typeName = fieldSchema._def.typeName as z.ZodFirstPartyTypeKind;
   let currentValue = comp.props?.[fieldKey];
 

@@ -10,6 +10,7 @@ export const typographySchema = z.object({
   typo_fontFamily: z.string().default(defaultFontFamily),
   typo_textAlign: z.enum(["left", "center", "right"]).default("center"),
   typo_letter_spacing: z.number().default(0),
+  typo_verticalAlign: z.enum(["top", "baseline", "bottom"]).default("baseline"),
 });
 
 export const simpleFadeSchema = typographySchema.extend({
