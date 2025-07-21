@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -29,8 +29,14 @@ export const FontCombobox: React.FC<{
   readonly value: PropType;
   readonly onChange: (compId: string, key: string, value: PropType) => void;
 }> = ({ compId, fieldKey, value, onChange }) => {
-  const [open, setOpen] = React.useState(false);
-  const [val, setVal] = React.useState(value);
+  const [open, setOpen] = useState<boolean>(false);
+  const [val, setVal] = useState<PropType | undefined>("Inter");
+
+  useEffect(() => {
+    if (value !== val) {
+      setVal(value);
+    }
+  }, [value, val, setVal]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -41,7 +47,7 @@ export const FontCombobox: React.FC<{
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {val ? val : "Select Font..."}
+          {val || "Inter"}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

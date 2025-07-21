@@ -121,14 +121,14 @@ export const TypoAggregateEditor: React.FC<{
   return (
     <>
       <div className="p-4 space-y-4 border rounded-md bg-white mb-8">
-          <h4 className="text-sm font-medium mb-4">Typography</h4>
+        <h4 className="text-sm font-medium mb-4">Typography</h4>
 
-          <FontCombobox 
-              compId={composition.id}
-              value="Inter"
-              fieldKey="typo_fontFamily"
-              onChange={handleChange} 
-          />
+        <FontCombobox
+          compId={composition.id}
+          value={composition.props?.["typo_fontFamily"]}
+          fieldKey="typo_fontFamily"
+          onChange={handleChange}
+        />
 
         {/* Font Weight and Size */}
         <div className="flex gap-2">
@@ -144,7 +144,6 @@ export const TypoAggregateEditor: React.FC<{
           </Select>
           <Select
             onValueChange={(value: string) => {
-              console.log("value", value);
               handleChange(composition.id, "typo_fontSize", Number(value));
             }}
           >

@@ -158,29 +158,31 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
       <TypoAggregateEditor
         composition={filteredComps.typo}
         handleChange={handleFieldChange({
-          parentId: selectedComp.id,
+          parentId: filteredComps.typo.id,
           level: 0,
         })}
       />
 
-      <AccordionItem
-        value={selectedComp.id}
-        key={selectedComp.id}
-        className="mb-8 border rounded-xl"
-      >
-        <AccordionTrigger>
-          <h2 className="text-ml font-bold p-2">Foreground</h2>
-        </AccordionTrigger>
-        <AccordionContent className="p-2">
-          <EditorElement
-            composition={filteredComps.nonTypo}
-            handleChange={handleFieldChange({
-              parentId: selectedComp.id,
-              level: 0,
-            })}
-          />
-        </AccordionContent>
-      </AccordionItem>
+      {Object.keys(filteredComps.nonTypo.schema.shape).length > 0 && (
+        <AccordionItem
+          value={selectedComp.id}
+          key={selectedComp.id}
+          className="mb-8 border rounded-xl"
+        >
+          <AccordionTrigger>
+            <h2 className="text-ml font-bold p-2">Foreground</h2>
+          </AccordionTrigger>
+          <AccordionContent className="p-2">
+            <EditorElement
+              composition={filteredComps.nonTypo}
+              handleChange={handleFieldChange({
+                parentId: selectedComp.id,
+                level: 0,
+              })}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      )}
       {selectedComp.background && (
         <AccordionItem
           value={selectedComp.background.id}

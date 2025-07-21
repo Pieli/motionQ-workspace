@@ -58,7 +58,7 @@ const TrackItems: React.FC<{
   selectedItemId?: string | null;
 }> = ({ items, calcWidth, onItemClick, selectedItemId }) => {
   return (
-    <div className="flex" style={{ gap: "1px" }}>
+    <div className="flex gap-[1px]">
       {items.map((item: BaseItem, index) => (
         <div
           key={index}
@@ -372,8 +372,10 @@ export const Timeline: React.FC<{
       setSelectedItem(item); // Set the selected item for the properties panel
       setSidebarOpen(true); // Expand sidebar
       setSidebarTab("properties"); // Switch to properties tab
+
+      playerRef.current?.seekTo(item.start + 1); // Seek to the item's start time
     },
-    [setSidebarOpen, setSidebarTab, setSelectedItem],
+    [setSidebarOpen, setSidebarTab, setSelectedItem, playerRef],
   );
 
   return (
