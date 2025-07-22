@@ -108,9 +108,7 @@ export const Transcript: React.FC<TranscriptProps> = ({
             </div>
             <div className="relative hover:bg-accent rounded pb-4">
               <div
-                className={`text-sm font-medium peer/text ${
-                  editingId === comp.id ? "py-2" : "py-1"
-                }`}
+                className={`text-sm text-muted-foreground ${editingId === comp.id ? "py-2" : "py-1"}`}
               >
                 {editingId === comp.id ? (
                   <textarea

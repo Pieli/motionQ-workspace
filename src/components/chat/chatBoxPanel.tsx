@@ -29,8 +29,8 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
       <div
         className={
           (isUser
-            ? "w-9/10 rounded-2xl bg-muted text-muted-foreground px-4 py-2 break-words break-all text-left ml-auto"
-            : "w-8/10 rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-left mr-auto border border-primary/20") +
+            ? "w-9/10 rounded-2xl bg-secondary text-secondary-foreground px-4 py-2 break-words break-all text-left ml-auto"
+            : "w-8/10 rounded-2xl text-foreground px-4 py-2 break-words break-all text-left mr-auto") +
           " max-w-full"
         }
         style={{
@@ -40,7 +40,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
           wordBreak: "break-word",
         }}
       >
-        <span className="block text-xs font-semibold mb-1 opacity-60">
+        <span className="block text-xs font-semibold mb-1 opacity-80">
           {isUser ? "You" : "Agent"}
         </span>
         <CollapsibleText
