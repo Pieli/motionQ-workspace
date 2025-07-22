@@ -7,6 +7,7 @@ import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { LLMService } from "@/components/interfaces/llm";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CollapsibleText } from "@/components/ui/collapsible-text";
 
 // import { logCompositionConfig } from "@/helpers/composition-logger";
 import { exampleComp, exampleHistory } from "@/helpers/example-comp";
@@ -42,9 +43,11 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
         <span className="block text-xs font-semibold mb-1 opacity-60">
           {isUser ? "You" : "Agent"}
         </span>
-        <span style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}>
-          {content}
-        </span>
+        <CollapsibleText
+          text={content}
+          maxLength={346}
+          style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
+        />
       </div>
     </li>
   );
