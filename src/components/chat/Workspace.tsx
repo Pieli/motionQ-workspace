@@ -4,6 +4,7 @@ import { Player, type PlayerRef } from "@remotion/player";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { ShareDialog } from "@/components/navbar/share";
+import { PreviewDialog } from "@/components/navbar/preview-dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
@@ -80,7 +81,15 @@ const Workspace = () => {
           style={{ "--sidebar-width": "calc(28rem)" } as React.CSSProperties}
         >
           <Navbar>
-            <Button variant={"outline"}>Preview</Button>
+            <PreviewDialog
+              compositions={GeneratedComp}
+              totalDuration={totalDuration}
+              handleOpenChange={(open) => {
+                if (open) {
+                  playerRef.current?.pause();
+                }
+              }}
+            />
             <ShareDialog />
             <Button>Export</Button>
           </Navbar>
