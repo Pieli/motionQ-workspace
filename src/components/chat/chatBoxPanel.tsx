@@ -57,7 +57,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
 const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
   return (
     <ScrollArea className="h-[calc(100vh-130px)] w-full">
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-3 pb-14">
         {history.map((item, index) => (
           <ChatMessage key={index} message={item} />
         ))}
@@ -89,7 +89,7 @@ export const ChatBoxPanel: React.FC<{
   const initialPromptProcessedRef = React.useRef(false);
 
   const devMode = React.useCallback(() => {
-    setHistory(exampleHistory);
+    setHistory((prev) => [...prev, ...exampleHistory]);
     preUpdateCleanup();
     setGeneratedComp(exampleComp);
     setIsGenerating(false);
@@ -177,21 +177,27 @@ export const ChatBoxPanel: React.FC<{
           </div>
         )}
       </div>
-      <div className="absolute left-0 right-0 bottom-0 bg-background z-20 p-4 pointer-events-auto">
-        {isGenerating && (
-          <div className="pl-4 pt-2 pb-2 text-right">
-            <AnimatedGradientText className="text-sm font-semibold">
-              Generating Animation
-            </AnimatedGradientText>
+      {/* Gradient overlay for fade effect */}
+      <div className="relative">
+        <div className="absolute left-0 right-0 bottom-0 bg-transparent z-20 px-4 pb-4 pointer-events-auto">
+          <div className="h-10 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
+          <div className="bg-background">
+            {isGenerating && (
+              <div className="b-1 text-right">
+                <AnimatedGradientText className="text-sm font-semibold">
+                  Generating Animation
+                </AnimatedGradientText>
+              </div>
+            )}
+            <div className="block align-bottom">
+              <ChatInput
+                prompt={prompt}
+                setPrompt={setPrompt}
+                onSend={() => generate()}
+                isGenerating={isGenerating}
+              />
+            </div>
           </div>
-        )}
-        <div className="block align-bottom">
-          <ChatInput
-            prompt={prompt}
-            setPrompt={setPrompt}
-            onSend={() => generate()}
-            isGenerating={isGenerating}
-          />
         </div>
       </div>
     </div>
