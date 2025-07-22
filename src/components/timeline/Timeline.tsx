@@ -231,11 +231,10 @@ const Cursor: React.FC<{
 
   return (
     <div
-      className="absolute top-0 w-[2px] bg-red-500 pointer-events-none"
+      className="absolute top-0 w-[2px] bg-red-500 pointer-events-none z-10"
       style={{
         left: position,
-        height: height,
-        zIndex: 1000,
+        height: height + 7,
       }}
     />
   );
