@@ -14,12 +14,7 @@ import type {
   CompositionConfig,
   PropType,
 } from "@/components/interfaces/compositions";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@radix-ui/react-accordion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { modifyPropsInTree } from "@/components/zodeditor/tree-modifier";
 import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg-editor";
 
@@ -56,24 +51,13 @@ export const OptionsPanelZ: React.FC<{
     <>
       {selectedComp ? (
         <ScrollArea className="h-full w-full">
-          <Accordion
-            type="multiple"
-            className="w-full"
-            defaultValue={[
-              selectedComp.id,
-              ...(selectedComp.background ? [selectedComp.background.id] : []),
-            ]}
-            value={[
-              selectedComp.id,
-              ...(selectedComp.background ? [selectedComp.background.id] : []),
-            ]}
-          >
+          <div className="w-full space-y-4">
             <ZodEditor
               compositions={comps}
               setCompositions={setComps}
               selectedComp={selectedComp}
             />
-          </Accordion>
+          </div>
         </ScrollArea>
       ) : (
         <span>Select a composition to edit its properties</span>
@@ -164,15 +148,11 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
       />
 
       {Object.keys(filteredComps.nonTypo.schema.shape).length > 0 && (
-        <AccordionItem
-          value={selectedComp.id}
-          key={selectedComp.id}
-          className="mb-8 border rounded-xl"
-        >
-          <AccordionTrigger>
-            <h2 className="text-ml font-bold p-2">Foreground</h2>
-          </AccordionTrigger>
-          <AccordionContent className="p-2">
+        <Card key={selectedComp.id} className="mb-4 gap-4">
+          <CardHeader>
+            <CardTitle>Foreground</CardTitle>
+          </CardHeader>
+          <CardContent>
             <EditorElement
               composition={filteredComps.nonTypo}
               handleChange={handleFieldChange({
@@ -180,19 +160,15 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
                 level: 0,
               })}
             />
-          </AccordionContent>
-        </AccordionItem>
+          </CardContent>
+        </Card>
       )}
       {selectedComp.background && (
-        <AccordionItem
-          value={selectedComp.background.id}
-          key={"background"}
-          className="mb-8 border rounded-xl"
-        >
-          <AccordionTrigger>
-            <h2 className="text-ml font-bold p-2">Background</h2>
-          </AccordionTrigger>
-          <AccordionContent className="p-2">
+        <Card key="background" className="mb-4 gap-4">
+          <CardHeader>
+            <CardTitle>Background</CardTitle>
+          </CardHeader>
+          <CardContent>
             <EditorElement
               composition={selectedComp.background}
               handleChange={handleFieldChange({
@@ -200,8 +176,8 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
                 level: 1,
               })}
             />
-          </AccordionContent>
-        </AccordionItem>
+          </CardContent>
+        </Card>
       )}
     </>
   );

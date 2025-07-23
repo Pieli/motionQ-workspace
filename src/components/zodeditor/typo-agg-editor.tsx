@@ -17,6 +17,8 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import type {
   CompositionConfig,
   PropType,
@@ -120,85 +122,88 @@ export const TypoAggregateEditor: React.FC<{
 }> = ({ composition, handleChange }) => {
   return (
     <>
-      <div className="p-4 space-y-4 border rounded-md bg-white mb-8">
-        <h4 className="text-sm font-medium mb-4">Typography</h4>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Typography</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <FontCombobox
+            compId={composition.id}
+            value={composition.props?.["typo_fontFamily"]}
+            fieldKey="typo_fontFamily"
+            onChange={handleChange}
+          />
 
-        <FontCombobox
-          compId={composition.id}
-          value={composition.props?.["typo_fontFamily"]}
-          fieldKey="typo_fontFamily"
-          onChange={handleChange}
-        />
-
-        {/* Font Weight and Size */}
-        <div className="flex gap-2">
-          <Select>
-            <SelectTrigger className="w-1/2 h-8">
-              <SelectValue placeholder="SemiBold" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="regular">Regular</SelectItem>
-              <SelectItem value="semibold">SemiBold</SelectItem>
-              <SelectItem value="bold">Bold</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            onValueChange={(value: string) => {
-              handleChange(composition.id, "typo_fontSize", Number(value));
-            }}
-          >
-            <SelectTrigger className="w-1/2 h-8">
-              <SelectValue placeholder="100" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="100">100</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="40">40</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Line Height & Letter Spacing */}
-        <div className="flex gap-2">
-          <div className="relative">
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-              <p className="border-y border-y-1 border-muted-foreground py-0.5 leading-none">
-                A
-              </p>
-            </span>
-            <Input className="pl-10" defaultValue="100%" />
+          {/* Font Weight and Size */}
+          <div className="flex gap-2">
+            <Select>
+              <SelectTrigger className="w-1/2 h-8">
+                <SelectValue placeholder="SemiBold" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="regular">Regular</SelectItem>
+                <SelectItem value="semibold">SemiBold</SelectItem>
+                <SelectItem value="bold">Bold</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              onValueChange={(value: string) => {
+                handleChange(composition.id, "typo_fontSize", Number(value));
+              }}
+            >
+              <SelectTrigger className="w-1/2 h-8">
+                <SelectValue placeholder="100" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="100">100</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="40">40</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="relative">
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-              <p className="border-x border-x-1 border-muted-foreground px-1 leading-none">
-                A
-              </p>
-            </span>
-            <Input className="pl-10" defaultValue="100%" />
-          </div>
-        </div>
+          {/* Line Height & Letter Spacing */}
+          <div className="flex gap-2">
+            <div className="relative">
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                <p className="border-y border-y-1 border-muted-foreground py-0.5 leading-none">
+                  A
+                </p>
+              </span>
+              <Input className="pl-10" defaultValue="100%" />
+            </div>
 
-        {/* Alignment Buttons */}
-        <div className="flex gap-2">
-          <div className="w-1/2 flex justify-between">
-            <AlignmentSelectHorizontal
-              compId={composition.id}
-              value="center"
-              fieldKey="typo_textAlign"
-              onChange={handleChange}
-            />
+            <div className="relative">
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                <p className="border-x border-x-1 border-muted-foreground px-1 leading-none">
+                  A
+                </p>
+              </span>
+              <Input className="pl-10" defaultValue="100%" />
+            </div>
           </div>
-          <div className="w-1/2 flex justify-between">
-            <AlignmentSelectVertical
-              compId={composition.id}
-              value="center"
-              fieldKey="typo_verticalAlign"
-              onChange={handleChange}
-            />
+
+          {/* Alignment Buttons */}
+          <div className="flex gap-2">
+            <div className="w-1/2 flex justify-between">
+              <AlignmentSelectHorizontal
+                compId={composition.id}
+                value="center"
+                fieldKey="typo_textAlign"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-1/2 flex justify-between">
+              <AlignmentSelectVertical
+                compId={composition.id}
+                value="center"
+                fieldKey="typo_verticalAlign"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </>
   );
 };
