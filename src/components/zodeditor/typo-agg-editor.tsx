@@ -260,6 +260,28 @@ export const TypoAggregateEditor: React.FC<{
               />
             </div>
           </div>
+          {/* Text Color */}
+          <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center">
+              <input
+                type="color"
+                value={composition.props?.["typo_textColor"] || "#ffffff"}
+                onChange={(e) =>
+                  handleChange(composition.id, "typo_textColor", e.target.value)
+                }
+                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                style={{ padding: 0 }}
+              />
+              <Input
+                value={composition.props?.["typo_textColor"] || "#ffffff"}
+                onChange={(e) =>
+                  handleChange(composition.id, "typo_textColor", e.target.value)
+                }
+                placeholder="#ffffff"
+                className="flex-1"
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
     </>
