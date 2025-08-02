@@ -12,6 +12,7 @@ import { z } from "zod";
 interface ZodEnumEditorProps {
   readonly compId: string;
   readonly fieldKey: string;
+  readonly label: string;
   readonly value: string;
   readonly onChange: (compId: string, key: string, value: string) => void;
   readonly schema: z.ZodEnum<[string, ...string[]]>;
@@ -20,6 +21,7 @@ interface ZodEnumEditorProps {
 export const ZodEnumEditor: React.FC<ZodEnumEditorProps> = ({
   compId,
   fieldKey,
+  label,
   value,
   onChange,
   schema,
@@ -29,7 +31,7 @@ export const ZodEnumEditor: React.FC<ZodEnumEditorProps> = ({
   return (
     <div>
       <label className="block text-sm text-foreground font-medium mb-1">
-        {fieldKey}
+        {label}
       </label>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

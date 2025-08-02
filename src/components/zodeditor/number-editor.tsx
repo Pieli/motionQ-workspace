@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 interface ZodNumberEditorProps {
   readonly compId: string;
   readonly fieldKey: string;
+  readonly label: string;
   readonly value: number;
   readonly onChange: (compId: string, key: string, value: number) => void;
 }
@@ -10,13 +11,14 @@ interface ZodNumberEditorProps {
 export const ZodNumberEditor: React.FC<ZodNumberEditorProps> = ({
   compId,
   fieldKey,
+  label,
   value,
   onChange,
 }) => {
   return (
     <div>
       <label className="block text-sm text-foreground font-medium mb-1">
-        {fieldKey}
+        {label}
       </label>
       <Input
         type="number"

@@ -9,9 +9,10 @@ import { Row } from "@/components/ui/row";
 export const ZodColorEditor: React.FC<{
   readonly compId: string;
   readonly fieldKey: string;
+  readonly label: string;
   readonly value: string;
   readonly onChange: (compId: string, key: string, value: string) => void;
-}> = ({ compId, fieldKey, value, onChange }) => {
+}> = ({ compId, fieldKey, label, value, onChange }) => {
   const { a, b, g, r } = useMemo(
     () => zodTypes.ZodZypesInternals.parseColor(value),
     [value],
@@ -41,7 +42,7 @@ export const ZodColorEditor: React.FC<{
   return (
     <>
       <label className="block text-sm text-foreground font-medium mb-1">
-        {fieldKey}
+        {label}
       </label>
       <div style={{ width: "100%" }}>
         <Row align="center">

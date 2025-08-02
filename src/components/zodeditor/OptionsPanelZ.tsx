@@ -76,6 +76,13 @@ const EditorElement: React.FC<{
   composition: CompositionConfig;
   handleChange: (compId: string, key: string, value: PropType) => void;
 }> = ({ composition, handleChange }) => {
+  const makeUIFriendly = (label: string): string => {
+    return label
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
   const shapeDef = (composition.schema as z.ZodTypeAny)._def.shape() as Record<
     string,
     z.ZodTypeAny
@@ -89,6 +96,7 @@ const EditorElement: React.FC<{
             key={index}
             comp={composition}
             fieldKey={key}
+            label={makeUIFriendly(key)}
             onFieldChange={handleChange}
           />
         </div>
@@ -150,7 +158,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
       {Object.keys(filteredComps.nonTypo.schema.shape).length > 0 && (
         <Card key={selectedComp.id} className="mb-4 gap-4">
           <CardHeader>
-            <CardTitle>Foreground</CardTitle>
+            <CardTitle>Animation</CardTitle>
           </CardHeader>
           <CardContent>
             <EditorElement
@@ -187,6 +195,7 @@ const ZodEditor: React.FC<ZodEditorProps> = ({
 interface ZodSwitchProps {
   comp: CompositionConfig;
   fieldKey: string;
+  label: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFieldChange: (compId: string, key: string, value: any) => void;
 }
@@ -194,6 +203,7 @@ interface ZodSwitchProps {
 const ZodSwitch: React.FC<ZodSwitchProps> = ({
   comp,
   fieldKey,
+  label,
   onFieldChange,
 }) => {
   let fieldSchema = (
@@ -219,6 +229,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
         <ZodTextEditor
           compId={comp.id}
           fieldKey={fieldKey}
+          label={label}
           value={String(currentValue)}
           onChange={onFieldChange}
         />
@@ -228,6 +239,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
         <ZodNumberEditor
           compId={comp.id}
           fieldKey={fieldKey}
+          label={label}
           value={Number(currentValue)}
           onChange={onFieldChange}
         />
@@ -237,6 +249,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
         <ZodEnumEditor
           compId={comp.id}
           fieldKey={fieldKey}
+          label={label}
           value={String(currentValue)}
           onChange={onFieldChange}
           schema={fieldSchema as z.ZodEnum<[string, ...string[]]>}
@@ -249,6 +262,7 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
           <ZodColorEditor
             compId={comp.id}
             fieldKey={fieldKey}
+            label={label}
             value={String(currentValue)}
             onChange={onFieldChange}
           />
