@@ -57,7 +57,7 @@ export const Typography: React.FC<TypographyProps> = ({
         fontWeight: typo_fontWeight,
         fontFamily: fontFamily,
         textAlign: typo_textAlign,
-        letterSpacing: typo_letter_spacing * (typo_fontSize || fittedFontSize),
+        letterSpacing: `${typo_letter_spacing / 100}rem`,
         verticalAlign: typo_verticalAlign,
       }}
     >

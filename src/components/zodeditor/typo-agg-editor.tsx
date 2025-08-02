@@ -146,17 +146,23 @@ export const TypoAggregateEditor: React.FC<{
 
           {/* Font Weight and Size */}
           <div className="flex gap-2">
-            <Select>
+            <Select
+              value={composition.props?.["typo_fontWeight"]?.toString()}
+              onValueChange={(value: string) => {
+                handleChange(composition.id, "typo_fontWeight", Number(value));
+              }}
+            >
               <SelectTrigger className="w-1/2 h-8">
                 <SelectValue placeholder="SemiBold" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="regular">Regular</SelectItem>
-                <SelectItem value="semibold">SemiBold</SelectItem>
-                <SelectItem value="bold">Bold</SelectItem>
+                <SelectItem value="400">Regular</SelectItem>
+                <SelectItem value="550">SemiBold</SelectItem>
+                <SelectItem value="700">Bold</SelectItem>
               </SelectContent>
             </Select>
             <Select
+              value={composition.props?.["typo_fontSize"]?.toString()}
               onValueChange={(value: string) => {
                 handleChange(composition.id, "typo_fontSize", Number(value));
               }}
@@ -180,7 +186,23 @@ export const TypoAggregateEditor: React.FC<{
                   A
                 </p>
               </span>
-              <Input className="pl-10" defaultValue="100%" />
+              <div className="relative">
+                <Input
+                  className="pl-10 pr-6"
+                  value={composition.props?.["typo_lineHeight"] || ""}
+                  onChange={(e) => {
+                    handleChange(
+                      composition.id,
+                      "typo_lineHeight",
+                      Number(e.target.value),
+                    );
+                  }}
+                  placeholder="100"
+                />
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                  %
+                </span>
+              </div>
             </div>
 
             <div className="relative">
@@ -189,7 +211,23 @@ export const TypoAggregateEditor: React.FC<{
                   A
                 </p>
               </span>
-              <Input className="pl-10" defaultValue="100%" />
+              <div className="relative">
+                <Input
+                  className="pl-10 pr-6"
+                  value={composition.props?.["typo_letter_spacing"] || ""}
+                  onChange={(e) => {
+                    handleChange(
+                      composition.id,
+                      "typo_letter_spacing",
+                      Number(e.target.value),
+                    );
+                  }}
+                  placeholder="0"
+                />
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                  %
+                </span>
+              </div>
             </div>
           </div>
 
@@ -198,7 +236,12 @@ export const TypoAggregateEditor: React.FC<{
             <div className="w-1/2 flex justify-between">
               <AlignmentSelectHorizontal
                 compId={composition.id}
-                value="center"
+                value={
+                  (composition.props?.["typo_textAlign"] as
+                    | "left"
+                    | "center"
+                    | "right") || "center"
+                }
                 fieldKey="typo_textAlign"
                 onChange={handleChange}
               />
@@ -206,7 +249,12 @@ export const TypoAggregateEditor: React.FC<{
             <div className="w-1/2 flex justify-between">
               <AlignmentSelectVertical
                 compId={composition.id}
-                value="center"
+                value={
+                  (composition.props?.["typo_verticalAlign"] as
+                    | "bottom"
+                    | "center"
+                    | "top") || "center"
+                }
                 fieldKey="typo_verticalAlign"
                 onChange={handleChange}
               />
