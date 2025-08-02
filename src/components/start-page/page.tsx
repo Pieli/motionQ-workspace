@@ -42,6 +42,7 @@ const StartPage: React.FC = () => {
               prompt={prompt}
               setPrompt={setPrompt}
               onSend={handleSend}
+              onStop={() => {}}
               isGenerating={false}
             />
           </div>

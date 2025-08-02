@@ -95,6 +95,12 @@ export const ChatBoxPanel: React.FC<{
     setIsGenerating(false);
   }, [setHistory, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
 
+  const stopGeneration = React.useCallback(() => {
+    llm.abort();
+    setIsGenerating(false);
+    toast.info("Agent call interrupted");
+  }, [setIsGenerating]);
+
   const generate = React.useCallback(
     async (promptArg?: string) => {
       let usedPrompt = prompt.trim();
@@ -136,7 +142,16 @@ export const ChatBoxPanel: React.FC<{
         // Append the agent's comment to the history
         setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
       } catch (e) {
+        if (typeof e == "string") {
+          console.error(e);
+          return;
+        }
+        if (e instanceof Error && e.message == "Request was aborted.") {
+          return;
+        }
+
         console.error("Error during generation:", e);
+
         preUpdateCleanup();
         setGeneratedComp(null);
         // In case of error, you might also want to add an error message to history
@@ -194,6 +209,7 @@ export const ChatBoxPanel: React.FC<{
                 prompt={prompt}
                 setPrompt={setPrompt}
                 onSend={() => generate()}
+                onStop={stopGeneration}
                 isGenerating={isGenerating}
               />
             </div>

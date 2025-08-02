@@ -4,6 +4,7 @@ export interface LLMService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   generateCompositions(prompt: string): Promise<any>;
   responseToGeneratedComposition(resp: object): CompositionConfig[];
+  abort(): void;
 }
 
 

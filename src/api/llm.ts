@@ -26,22 +26,31 @@ export class NullLLMService implements LLMService {
         console.log("No LLM service configured", resp);
         return [];
     }
+
+    abort(): void {
+        console.log("No LLM service configured - abort called");
+    }
 };
 
 export class OpenAIService implements LLMService {
   private client: OpenAI;
+  private abortController: AbortController | null = null;
 
   constructor(apiKey: string, ) {
     this.client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true});
   }
 
   async generateCompositions(prompt: string): Promise<ResponseType> {
+    this.abortController = new AbortController();
+    
     const completion = await this.client.beta.chat.completions.parse({
       model: 'gpt-4.1-nano-2025-04-14',
       messages: [{role: 'system', content: systemPrompt}, { role: 'user', content: prompt }],
       temperature: 0.7,
       max_tokens: 1500,
       response_format: zodResponseFormat(Response, 'response'),
+    }, {
+      signal: this.abortController.signal
     });
 
     console.dir(completion, { depth: 5 });
@@ -73,4 +82,11 @@ export class OpenAIService implements LLMService {
 
     return compostitions;
 };
+
+  abort(): void {
+    if (this.abortController) {
+      this.abortController.abort();
+      this.abortController = null;
+    }
+  }
 }

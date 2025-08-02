@@ -8,14 +8,15 @@ import {
 } from "@/components/ui/tooltip";
 
 import { Button } from "@/components/ui/button";
-import { SendHorizonal } from "lucide-react";
+import { SendHorizonal, Square } from "lucide-react";
 
 export const ChatInput: React.FC<{
   prompt: string;
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
   onSend: () => void;
+  onStop: () => void;
   isGenerating: boolean;
-}> = ({ prompt, setPrompt, onSend, isGenerating }) => {
+}> = ({ prompt, setPrompt, onSend, onStop, isGenerating }) => {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Auto-grow textarea height
@@ -39,7 +40,9 @@ export const ChatInput: React.FC<{
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            if (!isGenerating && prompt) {
+            if (isGenerating) {
+              onStop();
+            } else if (prompt) {
               onSend();
             }
           }
@@ -50,16 +53,23 @@ export const ChatInput: React.FC<{
           <Button
             className="absolute right-2 bottom-2"
             size="lg"
-            onClick={onSend}
-            disabled={isGenerating || !prompt}
+            onClick={isGenerating ? onStop : onSend}
+            disabled={!isGenerating && !prompt}
+            variant={isGenerating ? "destructive" : "default"}
           >
-            <SendHorizonal />
+            {isGenerating ? <Square /> : <SendHorizonal />}
           </Button>
         </TooltipTrigger>
         <TooltipContent sideOffset={8}>
-          Press <kbd>Enter</kbd> to send
-          <br />
-          and <kbd>Shift</kbd>+<kbd>Enter</kbd> for a linebreak.
+          {isGenerating ? (
+            <>Press <kbd>Enter</kbd> to stop generation</>
+          ) : (
+            <>
+              Press <kbd>Enter</kbd> to send
+              <br />
+              and <kbd>Shift</kbd>+<kbd>Enter</kbd> for a linebreak.
+            </>
+          )}
         </TooltipContent>
       </Tooltip>
     </div>
