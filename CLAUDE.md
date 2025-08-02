@@ -101,3 +101,5 @@ shadcn/ui components with consistent styling
 - Always write pre and post condititions using assert statements to verify the correctness of the implementations
 - Exceptions should not be hidden away but should be raised 
 
+## Import Notation Guidelines
+- Always use the absolute path, with the "@" symbol for the root folder

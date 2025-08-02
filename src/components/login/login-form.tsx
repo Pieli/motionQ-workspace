@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { auth } from "@/lib/firebase"
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { createUser } from "@/lib/api-client"
 import { useState } from "react"
 import { Navigate } from "react-router-dom"
 
@@ -32,7 +33,12 @@ export function LoginForm({
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // Create user in backend after successful Firebase signup
+        const userId = await createUser(userCredential.user);
+        if (!userId) {
+          throw new Error("Failed to create user in backend");
+        }
       }
       setRedirectTo("/");
     } catch (err) {
@@ -43,7 +49,16 @@ export function LoginForm({
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const userCredential = await signInWithPopup(auth, provider);
+      
+      // Check if this is a new user and create in backend if needed
+      if (userCredential.user.metadata.creationTime === userCredential.user.metadata.lastSignInTime) {
+        const userId = await createUser(userCredential.user);
+        if (!userId) {
+          throw new Error("Failed to create user in backend");
+        }
+      }
+      
       setRedirectTo("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
