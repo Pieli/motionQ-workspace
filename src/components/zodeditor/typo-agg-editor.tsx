@@ -8,6 +8,7 @@ import {
   MoveVertical,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Toggle } from "@/components/ui/toggle";
 import {
   Select,
@@ -127,6 +128,15 @@ export const TypoAggregateEditor: React.FC<{
           <CardTitle>Typography</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <Textarea
+            value={composition.props?.["typo_text"] || ""}
+            onChange={(e) =>
+              handleChange(composition.id, "typo_text", e.target.value)
+            }
+            placeholder="Enter your text here..."
+            className="min-h-[60px] resize-none"
+          />
+
           <FontCombobox
             compId={composition.id}
             value={composition.props?.["typo_fontFamily"]}
