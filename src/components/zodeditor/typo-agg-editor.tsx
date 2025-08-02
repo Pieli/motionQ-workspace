@@ -168,12 +168,14 @@ export const TypoAggregateEditor: React.FC<{
               }}
             >
               <SelectTrigger className="w-1/2 h-8">
-                <SelectValue placeholder="100" />
+                <SelectValue placeholder="72" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="100">100</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="40">40</SelectItem>
+                {Array.from({ length: (320 - 12) / 8 + 1 }, (_, i) => 12 + i * 8).map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
