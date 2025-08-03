@@ -48,7 +48,7 @@ const StartPage: React.FC = () => {
           </div>
         </div>
       </section>
-      <section className="px-6 pt-20 pb-12 min-h-[70vh]">
+      <section className="hidden px-6 pt-20 pb-12 min-h-[70vh]">
         <h3>Your Projects</h3>
       </section>
     </div>
