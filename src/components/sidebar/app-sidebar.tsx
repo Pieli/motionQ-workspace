@@ -1,8 +1,6 @@
 import { Captions, Command, Component, Folders, ListMusic } from "lucide-react";
 import React, { useMemo, useState, useEffect } from "react";
 
-// TODO is the NavUser needed (decide later)
-import { NavUser } from "@/components/sidebar/nav-user";
 import { Transcript } from "@/components/sidebar/transcript";
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
 import type { BaseItem } from "@/components/timeline/Timeline";
@@ -210,7 +208,6 @@ export const AppSidebar: React.FC<{
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
-            <NavUser user={data.user} />
           </SidebarFooter>
         </Sidebar>
         <Sidebar collapsible="none" className="bg-background">
