@@ -11,6 +11,7 @@ import {
   scaleUpDownSchema,
   simpleTypingSchema,
   slideInSchema,
+  typographySchema,
 } from "@/remotion-lib/TextFades/schemas";
 
 import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
@@ -28,12 +29,14 @@ export interface AnimationBinding {
     settings: string,
 }
 
+
+const exceptions = ["typo_textColor", "typo_text"]
+const blacklist = Object.keys(typographySchema.shape).filter((key) => !exceptions.includes(key));
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getFilteredSchema(schema: z.ZodObject<any>): z.ZodObject<any> {
-    const blacklistedTypographyProps = ['fontSize', 'fontWeight', 'fontFamily', 'textAlign'];
-
     const filteredShape = Object.entries(schema.shape)
-        .filter(([key]) => !blacklistedTypographyProps.includes(key))
+        .filter(([key]) => !blacklist.includes(key))
         .reduce((acc, [key, value ]) => {
             let processedValue = value as z.ZodTypeAny;
             
@@ -186,7 +189,9 @@ function getDefault(zodType: z.ZodTypeAny): unknown {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSchemaDescription(schema: z.ZodObject<any>) {
-    return Object.entries(schema.shape).map(([key, value]) => {
+    return Object.entries(schema.shape)
+        .filter(([key]) => !blacklist.includes(key))
+        .map(([key, value]) => {
 
         let type: string;
         let constraints = "";
