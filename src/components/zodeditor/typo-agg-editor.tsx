@@ -80,39 +80,37 @@ const AlignmentSelectVertical: React.FC<{
   const [val, setVal] = useState<"bottom" | "center" | "top">(value);
 
   return (
-    <div className="w-1/2 flex justify-between">
-      <div className="inline-flex h-11 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-        <Toggle
-          pressed={val === "top"}
-          onPressedChange={() => {
-            setVal("top");
-            onChange(compId, fieldKey, "top");
-          }}
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-1 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
-        >
-          <ArrowUp className="h-3 w-3" />
-        </Toggle>
-        <Toggle
-          pressed={val === "center"}
-          onPressedChange={() => {
-            setVal("center");
-            onChange(compId, fieldKey, "baseline");
-          }}
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-1 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
-        >
-          <MoveVertical className="h-3 w-3" />
-        </Toggle>
-        <Toggle
-          pressed={val === "bottom"}
-          onPressedChange={() => {
-            setVal("bottom");
-            onChange(compId, fieldKey, "bottom");
-          }}
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-1 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
-        >
-          <ArrowDown className="h-3 w-3" />
-        </Toggle>
-      </div>
+    <div className="inline-flex h-11 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+      <Toggle
+        pressed={val === "top"}
+        onPressedChange={() => {
+          setVal("top");
+          onChange(compId, fieldKey, "top");
+        }}
+        className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-1 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
+      >
+        <ArrowUp className="h-3 w-3" />
+      </Toggle>
+      <Toggle
+        pressed={val === "center"}
+        onPressedChange={() => {
+          setVal("center");
+          onChange(compId, fieldKey, "baseline");
+        }}
+        className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-1 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
+      >
+        <MoveVertical className="h-3 w-3" />
+      </Toggle>
+      <Toggle
+        pressed={val === "bottom"}
+        onPressedChange={() => {
+          setVal("bottom");
+          onChange(compId, fieldKey, "bottom");
+        }}
+        className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-1 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
+      >
+        <ArrowDown className="h-3 w-3" />
+      </Toggle>
     </div>
   );
 };
@@ -144,6 +142,25 @@ export const TypoAggregateEditor: React.FC<{
             onChange={handleChange}
           />
 
+          {/* Text Color */}
+          <div className="flex gap-2 items-center">
+            <Input
+              type="color"
+              value={composition.props?.["typo_textColor"] || "#ffffff"}
+              onChange={(e) =>
+                handleChange(composition.id, "typo_textColor", e.target.value)
+              }
+              className="w-6 h-6 p-1 m-0 rounded-[50%] inline-block cursor-pointer"
+            />
+            <Input
+              value={composition.props?.["typo_textColor"] || "#ffffff"}
+              placeholder="#ffffff"
+              onChange={(e) =>
+                handleChange(composition.id, "typo_textColor", e.target.value)
+              }
+            />
+          </div>
+
           {/* Font Weight and Size */}
           <div className="flex gap-2">
             <Select
@@ -171,7 +188,10 @@ export const TypoAggregateEditor: React.FC<{
                 <SelectValue placeholder="72" />
               </SelectTrigger>
               <SelectContent>
-                {Array.from({ length: (320 - 12) / 8 + 1 }, (_, i) => 12 + i * 8).map((size) => (
+                {Array.from(
+                  { length: (320 - 12) / 8 + 1 },
+                  (_, i) => 12 + i * 8,
+                ).map((size) => (
                   <SelectItem key={size} value={size.toString()}>
                     {size}
                   </SelectItem>
@@ -259,28 +279,6 @@ export const TypoAggregateEditor: React.FC<{
                 }
                 fieldKey="typo_verticalAlign"
                 onChange={handleChange}
-              />
-            </div>
-          </div>
-          {/* Text Color */}
-          <div className="flex gap-2 items-center">
-            <div className="flex gap-2 items-center">
-              <input
-                type="color"
-                value={composition.props?.["typo_textColor"] || "#ffffff"}
-                onChange={(e) =>
-                  handleChange(composition.id, "typo_textColor", e.target.value)
-                }
-                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-                style={{ padding: 0 }}
-              />
-              <Input
-                value={composition.props?.["typo_textColor"] || "#ffffff"}
-                onChange={(e) =>
-                  handleChange(composition.id, "typo_textColor", e.target.value)
-                }
-                placeholder="#ffffff"
-                className="flex-1"
               />
             </div>
           </div>
