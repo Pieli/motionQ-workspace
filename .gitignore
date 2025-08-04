@@ -34,4 +34,4 @@ playwright/.cache/*
 
 
 # generated code
-src/client/*
+# src/client/*
