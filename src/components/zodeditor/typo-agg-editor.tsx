@@ -128,6 +128,7 @@ export const TypoAggregateEditor: React.FC<{
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
+            key={composition.id}
             defaultValue={composition.props?.["typo_text"] || ""}
             onChange={(e) =>
               handleChange(composition.id, "typo_text", e.target.value)
