@@ -176,7 +176,7 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
     },
     {
         name: "growingDark",
-        usecase: "gradients are aesthetic. more on the techy side. modern feel. Only use white fonts to write on it.",
+        usecase: "gradients are aesthetic. more on the techy side. modern feel. Only use white fonts to write on it. Should be 60 frames long",
         settings: getSchemaDescription(GrowingDarkPropsSchema)
     },
 
