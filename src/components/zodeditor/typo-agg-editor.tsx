@@ -119,7 +119,7 @@ export const TypoAggregateEditor: React.FC<{
   composition: CompositionConfig;
   handleChange: (compId: string, key: string, value: PropType) => void;
 }> = ({ composition, handleChange }) => {
-  console.log(composition.props);
+  // console.log(composition.props);
   return (
     <>
       <Card className="mb-8">

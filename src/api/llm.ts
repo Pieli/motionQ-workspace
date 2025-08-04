@@ -53,7 +53,7 @@ export class OpenAIService implements LLMService {
       signal: this.abortController.signal
     });
 
-    console.dir(completion, { depth: 5 });
+    // console.dir(completion, { depth: 5 });
     const message= completion.choices[0]?.message
     if (message?.parsed) {
       // console.log(message.parsed.compositions);
