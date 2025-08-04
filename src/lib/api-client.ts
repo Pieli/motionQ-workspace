@@ -21,10 +21,8 @@ export async function createUser(firebaseUser: User): Promise<string | null> {
         Authorization: `Bearer ${idToken}`,
       },
       body: {
-        uid: firebaseUser.uid,
         email: firebaseUser.email || '',
         userName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Anonymous',
-        isVerified: firebaseUser.emailVerified,
       },
     });
 
