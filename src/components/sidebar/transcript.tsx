@@ -56,7 +56,7 @@ export const Transcript: React.FC<TranscriptProps> = ({
           ...comp,
           props: {
             ...comp.props,
-            text: editedText[id] || comp.props.typo_text,
+            typo_text: editedText[id] || comp.props.typo_text,
           },
         };
       }
