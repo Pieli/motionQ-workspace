@@ -238,7 +238,9 @@ export const TypoAggregateEditor: React.FC<{
               <div className="relative">
                 <Input
                   className="pl-10 pr-6"
-                  value={composition.props?.["typo_letter_spacing"] || ""}
+                  defaultValue={
+                    composition.props?.["typo_letter_spacing"] || ""
+                  }
                   onChange={(e) => {
                     handleChange(
                       composition.id,
