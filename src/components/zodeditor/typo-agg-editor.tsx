@@ -119,6 +119,7 @@ export const TypoAggregateEditor: React.FC<{
   composition: CompositionConfig;
   handleChange: (compId: string, key: string, value: PropType) => void;
 }> = ({ composition, handleChange }) => {
+  console.log(composition.props);
   return (
     <>
       <Card className="mb-8">
@@ -164,13 +165,13 @@ export const TypoAggregateEditor: React.FC<{
           {/* Font Weight and Size */}
           <div className="flex gap-2">
             <Select
-              value={composition.props?.["typo_fontWeight"]?.toString()}
+              defaultValue={composition.props?.["typo_fontWeight"]?.toString()}
               onValueChange={(value: string) => {
                 handleChange(composition.id, "typo_fontWeight", Number(value));
               }}
             >
               <SelectTrigger className="w-1/2 h-8">
-                <SelectValue placeholder="SemiBold" />
+                <SelectValue placeholder={"SemiBold"} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="400">Regular</SelectItem>
@@ -178,14 +179,15 @@ export const TypoAggregateEditor: React.FC<{
                 <SelectItem value="700">Bold</SelectItem>
               </SelectContent>
             </Select>
+
             <Select
-              value={composition.props?.["typo_fontSize"]?.toString()}
+              defaultValue={composition.props?.["typo_fontSize"]?.toString()}
               onValueChange={(value: string) => {
                 handleChange(composition.id, "typo_fontSize", Number(value));
               }}
             >
               <SelectTrigger className="w-1/2 h-8">
-                <SelectValue placeholder="72" />
+                <SelectValue placeholder="100" />
               </SelectTrigger>
               <SelectContent>
                 {Array.from(

@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import { animationMap, backgroundMap } from "@/remotion-lib/animation-bindings";
 
-// Animation Union of Schemas 
-const schemas: z.ZodType[] = Object.values(animationMap).map((animation) => animation.schema);
+// Animation Union of Schemas
+const schemas: z.ZodType[] = Object.values(animationMap).map((animation) => animation.llm_schema);
 if (schemas.length < 2) {
     throw Error("Too few schemas provided... at leas 2 needed");
 }

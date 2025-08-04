@@ -18,18 +18,16 @@ export type BackgroundProps= {
     [K in keyof typeof backgroundMap]: z.infer<typeof backgroundMap[K]['schema']>
 };
 
-// factories 
+// factories
 
 // for schemas
 export function schemaFactory(name: string) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const record = animationMap as Record<string, { schema: z.ZodObject<any> }>;
+    const record = animationMap as Record<string, { schema: z.AnyZodObject }>;
     return record[name]?.schema ?? null;
 }
 
 export function backgroundSchemaFactory(name: string) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const record = backgroundMap as Record<string, { schema: z.ZodObject<any> }>;
+    const record = backgroundMap as Record<string, { schema: z.AnyZodObject }>;
     return record[name]?.schema ?? null;
 }
 

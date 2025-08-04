@@ -33,23 +33,23 @@ export interface AnimationBinding {
 const exceptions = ["typo_textColor", "typo_text"]
 const blacklist = Object.keys(typographySchema.shape).filter((key) => !exceptions.includes(key));
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getFilteredSchema(schema: z.ZodObject<any>): z.ZodObject<any> {
+function getFilteredSchema(schema: z.AnyZodObject): z.ZodObject<any> {
+    // filter out blacklist + remove defaults / optionals
     const filteredShape = Object.entries(schema.shape)
         .filter(([key]) => !blacklist.includes(key))
         .reduce((acc, [key, value ]) => {
             let processedValue = value as z.ZodTypeAny;
-            
+
             // Remove defaults
             if (processedValue instanceof z.ZodDefault) {
                 processedValue = processedValue.removeDefault();
             }
-            
+
             // Remove optionals
             if (processedValue instanceof z.ZodOptional) {
                 processedValue = processedValue.unwrap();
             }
-            
+
             acc[key] = processedValue;
             return acc;
         }, {} as Record<string, z.ZodTypeAny>);
@@ -58,23 +58,30 @@ function getFilteredSchema(schema: z.ZodObject<any>): z.ZodObject<any> {
 }
 
 
+
 // Create a map for animations
+// schema -> contains all the possilbe changeable pareameters with defaults etc.
+// llm_schema -> should not contain the blacklisted keys, or defaults, optionals
 export const animationMap = {
     slideInTransition: {
         component: SlideInTransition,
-        schema: getFilteredSchema(slideInSchema),
+        schema: slideInSchema,
+        llm_schema: getFilteredSchema(slideInSchema),
     },
     fadeInTransition: {
         component: FadeInTransition,
-        schema: getFilteredSchema(fadeInSchema),
+        schema: fadeInSchema,
+        llm_schema: getFilteredSchema(fadeInSchema),
     },
     simpleTextTyping: {
         component: SimpleTextTyping,
-        schema: getFilteredSchema(simpleTypingSchema),
+        schema: simpleTypingSchema,
+        llm_schema: getFilteredSchema(simpleTypingSchema),
     },
     scaleUpDownTransition: {
         component: ScaleUpDownTransition,
-        schema: getFilteredSchema(scaleUpDownSchema),
+        schema: scaleUpDownSchema,
+        llm_schema: getFilteredSchema(scaleUpDownSchema),
     }
 } as const;
 
@@ -187,8 +194,7 @@ function getDefault(zodType: z.ZodTypeAny): unknown {
   return undefined;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getSchemaDescription(schema: z.ZodObject<any>) {
+export function getSchemaDescription(schema: z.AnyZodObject) {
     return Object.entries(schema.shape)
         .filter(([key]) => !blacklist.includes(key))
         .map(([key, value]) => {
@@ -198,7 +204,7 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
 
         // If it's a ZodDefault, unwrap it and use the inner type
         if (value instanceof z.ZodDefault) {
-            const defaultValue = getDefault(value); 
+            const defaultValue = getDefault(value);
             constraints = `[default: ${defaultValue}]`;
             let inner = value.removeDefault() as z.ZodAny;
 
@@ -241,8 +247,8 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
 
             // Add default value if present
             if (value._def.defaultValue !== undefined) {
-                const defaultValue = typeof value._def.defaultValue === 'function' 
-                    ? value._def.defaultValue() 
+                const defaultValue = typeof value._def.defaultValue === 'function'
+                    ? value._def.defaultValue()
                     : value._def.defaultValue;
                 constraints += `, default: ${defaultValue}`;
             }
@@ -253,4 +259,3 @@ export function getSchemaDescription(schema: z.ZodObject<any>) {
         return `${key}: ${type} ${constraints}`;
     }).join(', ');
 }
-

@@ -42,7 +42,7 @@ export class OpenAIService implements LLMService {
 
   async generateCompositions(prompt: string): Promise<ResponseType> {
     this.abortController = new AbortController();
-    
+
     const completion = await this.client.beta.chat.completions.parse({
       model: 'gpt-4.1-nano-2025-04-14',
       messages: [{role: 'system', content: systemPrompt}, { role: 'user', content: prompt }],

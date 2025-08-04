@@ -5,11 +5,11 @@ import { z } from 'zod';
 export const typographySchema = z.object({
   typo_text: z.string().default("Hello World"),
   typo_textColor: zColor().default("#fff"),
-  typo_fontSize: z.number().optional(),
+  typo_fontSize: z.number().default(100),
   typo_fontWeight: z.number().default(550),
   typo_fontFamily: z.string().default(defaultFontFamily),
-  typo_textAlign: z.enum(["left", "center", "right"]).default("center"),
   typo_letter_spacing: z.number().default(0),
+  typo_textAlign: z.enum(["left", "center", "right"]).default("center"),
   typo_verticalAlign: z.enum(["top", "baseline", "bottom"]).default("baseline"),
 });
 
