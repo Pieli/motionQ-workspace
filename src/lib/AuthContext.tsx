@@ -25,20 +25,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-      
+
       if (user) {
         // Fetch backend user data when Firebase user is authenticated
         try {
           const userData = await getCurrentUser(user);
           setBackendUser(userData);
         } catch (error) {
-          console.error('Failed to fetch backend user data:', error);
+          console.error("Failed to fetch backend user data:", error);
           setBackendUser(null);
         }
       } else {
         setBackendUser(null);
       }
-      
+
       setLoading(false);
     });
 

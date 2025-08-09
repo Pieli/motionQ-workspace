@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { NavUser } from "@/components/navbar/user-settings";
+import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,16 +13,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type React from "react";
 
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg?w",
-};
-
 export const Navbar: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { user: firebaseUser, backendUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === "/";
+
+  const user = {
+    name:
+      firebaseUser?.displayName || backendUser?.email.split("@")[0] || "User",
+    email: backendUser?.email || firebaseUser?.email || "",
+    avatar: firebaseUser?.photoURL || "/avatars/default.jpg",
+  };
 
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary">
@@ -32,7 +35,9 @@ export const Navbar: React.FC<{ children: ReactNode }> = ({ children }) => {
               <span className="text-2xl font-semibold dm-mono">MotionQ</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onSelect={() => navigate("/")}>Files</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => navigate("/")}>
+                Files
+              </DropdownMenuItem>
               <DropdownMenuItem>Exports</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
