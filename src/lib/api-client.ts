@@ -1,11 +1,7 @@
-import { createClient } from '@/client/client';
+import { client } from '@/client/client.gen';
 import { postApiUsers, getApiUsersMe } from '@/client/sdk.gen';
 import type { User } from 'firebase/auth';
 
-// Create the API client instance
-const client = createClient({
-  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
-});
 
 /**
  * Create a new user in the backend API
@@ -22,7 +18,6 @@ export async function createUser(firebaseUser: User): Promise<string | null> {
       },
       body: {
         email: firebaseUser.email || '',
-        userName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Anonymous',
       },
     });
 

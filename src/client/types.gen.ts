@@ -14,10 +14,6 @@ export type UserResponse = {
      */
     email: string;
     /**
-     * User name
-     */
-    userName: string;
-    /**
      * Email verification status
      */
     isVerified: boolean;
@@ -58,10 +54,6 @@ export type PublicUser = {
 };
 
 export type UserCreateRequest = {
-    /**
-     * Updated display name
-     */
-    userName: string;
     /**
      * Updated email address
      */
