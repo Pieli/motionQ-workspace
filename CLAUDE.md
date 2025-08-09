@@ -103,3 +103,4 @@ shadcn/ui components with consistent styling
 
 ## Import Notation Guidelines
 - Always use the absolute path, with the "@" symbol for the root folder
+- the project uses pnpm.

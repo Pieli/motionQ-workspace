@@ -1,6 +1,6 @@
-import { client } from '@/client/client.gen';
-import { postApiUsers, getApiUsersMe } from '@/client/sdk.gen';
+import { postApiUsers, getApiUsersMe, postApiUsersMeProjects } from '@/client/sdk.gen';
 import type { User } from 'firebase/auth';
+import type { Project } from '@/client/types.gen';
 
 
 /**
@@ -12,7 +12,6 @@ export async function createUser(firebaseUser: User): Promise<string | null> {
     const idToken = await firebaseUser.getIdToken();
 
     const response = await postApiUsers({
-      client,
       headers: {
         Authorization: `Bearer ${idToken}`,
       },
@@ -41,7 +40,6 @@ export async function getCurrentUser(firebaseUser: User) {
     const idToken = await firebaseUser.getIdToken();
 
     const response = await getApiUsersMe({
-      client,
       headers: {
         Authorization: `Bearer ${idToken}`,
       },
@@ -59,4 +57,30 @@ export async function getCurrentUser(firebaseUser: User) {
   }
 }
 
-export { client };
+/**
+ * Create a new project in the backend API
+ */
+export async function createProject(firebaseUser: User, projectName: string): Promise<Project | null> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await postApiUsersMeProjects({
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: {
+        name: projectName,
+      },
+    });
+
+    if (response.data) {
+      return response.data;
+    }
+
+    console.error('Failed to create project:', response.error);
+    return null;
+  } catch (error) {
+    console.error('Error creating project:', error);
+    return null;
+  }
+}

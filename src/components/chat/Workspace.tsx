@@ -16,6 +16,7 @@ import {
 
 import { ChatBoxPanel } from "@/components/chat/chatBoxPanel";
 import { Navbar } from "@/components/navbar/navbar";
+import { ProjectTitle } from "@/components/navbar/project-title";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Timeline } from "@/components/timeline/Timeline";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -48,6 +49,7 @@ const Workspace = () => {
     CompositionConfig[] | null
   >(null);
   const [isGenerating, setIsGenerating] = useState(location.state || false);
+  const [projectTitle, setProjectTitle] = useState<string>("Untitled");
 
   const [loop, setLoop] = useState(true);
 
@@ -72,6 +74,7 @@ const Workspace = () => {
   const inputProps = useMemo(() => GeneratedComp, [GeneratedComp]);
 
   const playerRef = useRef<PlayerRef>(null);
+  console.log(projectTitle);
 
   return (
     <>
@@ -81,6 +84,7 @@ const Workspace = () => {
           style={{ "--sidebar-width": "calc(28rem)" } as React.CSSProperties}
         >
           <Navbar>
+            <ProjectTitle title={projectTitle} />
             <PreviewDialog
               compositions={GeneratedComp}
               totalDuration={totalDuration}
@@ -113,6 +117,7 @@ const Workspace = () => {
                     initialPrompt={initialPrompt}
                     setInitialPrompt={setInitialPrompt}
                     preUpdateCleanup={clearSelectedProperty}
+                    setProjectTitle={setProjectTitle}
                   />
                 </ResizablePanel>
                 <ResizableHandle

@@ -12,6 +12,8 @@ import { CollapsibleText } from "@/components/ui/collapsible-text";
 // import { logCompositionConfig } from "@/helpers/composition-logger";
 import { exampleComp, exampleHistory } from "@/helpers/example-comp";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/AuthContext";
+import { createProject } from "@/lib/api-client";
 
 // keep service null if undefined env
 let llm: LLMService = new NullLLMService();
@@ -75,6 +77,7 @@ export const ChatBoxPanel: React.FC<{
   initialPrompt: string;
   setInitialPrompt: React.Dispatch<React.SetStateAction<string>>;
   preUpdateCleanup: () => void;
+  setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
   setGeneratedComp,
   setIsGenerating,
@@ -82,11 +85,19 @@ export const ChatBoxPanel: React.FC<{
   initialPrompt,
   setInitialPrompt,
   preUpdateCleanup,
+  setProjectTitle,
 }) => {
   const [history, setHistory] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
+  const [currentProject, setCurrentProject] = useState<string | null>(null);
 
   const initialPromptProcessedRef = React.useRef(false);
+  const { user } = useAuth();
+
+  // Generate a project name from the user prompt
+  const generateProjectName = (): string => {
+    return "Untitled";
+  };
 
   const devMode = React.useCallback(() => {
     setHistory((prev) => [...prev, ...exampleHistory]);
@@ -123,6 +134,29 @@ export const ChatBoxPanel: React.FC<{
       if (usedPrompt === "#dev") {
         devMode();
         return;
+      }
+
+      // Create project if this is the first prompt and we don't have a current project
+      if (!currentProject && user && history.length === 0) {
+        try {
+          const projectName = generateProjectName(usedPrompt);
+          const newProject = await createProject(user, projectName);
+
+          if (newProject) {
+            setCurrentProject(newProject._id);
+            setProjectTitle(projectName);
+            toast.success(`Project "${projectName}" created successfully`);
+          } else {
+            toast.error(
+              "Failed to create project, but animation will still generate",
+            );
+          }
+        } catch (error) {
+          console.error("Error creating project:", error);
+          toast.error(
+            "Failed to create project, but animation will still generate",
+          );
+        }
       }
 
       try {
@@ -171,6 +205,11 @@ export const ChatBoxPanel: React.FC<{
       devMode,
       setInitialPrompt,
       preUpdateCleanup,
+      currentProject,
+      user,
+      history.length,
+      generateProjectName,
+      setProjectTitle,
     ],
   );
 
