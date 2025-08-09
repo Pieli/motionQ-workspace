@@ -5,6 +5,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
+import { signOut } from "firebase/auth";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -16,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { auth } from "@/lib/firebase";
 
 export function NavUser({
   user,
@@ -26,10 +28,17 @@ export function NavUser({
     avatar: string;
   };
 }) {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-          <Avatar className="h-8 w-8 rounded-lg">
+          <Avatar className="h-8 w-8 rounded-lg cursor-pointer">
             <AvatarImage src={user.avatar} alt={user.name} />
             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
           </Avatar>
@@ -75,7 +84,7 @@ export function NavUser({
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut />
           Log out
         </DropdownMenuItem>
