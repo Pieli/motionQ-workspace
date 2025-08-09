@@ -83,20 +83,24 @@ const Workspace = () => {
           className="flex flex-col"
           style={{ "--sidebar-width": "calc(28rem)" } as React.CSSProperties}
         >
-          <Navbar>
-            <ProjectTitle title={projectTitle} />
-            <PreviewDialog
-              compositions={GeneratedComp}
-              totalDuration={totalDuration}
-              handleOpenChange={(open) => {
-                if (open) {
-                  playerRef.current?.pause();
-                }
-              }}
-            />
-            <ShareDialog />
-            <Button>Export</Button>
-          </Navbar>
+          <Navbar
+            centerContent={<ProjectTitle title={projectTitle} />}
+            rightContent={
+              <>
+                <PreviewDialog
+                  compositions={GeneratedComp}
+                  totalDuration={totalDuration}
+                  handleOpenChange={(open) => {
+                    if (open) {
+                      playerRef.current?.pause();
+                    }
+                  }}
+                />
+                <ShareDialog />
+                <Button>Export</Button>
+              </>
+            }
+          />
           <div className="flex flex-1">
             <SidebarInset>
               <ResizablePanelGroup

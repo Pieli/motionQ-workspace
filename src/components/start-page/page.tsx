@@ -19,7 +19,7 @@ const StartPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar children={[]} />
+      <Navbar />
       <section className="flex flex-col justify-center items-center px-6 pt-20 pb-12 min-h-[70vh]">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           <div className="space-y-6">
