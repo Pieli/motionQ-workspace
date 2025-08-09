@@ -23,11 +23,7 @@ export type UserResponse = {
     /**
      * MongoDB ObjectId
      */
-    _id: string;
-    /**
-     * Firebase user ID
-     */
-    firebaseUid: string;
+    id: string;
     /**
      * User email address
      */
@@ -188,10 +184,6 @@ export type UsageStats = {
 };
 
 export type Project = {
-    /**
-     * MongoDB ObjectId
-     */
-    _id: string;
     /**
      * Owner user ID (MongoDB ObjectId)
      */
@@ -354,6 +346,23 @@ export type GetApiUsersMeProjectsData = {
     query?: never;
     url: '/api/users/me/projects';
 };
+
+export type GetApiUsersMeProjectsErrors = {
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type GetApiUsersMeProjectsError = GetApiUsersMeProjectsErrors[keyof GetApiUsersMeProjectsErrors];
 
 export type GetApiUsersMeProjectsResponses = {
     /**

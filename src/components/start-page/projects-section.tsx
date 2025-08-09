@@ -87,19 +87,13 @@ const ProjectsSection: React.FC = () => {
   return (
     <section className="px-6 py-20">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-bold text-foreground mb-2">
-              Your Projects
-            </h2>
-            <p className="text-muted-foreground">
-              Create and manage your animated video projects
-            </p>
-          </div>
-          <Button onClick={() => navigate('/workspace')} className="flex items-center gap-2">
-            <Plus className="size-4" />
-            New Project
-          </Button>
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-foreground mb-2">
+            Your Projects
+          </h2>
+          <p className="text-muted-foreground">
+            Create and manage your animated video projects
+          </p>
         </div>
 
         {projectsLoading ? (
@@ -126,14 +120,10 @@ const ProjectsSection: React.FC = () => {
             <h3 className="text-xl font-semibold text-foreground mb-2">
               No projects yet
             </h3>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            <p className="text-muted-foreground max-w-md mx-auto">
               Get started by creating your first animated video project using
               AI or manual editing.
             </p>
-            <Button onClick={() => navigate('/workspace')} className="flex items-center gap-2">
-              <Plus className="size-4" />
-              Create Your First Project
-            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
