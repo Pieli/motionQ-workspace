@@ -50,7 +50,7 @@ export function LoginForm({
     try {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      
+
       // Check if this is a new user and create in backend if needed
       if (userCredential.user.metadata.creationTime === userCredential.user.metadata.lastSignInTime) {
         const userId = await createUser(userCredential.user);
@@ -58,7 +58,7 @@ export function LoginForm({
           throw new Error("Failed to create user in backend");
         }
       }
-      
+
       setRedirectTo("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -104,7 +104,6 @@ export function LoginForm({
                   <Input
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -122,10 +121,10 @@ export function LoginForm({
                       </a>
                     )}
                   </div>
-                  <Input 
-                    id="password" 
-                    type="password" 
-                    required 
+                  <Input
+                    id="password"
+                    type="password"
+                    required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -138,7 +137,7 @@ export function LoginForm({
                 {isLogin ? (
                   <>
                     Don&apos;t have an account?{" "}
-                    <button 
+                    <button
                       type="button"
                       className="underline underline-offset-4"
                       onClick={() => setIsLogin(false)}
@@ -149,7 +148,7 @@ export function LoginForm({
                 ) : (
                   <>
                     Already have an account?{" "}
-                    <button 
+                    <button
                       type="button"
                       className="underline underline-offset-4"
                       onClick={() => setIsLogin(true)}
