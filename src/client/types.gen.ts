@@ -23,7 +23,7 @@ export type UserResponse = {
     /**
      * MongoDB ObjectId
      */
-    id?: string;
+    _id: string;
     /**
      * Firebase user ID
      */

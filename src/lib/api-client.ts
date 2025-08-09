@@ -1,4 +1,4 @@
-import { postApiUsers, getApiUsersMe, postApiUsersMeProjects } from '@/client/sdk.gen';
+import { postApiUsers, getApiUsersMe, postApiUsersMeProjects, getApiUsersMeProjects } from '@/client/sdk.gen';
 import type { User } from 'firebase/auth';
 import type { Project } from '@/client/types.gen';
 
@@ -53,6 +53,31 @@ export async function getCurrentUser(firebaseUser: User) {
     return null;
   } catch (error) {
     console.error('Error getting user profile:', error);
+    return null;
+  }
+}
+
+/**
+ * Get user projects from the backend API
+ */
+export async function getUserProjects(firebaseUser: User): Promise<Project[] | null> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await getApiUsersMeProjects({
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (response.data) {
+      return response.data;
+    }
+
+    console.error('Failed to get projects:', response.error);
+    return null;
+  } catch (error) {
+    console.error('Error getting projects:', error);
     return null;
   }
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Navbar } from "@/components/navbar/navbar";
 import { ChatInput } from "@/components/chat/chat-input";
+import ProjectsSection from "@/components/start-page/projects-section";
 
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +14,7 @@ const StartPage: React.FC = () => {
     if (!prompt.trim()) return;
 
     navigate("/workspace", {
-      state: { initialPrompt: prompt},
+      state: { initialPrompt: prompt },
     });
   };
 
@@ -48,9 +49,7 @@ const StartPage: React.FC = () => {
           </div>
         </div>
       </section>
-      <section className="hidden px-6 pt-20 pb-12 min-h-[70vh]">
-        <h3>Your Projects</h3>
-      </section>
+      <ProjectsSection />
     </div>
   );
 };

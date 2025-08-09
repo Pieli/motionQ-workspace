@@ -139,7 +139,7 @@ export const ChatBoxPanel: React.FC<{
       // Create project if this is the first prompt and we don't have a current project
       if (!currentProject && user && history.length === 0) {
         try {
-          const projectName = generateProjectName(usedPrompt);
+          const projectName = generateProjectName();
           const newProject = await createProject(user, projectName);
 
           if (newProject) {
@@ -153,9 +153,7 @@ export const ChatBoxPanel: React.FC<{
           }
         } catch (error) {
           console.error("Error creating project:", error);
-          toast.error(
-            "Failed to create project, but animation will still generate",
-          );
+          toast.error("Failed to create project");
         }
       }
 
