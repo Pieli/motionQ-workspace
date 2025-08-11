@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { NullLLMService, OpenAIService } from "@/api/llm";
 
@@ -95,9 +95,9 @@ export const ChatBoxPanel: React.FC<{
   const { user } = useAuth();
 
   // Generate a project name from the user prompt
-  const generateProjectName = (): string => {
+  const generateProjectName = useCallback((): string => {
     return "Untitled";
-  };
+  }, []);
 
   const devMode = React.useCallback(() => {
     setHistory((prev) => [...prev, ...exampleHistory]);
@@ -131,11 +131,6 @@ export const ChatBoxPanel: React.FC<{
       setPrompt("");
       setIsGenerating(true);
 
-      if (usedPrompt === "#dev") {
-        devMode();
-        return;
-      }
-
       // Create project if this is the first prompt and we don't have a current project
       if (!currentProject && user && history.length === 0) {
         try {
@@ -143,7 +138,7 @@ export const ChatBoxPanel: React.FC<{
           const newProject = await createProject(user, projectName);
 
           if (newProject) {
-            setCurrentProject(newProject._id);
+            setCurrentProject(newProject.id);
             setProjectTitle(projectName);
             toast.success(`Project "${projectName}" created successfully`);
           } else {
@@ -155,6 +150,11 @@ export const ChatBoxPanel: React.FC<{
           console.error("Error creating project:", error);
           toast.error("Failed to create project");
         }
+      }
+
+      if (usedPrompt === "#dev") {
+        devMode();
+        return;
       }
 
       try {
