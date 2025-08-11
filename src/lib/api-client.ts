@@ -3,6 +3,7 @@ import {
   getApiUsersMe,
   postApiUsersMeProjects,
   getApiUsersMeProjects,
+  getApiUsersMeProjectsByProjectId,
   deleteApiUsersMeProjectsByProjectId,
 } from "@/client/sdk.gen";
 import type { User } from "firebase/auth";
@@ -85,6 +86,37 @@ export async function getUserProjects(
     return null;
   } catch (error) {
     console.error("Error getting projects:", error);
+    return null;
+  }
+}
+
+/**
+ * Get a specific project by ID from the backend API
+ */
+export async function getProject(
+  firebaseUser: User,
+  projectId: string,
+): Promise<Project | null> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await getApiUsersMeProjectsByProjectId({
+      path: {
+        projectId: projectId,
+      },
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (response.data) {
+      return response.data;
+    }
+
+    console.error("Failed to get project:", response.error);
+    return null;
+  } catch (error) {
+    console.error("Error getting project:", error);
     return null;
   }
 }

@@ -168,7 +168,11 @@ const ProjectsSection: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.isArray(projects) &&
               projects.map((project) => (
-                <Card key={project.id}>
+                <Card 
+                  key={project.id} 
+                  className="cursor-pointer hover:shadow-lg transition-shadow group"
+                  onClick={() => navigate(`/workspace/${project.id}`)}
+                >
                   <CardHeader className="p-0">
                     <div className="relative h-32 bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-xl flex items-center justify-center overflow-hidden">
                       {project?.thumbnail ? (

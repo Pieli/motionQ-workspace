@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 
 import { Player, type PlayerRef } from "@remotion/player";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ShareDialog } from "@/components/navbar/share";
 import { PreviewDialog } from "@/components/navbar/preview-dialog";
@@ -25,6 +25,9 @@ import { Spacing } from "@/components/ui/spacing";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { BaseItem } from "@/components/timeline/Timeline";
 import { FPS } from "@/globals";
+import { useAuth } from "@/lib/AuthContext";
+import { getProject } from "@/lib/api-client";
+import type { Project } from "@/client/types.gen";
 
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
 
@@ -34,12 +37,12 @@ const Workspace = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { projectId } = useParams<{ projectId: string }>();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    if (!location.state) {
-      navigate("/");
-    }
-  }, [location.state, navigate]);
+  // Project state
+  const [project, setProject] = useState<Project | null>(null);
+  const [projectLoading, setProjectLoading] = useState(true);
 
   // when transitioning from the start to the workspace screen
   const [initialPrompt, setInitialPrompt] = useState<string>(
@@ -62,6 +65,33 @@ const Workspace = () => {
     setPropertiesItem(null);
   }, []);
 
+  // Fetch project data
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (!projectId || !user) {
+        setProjectLoading(false);
+        return;
+      }
+
+      try {
+        const projectData = await getProject(user, projectId);
+        if (projectData) {
+          setProject(projectData);
+          setProjectTitle(projectData.name);
+        } else {
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Failed to fetch project:", error);
+        navigate("/");
+      } finally {
+        setProjectLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [projectId, user, navigate]);
+
   const totalDuration = useMemo(
     () =>
       GeneratedComp?.reduce((acc, comp) => {
@@ -75,6 +105,15 @@ const Workspace = () => {
 
   const playerRef = useRef<PlayerRef>(null);
   console.log(projectTitle);
+
+  // Show loading state while fetching project
+  if (projectLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-lg">Loading project...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -122,6 +161,8 @@ const Workspace = () => {
                     setInitialPrompt={setInitialPrompt}
                     preUpdateCleanup={clearSelectedProperty}
                     setProjectTitle={setProjectTitle}
+                    project={project}
+                    projectId={projectId}
                   />
                 </ResizablePanel>
                 <ResizableHandle

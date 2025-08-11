@@ -470,6 +470,27 @@ export type GetApiUsersMeProjectsByProjectIdData = {
     url: '/api/users/me/projects/{projectId}';
 };
 
+export type GetApiUsersMeProjectsByProjectIdErrors = {
+    /**
+     * Bad request - invalid input data
+     */
+    400: _Error;
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type GetApiUsersMeProjectsByProjectIdError = GetApiUsersMeProjectsByProjectIdErrors[keyof GetApiUsersMeProjectsByProjectIdErrors];
+
 export type GetApiUsersMeProjectsByProjectIdResponses = {
     /**
      * Project details

@@ -30,6 +30,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/workspace/:projectId",
+    element: (
+      <ProtectedRoute>
+        <Workspace />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "/login",
     element: (
       <PublicRoute>
