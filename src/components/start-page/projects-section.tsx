@@ -14,17 +14,28 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { getUserProjects } from "@/lib/api-client";
+import { getUserProjects, deleteProject } from "@/lib/api-client";
 import type { Project } from "@/client/types.gen";
 import { MoreVertical, Edit, Copy, Trash2, Plus } from "lucide-react";
 
 const ProjectsSection: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -39,10 +50,38 @@ const ProjectsSection: React.FC = () => {
       case "duplicate":
         console.log("Duplicate project:", projectId);
         break;
-      case "delete":
-        console.log("Delete project:", projectId);
+      case "delete": {
+        const project = projects.find((p) => p.id === projectId);
+        if (project) {
+          setProjectToDelete(project);
+          setDeleteDialogOpen(true);
+        }
         break;
+      }
     }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!projectToDelete || !user) return;
+
+    setIsDeleting(true);
+    try {
+      const success = await deleteProject(user, projectToDelete.id);
+      if (success) {
+        setProjects(projects.filter((p) => p.id !== projectToDelete.id));
+        setDeleteDialogOpen(false);
+        setProjectToDelete(null);
+      }
+    } catch (error) {
+      console.error("Failed to delete project:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setProjectToDelete(null);
   };
 
   const formatLastAccessed = (date: string) => {
@@ -121,23 +160,20 @@ const ProjectsSection: React.FC = () => {
               No projects yet
             </h3>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Get started by creating your first animated video project using
-              AI or manual editing.
+              Get started by creating your first animated video project using AI
+              or manual editing.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.isArray(projects) &&
               projects.map((project) => (
-                <Card
-                  key={project._id}
-                  className="group hover:shadow-lg transition-all cursor-pointer h-64"
-                >
+                <Card key={project.id}>
                   <CardHeader className="p-0">
                     <div className="relative h-32 bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-xl flex items-center justify-center overflow-hidden">
-                      {project.assets?.thumbnail ? (
+                      {project?.thumbnail ? (
                         <img
-                          src={project.assets.thumbnail}
+                          src={project.thumbnail}
                           alt={project.name}
                           className="w-full h-full object-cover"
                         />
@@ -180,7 +216,7 @@ const ProjectsSection: React.FC = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
                               onClick={() =>
-                                handleProjectAction("edit", project._id)
+                                handleProjectAction("edit", project.id)
                               }
                             >
                               <Edit className="size-4" />
@@ -188,7 +224,7 @@ const ProjectsSection: React.FC = () => {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
-                                handleProjectAction("duplicate", project._id)
+                                handleProjectAction("duplicate", project.id)
                               }
                             >
                               <Copy className="size-4" />
@@ -198,7 +234,7 @@ const ProjectsSection: React.FC = () => {
                             <DropdownMenuItem
                               variant="destructive"
                               onClick={() =>
-                                handleProjectAction("delete", project._id)
+                                handleProjectAction("delete", project.id)
                               }
                             >
                               <Trash2 className="size-4" />
@@ -214,6 +250,35 @@ const ProjectsSection: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Project</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{projectToDelete?.name}"? This
+              action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleDeleteCancel}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

@@ -1,7 +1,12 @@
-import { postApiUsers, getApiUsersMe, postApiUsersMeProjects, getApiUsersMeProjects } from '@/client/sdk.gen';
-import type { User } from 'firebase/auth';
-import type { Project } from '@/client/types.gen';
-
+import {
+  postApiUsers,
+  getApiUsersMe,
+  postApiUsersMeProjects,
+  getApiUsersMeProjects,
+  deleteApiUsersMeProjectsByProjectId,
+} from "@/client/sdk.gen";
+import type { User } from "firebase/auth";
+import type { Project } from "@/client/types.gen";
 
 /**
  * Create a new user in the backend API
@@ -16,7 +21,7 @@ export async function createUser(firebaseUser: User): Promise<string | null> {
         Authorization: `Bearer ${idToken}`,
       },
       body: {
-        email: firebaseUser.email || '',
+        email: firebaseUser.email || "",
       },
     });
 
@@ -24,10 +29,10 @@ export async function createUser(firebaseUser: User): Promise<string | null> {
       return response.data.userId;
     }
 
-    console.error('Failed to create user:', response.error);
+    console.error("Failed to create user:", response.error);
     return null;
   } catch (error) {
-    console.error('Error creating user:', error);
+    console.error("Error creating user:", error);
     return null;
   }
 }
@@ -49,10 +54,10 @@ export async function getCurrentUser(firebaseUser: User) {
       return response.data;
     }
 
-    console.error('Failed to get user profile:', response.error);
+    console.error("Failed to get user profile:", response.error);
     return null;
   } catch (error) {
-    console.error('Error getting user profile:', error);
+    console.error("Error getting user profile:", error);
     return null;
   }
 }
@@ -60,7 +65,9 @@ export async function getCurrentUser(firebaseUser: User) {
 /**
  * Get user projects from the backend API
  */
-export async function getUserProjects(firebaseUser: User): Promise<Project[] | null> {
+export async function getUserProjects(
+  firebaseUser: User,
+): Promise<Project[] | null> {
   try {
     const idToken = await firebaseUser.getIdToken();
 
@@ -74,10 +81,10 @@ export async function getUserProjects(firebaseUser: User): Promise<Project[] | n
       return response.data;
     }
 
-    console.error('Failed to get projects:', response.error);
+    console.error("Failed to get projects:", response.error);
     return null;
   } catch (error) {
-    console.error('Error getting projects:', error);
+    console.error("Error getting projects:", error);
     return null;
   }
 }
@@ -85,7 +92,10 @@ export async function getUserProjects(firebaseUser: User): Promise<Project[] | n
 /**
  * Create a new project in the backend API
  */
-export async function createProject(firebaseUser: User, projectName: string): Promise<Project | null> {
+export async function createProject(
+  firebaseUser: User,
+  projectName: string,
+): Promise<Project | null> {
   try {
     const idToken = await firebaseUser.getIdToken();
 
@@ -102,10 +112,41 @@ export async function createProject(firebaseUser: User, projectName: string): Pr
       return response.data;
     }
 
-    console.error('Failed to create project:', response.error);
+    console.error("Failed to create project:", response.error);
     return null;
   } catch (error) {
-    console.error('Error creating project:', error);
+    console.error("Error creating project:", error);
     return null;
+  }
+}
+
+/**
+ * Delete a project from the backend API
+ */
+export async function deleteProject(
+  firebaseUser: User,
+  projectId: string,
+): Promise<boolean> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await deleteApiUsersMeProjectsByProjectId({
+      path: {
+        projectId: projectId,
+      },
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (response.response.ok) {
+      return true;
+    }
+
+    console.error("Failed to delete project:", response.error);
+    return false;
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return false;
   }
 }

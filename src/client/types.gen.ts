@@ -185,9 +185,17 @@ export type UsageStats = {
 
 export type Project = {
     /**
+     * Project ID
+     */
+    id: string;
+    /**
      * Owner user ID (MongoDB ObjectId)
      */
     userId: string;
+    /**
+     * thumbnail for the project
+     */
+    thumbnail?: string;
     /**
      * Project name
      */
@@ -411,11 +419,35 @@ export type PostApiUsersMeProjectsResponse = PostApiUsersMeProjectsResponses[key
 export type DeleteApiUsersMeProjectsByProjectIdData = {
     body?: never;
     path: {
+        /**
+         * Project ID (MongoDB ObjectId)
+         */
         projectId: string;
     };
     query?: never;
     url: '/api/users/me/projects/{projectId}';
 };
+
+export type DeleteApiUsersMeProjectsByProjectIdErrors = {
+    /**
+     * Bad request - invalid input data
+     */
+    400: _Error;
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type DeleteApiUsersMeProjectsByProjectIdError = DeleteApiUsersMeProjectsByProjectIdErrors[keyof DeleteApiUsersMeProjectsByProjectIdErrors];
 
 export type DeleteApiUsersMeProjectsByProjectIdResponses = {
     /**
@@ -429,6 +461,9 @@ export type DeleteApiUsersMeProjectsByProjectIdResponse = DeleteApiUsersMeProjec
 export type GetApiUsersMeProjectsByProjectIdData = {
     body?: never;
     path: {
+        /**
+         * Project ID (MongoDB ObjectId)
+         */
         projectId: string;
     };
     query?: never;
@@ -449,6 +484,9 @@ export type PutApiUsersMeProjectsByProjectIdData = {
         compositions?: Array<Composition>;
     };
     path: {
+        /**
+         * Project ID (MongoDB ObjectId)
+         */
         projectId: string;
     };
     query?: never;
