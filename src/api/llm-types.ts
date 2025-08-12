@@ -1,11 +1,16 @@
 import { z } from "zod";
-import { EnumAvailableAnimations, EnumAvailableBackgrounds, UnionAvailableBackSchemas, UnionAvailableSchemas } from "@/remotion-lib/animation-types";
+import {
+  EnumAvailableAnimations,
+  EnumAvailableBackgrounds,
+  UnionAvailableBackSchemas,
+  UnionAvailableSchemas,
+} from "@/remotion-lib/animation-types";
 
 const Composition = z.object({
   id: z.string(),
   duration: z.number(),
   animationName: EnumAvailableAnimations,
-  animationSettings: UnionAvailableSchemas, 
+  animationSettings: UnionAvailableSchemas,
   text: z.string(),
   background: z.object({
     name: EnumAvailableBackgrounds,
@@ -15,7 +20,7 @@ const Composition = z.object({
 
 export const Response = z.object({
   compositions: z.array(Composition),
-  comment: z.string()
+  comment: z.string(),
 });
 
 export type CompositionType = z.infer<typeof Composition>;
