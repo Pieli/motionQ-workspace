@@ -580,6 +580,63 @@ export type PutApiUsersMeProjectsByProjectIdCompositionsResponses = {
 
 export type PutApiUsersMeProjectsByProjectIdCompositionsResponse = PutApiUsersMeProjectsByProjectIdCompositionsResponses[keyof PutApiUsersMeProjectsByProjectIdCompositionsResponses];
 
+export type PostApiUsersMeProjectsByProjectIdChatData = {
+    body: {
+        /**
+         * Message sender role
+         */
+        role: 'user' | 'assistant';
+        /**
+         * Message content
+         */
+        content: string;
+        /**
+         * Additional message metadata
+         */
+        metadata?: {
+            [key: string]: unknown;
+        };
+    };
+    path: {
+        /**
+         * Project ID (MongoDB ObjectId)
+         */
+        projectId: string;
+    };
+    query?: never;
+    url: '/api/users/me/projects/{projectId}/chat';
+};
+
+export type PostApiUsersMeProjectsByProjectIdChatErrors = {
+    /**
+     * Bad request - invalid input data
+     */
+    400: _Error;
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type PostApiUsersMeProjectsByProjectIdChatError = PostApiUsersMeProjectsByProjectIdChatErrors[keyof PostApiUsersMeProjectsByProjectIdChatErrors];
+
+export type PostApiUsersMeProjectsByProjectIdChatResponses = {
+    /**
+     * Message added to chat history
+     */
+    200: ChatMessage;
+};
+
+export type PostApiUsersMeProjectsByProjectIdChatResponse = PostApiUsersMeProjectsByProjectIdChatResponses[keyof PostApiUsersMeProjectsByProjectIdChatResponses];
+
 export type PostApiUsersData = {
     body: UserCreateRequest;
     path?: never;

@@ -26,7 +26,11 @@ import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { BaseItem } from "@/components/timeline/Timeline";
 import { FPS } from "@/globals";
 import { useAuth } from "@/lib/AuthContext";
-import { getProject, updateProject } from "@/lib/api-client";
+import {
+  getProject,
+  updateProject,
+  addToProjectHistory,
+} from "@/lib/api-client";
 import type { Composition, Project } from "@/client/types.gen";
 import {
   hydrateCompositions,
@@ -70,9 +74,22 @@ const Workspace = () => {
     setPropertiesItem(null);
   }, []);
 
-  const handleHistoryUpdate = React.useCallback((history: string[]) => {
-    setChatHistory(history);
-  }, []);
+  const handleHistoryUpdate = React.useCallback(
+    async (history: string[]) => {
+      setChatHistory(history);
+
+      // If there's a new message and we have a project, add it to backend history
+      if (projectId && user && history.length > chatHistory.length) {
+        // this could introduce some race condition misbehavior, TODO  change later
+        const newMessage = history[history.length - 1];
+        const role = newMessage.startsWith("User: ") ? "user" : "agent";
+        const content = newMessage.replace(/^(User|Agent): /, "");
+
+        await addToProjectHistory(user, projectId, role, content);
+      }
+    },
+    [projectId, user, chatHistory.length],
+  );
 
   // Fetch project data
   useEffect(() => {

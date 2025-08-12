@@ -6,6 +6,7 @@ import {
   getApiUsersMeProjectsByProjectId,
   putApiUsersMeProjectsByProjectId,
   deleteApiUsersMeProjectsByProjectId,
+  postApiUsersMeProjectsByProjectIdChat,
 } from "@/client/sdk.gen";
 import type { User } from "firebase/auth";
 import type { Composition, Project } from "@/client/types.gen";
@@ -187,6 +188,38 @@ export async function createProject(
   } catch (error) {
     console.error("Error creating project:", error);
     return null;
+  }
+}
+
+/**
+ * Add a message to project history
+ */
+export async function addToProjectHistory(
+  firebaseUser: User,
+  projectId: string,
+  role: 'user' | 'agent',
+  message: string,
+): Promise<boolean> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await postApiUsersMeProjectsByProjectIdChat({
+      path: {
+        projectId: projectId,
+      },
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: {
+        role: role,
+        content: message,
+      },
+    });
+
+    return response.data !== undefined;
+  } catch (error) {
+    console.error("Error adding to project history:", error);
+    return false;
   }
 }
 
