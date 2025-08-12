@@ -33,16 +33,19 @@ I'm building AI animation builder tool for creating company promotional videos. 
 
 ```bash
 # Development server
-npm run dev
+pnpm dev
 
 # Build for production
-npm run build
+pnpm build
+
+# Generate client code for the api 
+pnpm generate 
 
 # Lint code
-npm run lint
+pnpm lint
 
 # Preview production build
-npm run preview
+pnpm preview
 ```
 
 ## Key Components
@@ -104,3 +107,4 @@ shadcn/ui components with consistent styling
 ## Import Notation Guidelines
 - Always use the absolute path, with the "@" symbol for the root folder
 - the project uses pnpm.
+- Never use npm, the project uses pnpm

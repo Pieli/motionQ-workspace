@@ -361,7 +361,9 @@ export const Timeline: React.FC<{
   const totalDuration = useMemo(() => {
     if (tracks && tracks.length) {
       const lastTrackItems = tracks[tracks.length - 1].items;
-      return lastTrackItems[lastTrackItems.length - 1].end;
+      if (lastTrackItems && lastTrackItems.length > 0) {
+        return lastTrackItems[lastTrackItems.length - 1].end;
+      }
     }
     return 0;
   }, [tracks]);

@@ -26,8 +26,12 @@ import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { BaseItem } from "@/components/timeline/Timeline";
 import { FPS } from "@/globals";
 import { useAuth } from "@/lib/AuthContext";
-import { getProject } from "@/lib/api-client";
-import type { Project } from "@/client/types.gen";
+import { getProject, updateProject } from "@/lib/api-client";
+import type { Composition, Project } from "@/client/types.gen";
+import {
+  hydrateCompositions,
+  dehydrateCompositions,
+} from "@/lib/composition-hydrator";
 
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
 
@@ -68,16 +72,35 @@ const Workspace = () => {
   // Fetch project data
   useEffect(() => {
     const fetchProject = async () => {
+      console.log("fetchProject called");
       if (!projectId || !user) {
         setProjectLoading(false);
         return;
       }
+
+      console.log("fetchProject here");
 
       try {
         const projectData = await getProject(user, projectId);
         if (projectData) {
           setProject(projectData);
           setProjectTitle(projectData.name);
+
+          console.log(projectData);
+          // Hydrate compositions from backend format to CompositionConfig format
+          if (projectData.compositions && projectData.compositions.length > 0) {
+            try {
+              const hydratedCompositions = hydrateCompositions(
+                projectData.compositions as Composition[],
+              );
+              console.log(hydratedCompositions);
+              setGeneratedComp(hydratedCompositions);
+            } catch (error) {
+              console.error("Failed to hydrate compositions:", error);
+              // Set empty compositions if hydration fails
+              setGeneratedComp([]);
+            }
+          }
         } else {
           navigate("/");
         }
@@ -86,11 +109,31 @@ const Workspace = () => {
         navigate("/");
       } finally {
         setProjectLoading(false);
+        console.log("fetchProject there");
       }
     };
 
     fetchProject();
   }, [projectId, user, navigate]);
+
+  // Update project when compositions change (from sidebar modifications)
+  useEffect(() => {
+    const updateProjectCompositions = async () => {
+      if (projectId && user && GeneratedComp) {
+        try {
+          // Dehydrate compositions before saving to backend
+          const dehydratedCompositions = dehydrateCompositions(GeneratedComp);
+          await updateProject(user, projectId, {
+            compositions: dehydratedCompositions,
+          });
+        } catch (error) {
+          console.error("Failed to update project compositions:", error);
+        }
+      }
+    };
+
+    updateProjectCompositions();
+  }, [GeneratedComp, projectId, user]);
 
   const totalDuration = useMemo(
     () =>
