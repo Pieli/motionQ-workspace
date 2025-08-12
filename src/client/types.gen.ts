@@ -7,7 +7,7 @@ export type Composition = {
      */
     name: string;
     props: {
-        [key: string]: string | number;
+        [key: string]: unknown;
     };
     duration: number;
     background?: Composition;
