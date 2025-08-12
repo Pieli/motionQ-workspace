@@ -4,6 +4,7 @@ import {
   postApiUsersMeProjects,
   getApiUsersMeProjects,
   getApiUsersMeProjectsByProjectId,
+  putApiUsersMeProjectsByProjectId,
   deleteApiUsersMeProjectsByProjectId,
 } from "@/client/sdk.gen";
 import type { User } from "firebase/auth";
@@ -117,6 +118,43 @@ export async function getProject(
     return null;
   } catch (error) {
     console.error("Error getting project:", error);
+    return null;
+  }
+}
+
+/**
+ * Update a project in the backend API
+ */
+export async function updateProject(
+  firebaseUser: User,
+  projectId: string,
+  updates: {
+    name?: string;
+    history?: string[];
+    compositions?: any[];
+  },
+): Promise<Project | null> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await putApiUsersMeProjectsByProjectId({
+      path: {
+        projectId: projectId,
+      },
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: updates,
+    });
+
+    if (response.data) {
+      return response.data;
+    }
+
+    console.error("Failed to update project:", response.error);
+    return null;
+  } catch (error) {
+    console.error("Error updating project:", error);
     return null;
   }
 }

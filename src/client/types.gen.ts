@@ -5,13 +5,7 @@ export type Composition = {
     /**
      * Reference to the React component type
      */
-    componentType: string;
-    /**
-     * JSON representation of Zod schema
-     */
-    schema?: {
-        [key: string]: unknown;
-    };
+    name: string;
     props: {
         [key: string]: string | number;
     };
@@ -514,6 +508,27 @@ export type PutApiUsersMeProjectsByProjectIdData = {
     url: '/api/users/me/projects/{projectId}';
 };
 
+export type PutApiUsersMeProjectsByProjectIdErrors = {
+    /**
+     * Bad request - invalid input data
+     */
+    400: _Error;
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type PutApiUsersMeProjectsByProjectIdError = PutApiUsersMeProjectsByProjectIdErrors[keyof PutApiUsersMeProjectsByProjectIdErrors];
+
 export type PutApiUsersMeProjectsByProjectIdResponses = {
     /**
      * Project updated
@@ -522,6 +537,50 @@ export type PutApiUsersMeProjectsByProjectIdResponses = {
 };
 
 export type PutApiUsersMeProjectsByProjectIdResponse = PutApiUsersMeProjectsByProjectIdResponses[keyof PutApiUsersMeProjectsByProjectIdResponses];
+
+export type PutApiUsersMeProjectsByProjectIdCompositionsData = {
+    body: {
+        compositions?: Array<Composition>;
+    };
+    path: {
+        /**
+         * Project ID (MongoDB ObjectId)
+         */
+        projectId: string;
+    };
+    query?: never;
+    url: '/api/users/me/projects/{projectId}/compositions';
+};
+
+export type PutApiUsersMeProjectsByProjectIdCompositionsErrors = {
+    /**
+     * Bad request - invalid input data
+     */
+    400: _Error;
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type PutApiUsersMeProjectsByProjectIdCompositionsError = PutApiUsersMeProjectsByProjectIdCompositionsErrors[keyof PutApiUsersMeProjectsByProjectIdCompositionsErrors];
+
+export type PutApiUsersMeProjectsByProjectIdCompositionsResponses = {
+    /**
+     * Project updated
+     */
+    200: Project;
+};
+
+export type PutApiUsersMeProjectsByProjectIdCompositionsResponse = PutApiUsersMeProjectsByProjectIdCompositionsResponses[keyof PutApiUsersMeProjectsByProjectIdCompositionsResponses];
 
 export type PostApiUsersData = {
     body: UserCreateRequest;
