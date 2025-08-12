@@ -213,9 +213,7 @@ export type Project = {
     /**
      * Animation compositions
      */
-    compositions: Array<{
-        [key: string]: unknown;
-    }>;
+    compositions: Array<Composition>;
     /**
      * Exported video files
      */

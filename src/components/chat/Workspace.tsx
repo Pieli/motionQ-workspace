@@ -47,6 +47,7 @@ const Workspace = () => {
   // Project state
   const [project, setProject] = useState<Project | null>(null);
   const [projectLoading, setProjectLoading] = useState(true);
+  const [chatHistory, setChatHistory] = useState<string[]>([]);
 
   // when transitioning from the start to the workspace screen
   const [initialPrompt, setInitialPrompt] = useState<string>(
@@ -67,6 +68,10 @@ const Workspace = () => {
 
   const clearSelectedProperty = React.useCallback(() => {
     setPropertiesItem(null);
+  }, []);
+
+  const handleHistoryUpdate = React.useCallback((history: string[]) => {
+    setChatHistory(history);
   }, []);
 
   // Fetch project data
@@ -93,7 +98,6 @@ const Workspace = () => {
               const hydratedCompositions = hydrateCompositions(
                 projectData.compositions as Composition[],
               );
-              console.log(hydratedCompositions);
               setGeneratedComp(hydratedCompositions);
             } catch (error) {
               console.error("Failed to hydrate compositions:", error);
@@ -116,24 +120,35 @@ const Workspace = () => {
     fetchProject();
   }, [projectId, user, navigate]);
 
-  // Update project when compositions change (from sidebar modifications)
+  // Update project when compositions or history change - single source of truth
   useEffect(() => {
-    const updateProjectCompositions = async () => {
-      if (projectId && user && GeneratedComp) {
+    const updateProjectInternal = async () => {
+      if (projectId && user && (GeneratedComp || chatHistory.length > 0)) {
         try {
-          // Dehydrate compositions before saving to backend
-          const dehydratedCompositions = dehydrateCompositions(GeneratedComp);
-          await updateProject(user, projectId, {
-            compositions: dehydratedCompositions,
-          });
+          const updateData: { compositions?: Composition[]; name?: string; history?: any } = {};
+
+          if (GeneratedComp) {
+            const dehydratedCompositions = dehydrateCompositions(GeneratedComp);
+            updateData.compositions = dehydratedCompositions;
+            updateData.name = project?.name || "Untitled";
+          }
+
+          if (chatHistory.length > 0) {
+            updateData.history = chatHistory;
+          }
+
+          if (Object.keys(updateData).length > 0) {
+            await updateProject(user, projectId, updateData);
+            console.log("Project updated with:", Object.keys(updateData));
+          }
         } catch (error) {
-          console.error("Failed to update project compositions:", error);
+          console.error("Failed to update project:", error);
         }
       }
     };
 
-    updateProjectCompositions();
-  }, [GeneratedComp, projectId, user]);
+    updateProjectInternal();
+  }, [GeneratedComp, chatHistory, projectId, user, project?.name]);
 
   const totalDuration = useMemo(
     () =>
@@ -145,9 +160,7 @@ const Workspace = () => {
   );
 
   const inputProps = useMemo(() => GeneratedComp, [GeneratedComp]);
-
   const playerRef = useRef<PlayerRef>(null);
-  console.log(projectTitle);
 
   // Show loading state while fetching project
   if (projectLoading) {
@@ -206,6 +219,7 @@ const Workspace = () => {
                     setProjectTitle={setProjectTitle}
                     project={project}
                     projectId={projectId}
+                    onHistoryUpdate={handleHistoryUpdate}
                   />
                 </ResizablePanel>
                 <ResizableHandle

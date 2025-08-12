@@ -13,7 +13,9 @@ import { CollapsibleText } from "@/components/ui/collapsible-text";
 import { exampleComp, exampleHistory } from "@/helpers/example-comp";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
-import { createProject, updateProject } from "@/lib/api-client";
+import { createProject } from "@/lib/api-client";
+import type { Project } from "@/client";
+import { useNavigate } from "react-router-dom";
 
 // keep service null if undefined env
 let llm: LLMService = new NullLLMService();
@@ -78,8 +80,9 @@ export const ChatBoxPanel: React.FC<{
   setInitialPrompt: React.Dispatch<React.SetStateAction<string>>;
   preUpdateCleanup: () => void;
   setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
-  project: any;
+  project: Project | null;
   projectId?: string;
+  onHistoryUpdate: (history: string[]) => void;
 }> = ({
   setGeneratedComp,
   setIsGenerating,
@@ -88,16 +91,16 @@ export const ChatBoxPanel: React.FC<{
   setInitialPrompt,
   preUpdateCleanup,
   setProjectTitle,
-  project,
   projectId,
+  onHistoryUpdate,
 }) => {
   const [history, setHistory] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
   const [currentProject, setCurrentProject] = useState<string | null>(null);
-  const [currentCompositions, setCurrentCompositions] = useState<CompositionConfig[] | null>(null);
 
   const initialPromptProcessedRef = React.useRef(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Generate a project name from the user prompt
   const generateProjectName = useCallback((): string => {
@@ -108,7 +111,6 @@ export const ChatBoxPanel: React.FC<{
     setHistory((prev) => [...prev, ...exampleHistory]);
     preUpdateCleanup();
     setGeneratedComp(exampleComp);
-    setCurrentCompositions(exampleComp);
     setIsGenerating(false);
   }, [setHistory, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
 
@@ -146,6 +148,8 @@ export const ChatBoxPanel: React.FC<{
           if (newProject) {
             setCurrentProject(newProject.id);
             setProjectTitle(projectName);
+            // Update URL to include the new project ID without page reload
+            navigate(`/workspace/${newProject.id}`, { replace: true });
             toast.success(`Project "${projectName}" created successfully`);
           } else {
             toast.error(
@@ -174,7 +178,6 @@ export const ChatBoxPanel: React.FC<{
         }
         preUpdateCleanup();
         setGeneratedComp(composition);
-        setCurrentCompositions(composition);
         toast.success("Animation has been generated.");
         // logCompositionConfig(composition)
 
@@ -193,7 +196,6 @@ export const ChatBoxPanel: React.FC<{
 
         preUpdateCleanup();
         setGeneratedComp(null);
-        setCurrentCompositions(null);
         // In case of error, you might also want to add an error message to history
         setHistory((prev) => [
           ...prev,
@@ -216,6 +218,7 @@ export const ChatBoxPanel: React.FC<{
       history.length,
       generateProjectName,
       setProjectTitle,
+      navigate,
     ],
   );
 
@@ -233,35 +236,12 @@ export const ChatBoxPanel: React.FC<{
     }
   }, [projectId]);
 
-  // Update project when history changes
+  // Notify parent component when history changes
   useEffect(() => {
-    const updateProjectHistory = async () => {
-      if (currentProject && user && history.length > 0) {
-        try {
-          await updateProject(user, currentProject, { history });
-        } catch (error) {
-          console.error("Failed to update project history:", error);
-        }
-      }
-    };
-
-    updateProjectHistory();
-  }, [history, currentProject, user]);
-
-  // Update project when compositions change
-  useEffect(() => {
-    const updateProjectCompositions = async () => {
-      if (currentProject && user && currentCompositions) {
-        try {
-          await updateProject(user, currentProject, { compositions: currentCompositions });
-        } catch (error) {
-          console.error("Failed to update project compositions:", error);
-        }
-      }
-    };
-
-    updateProjectCompositions();
-  }, [currentCompositions, currentProject, user]);
+    if (history.length > 0) {
+      onHistoryUpdate(history);
+    }
+  }, [history, onHistoryUpdate]);
 
   return (
     <div className="flex flex-col h-full w-full px-2 bg-background relative">

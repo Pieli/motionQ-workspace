@@ -9,8 +9,12 @@ import { SequenceBuilder } from "@/components/tree-builder/sequence";
 const compositionWidth = 1920;
 const compositionHeight = 1080;
 
-const animationKeys = Object.keys(animationMap) as (keyof typeof animationMap)[];
-const backgroundKeys = Object.keys(backgroundMap) as (keyof typeof backgroundMap)[];
+const animationKeys = Object.keys(
+  animationMap,
+) as (keyof typeof animationMap)[];
+const backgroundKeys = Object.keys(
+  backgroundMap,
+) as (keyof typeof backgroundMap)[];
 
 const getCompositionsForBackground = (
   backgroundKey: keyof typeof backgroundMap,
@@ -24,12 +28,14 @@ const getCompositionsForBackground = (
     return {
       id: `${backgroundKey}-${animKey}`,
       component: anim.component,
+      name: animKey,
       schema: anim.schema,
       props: animProps,
       duration: 60,
       background: {
         id: `${backgroundKey}-bg`,
         component: background.component,
+        name: backgroundKey,
         schema: background.schema,
         props: bgProps,
         duration: 60,
