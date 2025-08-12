@@ -8,7 +8,7 @@ import {
   deleteApiUsersMeProjectsByProjectId,
 } from "@/client/sdk.gen";
 import type { User } from "firebase/auth";
-import type { Project } from "@/client/types.gen";
+import type { Composition, Project } from "@/client/types.gen";
 
 /**
  * Create a new user in the backend API
@@ -131,7 +131,7 @@ export async function updateProject(
   updates: {
     name?: string;
     history?: string[];
-    compositions?: any[];
+    compositions?: Composition[];
   },
 ): Promise<Project | null> {
   try {

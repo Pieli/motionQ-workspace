@@ -125,7 +125,11 @@ const Workspace = () => {
     const updateProjectInternal = async () => {
       if (projectId && user && (GeneratedComp || chatHistory.length > 0)) {
         try {
-          const updateData: { compositions?: Composition[]; name?: string; history?: any } = {};
+          const updateData: {
+            compositions?: Composition[];
+            name?: string;
+            history?: string[];
+          } = {};
 
           if (GeneratedComp) {
             const dehydratedCompositions = dehydrateCompositions(GeneratedComp);
