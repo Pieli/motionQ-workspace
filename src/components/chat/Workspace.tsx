@@ -240,6 +240,7 @@ const Workspace = () => {
                     project={project}
                     projectId={projectId}
                     onHistoryUpdate={handleHistoryUpdate}
+                    initialHistory={chatHistory}
                   />
                 </ResizablePanel>
                 <ResizableHandle

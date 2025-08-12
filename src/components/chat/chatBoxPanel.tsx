@@ -84,6 +84,7 @@ export const ChatBoxPanel: React.FC<{
   project: Project | null;
   projectId?: string;
   onHistoryUpdate: (history: ChatMessage[]) => void;
+  initialHistory?: ChatMessage[];
 }> = ({
   setGeneratedComp,
   setIsGenerating,
@@ -94,8 +95,9 @@ export const ChatBoxPanel: React.FC<{
   setProjectTitle,
   projectId,
   onHistoryUpdate,
+  initialHistory = [],
 }) => {
-  const [history, setHistory] = useState<ChatMessage[]>([]);
+  const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
   const [prompt, setPrompt] = useState("");
   const [currentProject, setCurrentProject] = useState<string | null>(null);
 
@@ -236,6 +238,13 @@ export const ChatBoxPanel: React.FC<{
       setCurrentProject(projectId);
     }
   }, [projectId]);
+
+  // Update history when initialHistory changes
+  useEffect(() => {
+    if (initialHistory.length > 0 && history.length === 0) {
+      setHistory(initialHistory);
+    }
+  }, [initialHistory, history.length]);
 
   // Notify parent component when history changes
   useEffect(() => {
