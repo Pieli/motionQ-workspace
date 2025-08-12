@@ -266,6 +266,17 @@ export type Asset = {
     uploadedAt: string;
 };
 
+export type CreateChatMessage = {
+    /**
+     * Message sender role
+     */
+    role: 'user' | 'agent';
+    /**
+     * Message content
+     */
+    content: string;
+};
+
 export type ChatMessage = {
     /**
      * Message ID
@@ -274,7 +285,7 @@ export type ChatMessage = {
     /**
      * Message sender role
      */
-    role: 'user' | 'assistant';
+    role: 'user' | 'agent';
     /**
      * Message content
      */
@@ -581,22 +592,7 @@ export type PutApiUsersMeProjectsByProjectIdCompositionsResponses = {
 export type PutApiUsersMeProjectsByProjectIdCompositionsResponse = PutApiUsersMeProjectsByProjectIdCompositionsResponses[keyof PutApiUsersMeProjectsByProjectIdCompositionsResponses];
 
 export type PostApiUsersMeProjectsByProjectIdChatData = {
-    body: {
-        /**
-         * Message sender role
-         */
-        role: 'user' | 'assistant';
-        /**
-         * Message content
-         */
-        content: string;
-        /**
-         * Additional message metadata
-         */
-        metadata?: {
-            [key: string]: unknown;
-        };
-    };
+    body: CreateChatMessage;
     path: {
         /**
          * Project ID (MongoDB ObjectId)

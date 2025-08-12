@@ -27,9 +27,21 @@ import {
   slideInSchema,
 } from "@/remotion-lib/TextFades/schemas";
 
-export const exampleHistory: string[] = [
-  "User: I have build an email client called Zero and I want to make a promo for that tool.  What is Zero ?  Zero is an open - source AI email solution that gives users the power to self - host their own email app while also integrating external services like Gmail and other email providers.Our goal is to modernize and improve emails through AI agents to truly modernize emails.  Why Zero ?  Most email services today are either closed - source, data - hungry, or too complex to self - host. 0.email is different: Open - Source – No hidden agendas, fully transparent.  AI Driven - Enhance your emails with Agents & LLMs.  Data Privacy First – Your emails, your data.Zero does not track, collect, or sell your data in any way.Please note: while we integrate with external services, the data passed through them is not under our control and falls under their respective privacy policies and terms of service.  Self - Hosting Freedom – Run your own email app with ease.  Unified Inbox – Connect multiple email providers like Gmail, Outlook, and more.  Customizable UI & Features – Tailor your email experience the way you want it.  Developer - Friendly – Built with extensibility and integrations in mind.",
-  "Agent: done so sire",
+import type { ChatMessage } from "@/types/chat";
+
+export const exampleHistory: ChatMessage[] = [
+  {
+    id: "example_msg_1",
+    role: "user",
+    content: "I have build an email client called Zero and I want to make a promo for that tool.  What is Zero ?  Zero is an open - source AI email solution that gives users the power to self - host their own email app while also integrating external services like Gmail and other email providers.Our goal is to modernize and improve emails through AI agents to truly modernize emails.  Why Zero ?  Most email services today are either closed - source, data - hungry, or too complex to self - host. 0.email is different: Open - Source – No hidden agendas, fully transparent.  AI Driven - Enhance your emails with Agents & LLMs.  Data Privacy First – Your emails, your data.Zero does not track, collect, or sell your data in any way.Please note: while we integrate with external services, the data passed through them is not under our control and falls under their respective privacy policies and terms of service.  Self - Hosting Freedom – Run your own email app with ease.  Unified Inbox – Connect multiple email providers like Gmail, Outlook, and more.  Customizable UI & Features – Tailor your email experience the way you want it.  Developer - Friendly – Built with extensibility and integrations in mind.",
+    timestamp: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: "example_msg_2", 
+    role: "agent",
+    content: "done so sire",
+    timestamp: "2024-01-01T00:01:00Z",
+  },
 ];
 
 export const exampleComp: CompositionConfig[] = [

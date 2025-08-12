@@ -32,6 +32,7 @@ import {
   addToProjectHistory,
 } from "@/lib/api-client";
 import type { Composition, Project } from "@/client/types.gen";
+import type { ChatMessage } from "@/types/chat";
 import {
   hydrateCompositions,
   dehydrateCompositions,
@@ -51,7 +52,7 @@ const Workspace = () => {
   // Project state
   const [project, setProject] = useState<Project | null>(null);
   const [projectLoading, setProjectLoading] = useState(true);
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
   // when transitioning from the start to the workspace screen
   const [initialPrompt, setInitialPrompt] = useState<string>(
@@ -75,17 +76,14 @@ const Workspace = () => {
   }, []);
 
   const handleHistoryUpdate = React.useCallback(
-    async (history: string[]) => {
+    async (history: ChatMessage[]) => {
       setChatHistory(history);
 
       // If there's a new message and we have a project, add it to backend history
       if (projectId && user && history.length > chatHistory.length) {
         // this could introduce some race condition misbehavior, TODO  change later
         const newMessage = history[history.length - 1];
-        const role = newMessage.startsWith("User: ") ? "user" : "agent";
-        const content = newMessage.replace(/^(User|Agent): /, "");
-
-        await addToProjectHistory(user, projectId, role, content);
+        await addToProjectHistory(user, projectId, newMessage.role, newMessage.content);
       }
     },
     [projectId, user, chatHistory.length],
@@ -109,6 +107,12 @@ const Workspace = () => {
           setProjectTitle(projectData.name);
 
           console.log(projectData);
+          
+          // Load chat history from project
+          if (projectData.chatHistory && projectData.chatHistory.length > 0) {
+            setChatHistory(projectData.chatHistory);
+          }
+          
           // Hydrate compositions from backend format to CompositionConfig format
           if (projectData.compositions && projectData.compositions.length > 0) {
             try {
@@ -137,25 +141,20 @@ const Workspace = () => {
     fetchProject();
   }, [projectId, user, navigate]);
 
-  // Update project when compositions or history change - single source of truth
+  // Update project when compositions change - history is handled separately via chat endpoint
   useEffect(() => {
     const updateProjectInternal = async () => {
-      if (projectId && user && (GeneratedComp || chatHistory.length > 0)) {
+      if (projectId && user && GeneratedComp) {
         try {
           const updateData: {
             compositions?: Composition[];
             name?: string;
-            history?: string[];
           } = {};
 
           if (GeneratedComp) {
             const dehydratedCompositions = dehydrateCompositions(GeneratedComp);
             updateData.compositions = dehydratedCompositions;
             updateData.name = project?.name || "Untitled";
-          }
-
-          if (chatHistory.length > 0) {
-            updateData.history = chatHistory;
           }
 
           if (Object.keys(updateData).length > 0) {
@@ -169,7 +168,7 @@ const Workspace = () => {
     };
 
     updateProjectInternal();
-  }, [GeneratedComp, chatHistory, projectId, user, project?.name]);
+  }, [GeneratedComp, projectId, user, project?.name]);
 
   const totalDuration = useMemo(
     () =>

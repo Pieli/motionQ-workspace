@@ -16,6 +16,8 @@ import { useAuth } from "@/lib/AuthContext";
 import { createProject } from "@/lib/api-client";
 import type { Project } from "@/client";
 import { useNavigate } from "react-router-dom";
+import type { ChatMessage } from "@/types/chat";
+import { createChatMessage } from "@/types/chat";
 
 // keep service null if undefined env
 let llm: LLMService = new NullLLMService();
@@ -25,9 +27,8 @@ if (import.meta.env.VITE_APP_OPENAI_KEY !== undefined) {
 }
 
 // ChatMessage component for rendering user/agent messages differently
-const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
-  const isUser = message.startsWith("User:");
-  const content = message.replace(/^User: |^Agent: /, "");
+const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({ message }) => {
+  const isUser = message.role === "user";
   return (
     <li className={isUser ? "flex justify-end" : "flex justify-start"}>
       <div
@@ -48,7 +49,7 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
           {isUser ? "You" : "Agent"}
         </span>
         <CollapsibleText
-          text={content}
+          text={message.content}
           maxLength={346}
           style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
         />
@@ -58,12 +59,12 @@ const ChatMessage: React.FC<{ message: string }> = ({ message }) => {
 };
 
 // ChatHistory component for rendering the chat history with a scrollbar
-const ChatHistory: React.FC<{ history: string[] }> = ({ history }) => {
+const ChatHistory: React.FC<{ history: ChatMessage[] }> = ({ history }) => {
   return (
     <ScrollArea className="h-[calc(100vh-130px)] w-full">
       <div className="p-4 space-y-3 pb-14">
-        {history.map((item, index) => (
-          <ChatMessage key={index} message={item} />
+        {history.map((message) => (
+          <ChatMessageComponent key={message.id} message={message} />
         ))}
       </div>
     </ScrollArea>
@@ -82,7 +83,7 @@ export const ChatBoxPanel: React.FC<{
   setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
   project: Project | null;
   projectId?: string;
-  onHistoryUpdate: (history: string[]) => void;
+  onHistoryUpdate: (history: ChatMessage[]) => void;
 }> = ({
   setGeneratedComp,
   setIsGenerating,
@@ -94,7 +95,7 @@ export const ChatBoxPanel: React.FC<{
   projectId,
   onHistoryUpdate,
 }) => {
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<ChatMessage[]>([]);
   const [prompt, setPrompt] = useState("");
   const [currentProject, setCurrentProject] = useState<string | null>(null);
 
@@ -134,7 +135,8 @@ export const ChatBoxPanel: React.FC<{
         return;
       }
 
-      setHistory((prev) => [...prev, `User: ${usedPrompt}`]);
+      const userMessage = createChatMessage('user', usedPrompt);
+      setHistory((prev) => [...prev, userMessage]);
       const currentPrompt = usedPrompt;
       setPrompt("");
       setIsGenerating(true);
@@ -182,7 +184,8 @@ export const ChatBoxPanel: React.FC<{
         // logCompositionConfig(composition)
 
         // Append the agent's comment to the history
-        setHistory((prev) => [...prev, `Agent: ${response.comment}`]);
+        const agentMessage = createChatMessage('agent', response.comment);
+        setHistory((prev) => [...prev, agentMessage]);
       } catch (e) {
         if (typeof e == "string") {
           console.error(e);
@@ -197,10 +200,8 @@ export const ChatBoxPanel: React.FC<{
         preUpdateCleanup();
         setGeneratedComp(null);
         // In case of error, you might also want to add an error message to history
-        setHistory((prev) => [
-          ...prev,
-          "Agent: An error occurred during generation.",
-        ]);
+        const errorMessage = createChatMessage('agent', 'An error occurred during generation.');
+        setHistory((prev) => [...prev, errorMessage]);
       }
 
       setIsGenerating(false);
