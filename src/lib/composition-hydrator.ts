@@ -1,4 +1,4 @@
-import type { CompositionConfig } from "@/components/interfaces/compositions";
+import type { CompositionConfig, PropType } from "@/components/interfaces/compositions";
 import type { Composition } from "@/client/types.gen";
 import {
   animationFactory,
@@ -37,7 +37,7 @@ export function hydrateCompositions(
       name: comp.name, // Use backend componentType as animationName
       component: component as AnimationComponents,
       schema: schema,
-      props: comp.props,
+      props: comp.props as Record<string, PropType>,
       duration: comp.duration,
     };
 
@@ -57,7 +57,7 @@ export function hydrateCompositions(
         name: comp.background.name, // Use backend componentType as animationName
         component: backgroundComponent as BackgroundComponents,
         schema: backgroundSchema,
-        props: comp.background.props,
+        props: comp.background.props as Record<string, PropType>,
         duration: comp.background.duration,
       };
     }
@@ -77,7 +77,7 @@ export function dehydrateCompositions(
     const dehydratedComp: Composition = {
       id: comp.id,
       name: comp.name,
-      props: comp.props,
+      props: comp.props as Record<string, PropType>,
       duration: comp.duration,
     };
 
