@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NullLLMService, OpenAIService } from "@/api/llm";
 
@@ -13,9 +13,7 @@ import { CollapsibleText } from "@/components/ui/collapsible-text";
 import { exampleComp, exampleHistory } from "@/helpers/example-comp";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
-import { createProject } from "@/lib/api-client";
 import type { Project } from "@/client";
-import { useNavigate } from "react-router-dom";
 import type { ChatMessage } from "@/types/chat";
 import { createChatMessage } from "@/types/chat";
 
@@ -27,7 +25,9 @@ if (import.meta.env.VITE_APP_OPENAI_KEY !== undefined) {
 }
 
 // ChatMessage component for rendering user/agent messages differently
-const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({ message }) => {
+const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({
+  message,
+}) => {
   const isUser = message.role === "user";
   return (
     <li className={isUser ? "flex justify-end" : "flex justify-start"}>
@@ -80,11 +80,10 @@ export const ChatBoxPanel: React.FC<{
   initialPrompt: string;
   setInitialPrompt: React.Dispatch<React.SetStateAction<string>>;
   preUpdateCleanup: () => void;
-  setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
   project: Project | null;
   projectId?: string;
-  onHistoryUpdate: (history: ChatMessage[]) => void;
   initialHistory?: ChatMessage[];
+  recordMessage: (message: ChatMessage) => Promise<void>;
 }> = ({
   setGeneratedComp,
   setIsGenerating,
@@ -92,30 +91,34 @@ export const ChatBoxPanel: React.FC<{
   initialPrompt,
   setInitialPrompt,
   preUpdateCleanup,
-  setProjectTitle,
   projectId,
-  onHistoryUpdate,
   initialHistory = [],
+  recordMessage,
 }) => {
   const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
   const [prompt, setPrompt] = useState("");
-  const [currentProject, setCurrentProject] = useState<string | null>(null);
 
   const initialPromptProcessedRef = React.useRef(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
 
-  // Generate a project name from the user prompt
-  const generateProjectName = useCallback((): string => {
-    return "Untitled";
-  }, []);
+  const addMessage = React.useCallback(
+    async (msg: ChatMessage) => {
+      console.log("Registering message:", msg.content.slice(0, 30));
+      setHistory((prev) => [...prev, msg]);
+      await recordMessage(msg);
+    },
+    [recordMessage, setHistory],
+  );
 
-  const devMode = React.useCallback(() => {
-    setHistory((prev) => [...prev, ...exampleHistory]);
+  const devMode = React.useCallback(async () => {
+    // Add each example message individually
+    for (const message of exampleHistory) {
+      await addMessage(message);
+    }
     preUpdateCleanup();
     setGeneratedComp(exampleComp);
     setIsGenerating(false);
-  }, [setHistory, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
+  }, [addMessage, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
 
   const stopGeneration = React.useCallback(() => {
     llm.abort();
@@ -137,34 +140,12 @@ export const ChatBoxPanel: React.FC<{
         return;
       }
 
-      const userMessage = createChatMessage('user', usedPrompt);
-      setHistory((prev) => [...prev, userMessage]);
+      const userMessage = createChatMessage("user", usedPrompt);
+      await addMessage(userMessage);
       const currentPrompt = usedPrompt;
       setPrompt("");
       setIsGenerating(true);
 
-      // Create project if this is the first prompt and we don't have a current project
-      if (!currentProject && user && history.length === 0) {
-        try {
-          const projectName = generateProjectName();
-          const newProject = await createProject(user, projectName);
-
-          if (newProject) {
-            setCurrentProject(newProject.id);
-            setProjectTitle(projectName);
-            // Update URL to include the new project ID without page reload
-            navigate(`/workspace/${newProject.id}`, { replace: true });
-            toast.success(`Project "${projectName}" created successfully`);
-          } else {
-            toast.error(
-              "Failed to create project, but animation will still generate",
-            );
-          }
-        } catch (error) {
-          console.error("Error creating project:", error);
-          toast.error("Failed to create project");
-        }
-      }
 
       if (usedPrompt === "#dev") {
         devMode();
@@ -186,8 +167,8 @@ export const ChatBoxPanel: React.FC<{
         // logCompositionConfig(composition)
 
         // Append the agent's comment to the history
-        const agentMessage = createChatMessage('agent', response.comment);
-        setHistory((prev) => [...prev, agentMessage]);
+        const agentMessage = createChatMessage("agent", response.comment);
+        await addMessage(agentMessage);
       } catch (e) {
         if (typeof e == "string") {
           console.error(e);
@@ -202,26 +183,25 @@ export const ChatBoxPanel: React.FC<{
         preUpdateCleanup();
         setGeneratedComp(null);
         // In case of error, you might also want to add an error message to history
-        const errorMessage = createChatMessage('agent', 'An error occurred during generation.');
-        setHistory((prev) => [...prev, errorMessage]);
+        const errorMessage = createChatMessage(
+          "agent",
+          "An error occurred during generation.",
+        );
+        await addMessage(errorMessage);
       }
 
       setIsGenerating(false);
     },
     [
       prompt,
-      setHistory,
+      addMessage,
       setGeneratedComp,
       setIsGenerating,
       devMode,
       setInitialPrompt,
       preUpdateCleanup,
-      currentProject,
       user,
       history.length,
-      generateProjectName,
-      setProjectTitle,
-      navigate,
     ],
   );
 
@@ -232,12 +212,14 @@ export const ChatBoxPanel: React.FC<{
     }
   }, [generate, initialPromptProcessedRef, initialPrompt]);
 
-  // Initialize project state from props
+  // Trigger generation if we have an initial prompt and a project becomes available
   useEffect(() => {
-    if (projectId) {
-      setCurrentProject(projectId);
+    if (initialPrompt.length > 0 && projectId && !initialPromptProcessedRef.current) {
+      initialPromptProcessedRef.current = true;
+      generate(initialPrompt);
     }
-  }, [projectId]);
+  }, [projectId, initialPrompt, generate]);
+
 
   // Update history when initialHistory changes
   useEffect(() => {
@@ -245,13 +227,6 @@ export const ChatBoxPanel: React.FC<{
       setHistory(initialHistory);
     }
   }, [initialHistory, history.length]);
-
-  // Notify parent component when history changes
-  useEffect(() => {
-    if (history.length > 0) {
-      onHistoryUpdate(history);
-    }
-  }, [history, onHistoryUpdate]);
 
   return (
     <div className="flex flex-col h-full w-full px-2 bg-background relative">

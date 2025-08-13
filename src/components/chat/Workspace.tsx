@@ -30,6 +30,7 @@ import {
   getProject,
   updateProject,
   addToProjectHistory,
+  createProject,
 } from "@/lib/api-client";
 import type { Composition, Project } from "@/client/types.gen";
 import type { ChatMessage } from "@/types/chat";
@@ -39,6 +40,7 @@ import {
 } from "@/lib/composition-hydrator";
 
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
+import { toast } from "sonner";
 
 const Workspace = () => {
   const compositionWidth = 1920;
@@ -75,18 +77,56 @@ const Workspace = () => {
     setPropertiesItem(null);
   }, []);
 
-  const handleHistoryUpdate = React.useCallback(
-    async (history: ChatMessage[]) => {
-      setChatHistory(history);
+  const generateProjectName = React.useCallback((): string => {
+    return "Untitled";
+  }, []);
 
-      // If there's a new message and we have a project, add it to backend history
-      if (projectId && user && history.length > chatHistory.length) {
-        // this could introduce some race condition misbehavior, TODO  change later
-        const newMessage = history[history.length - 1];
-        await addToProjectHistory(user, projectId, newMessage.role, newMessage.content);
+  const recordMessage = React.useCallback(
+    async (message: ChatMessage) => {
+      // Add to local history
+      setChatHistory((prev) => [...prev, message]);
+
+      let effectiveProjectId = projectId;
+      
+      // If no project exists and we have a user, create a new project
+      if (!effectiveProjectId && user && !project) {
+        try {
+          const projectName = generateProjectName();
+          const newProject = await createProject(user, projectName);
+
+          if (newProject) {
+            setProject(newProject);
+            setProjectTitle(projectName);
+            effectiveProjectId = newProject.id;
+            navigate(`/workspace/${newProject.id}`, { replace: true });
+            toast.success(`Project "${projectName}" created successfully`);
+          } else {
+            toast.error("Failed to create project, but message will be stored locally");
+          }
+        } catch (error) {
+          console.error("Error creating project:", error);
+          toast.error("Failed to create project");
+        }
+      }
+
+      // Save to backend if we have a project and user
+      console.log("conditions", effectiveProjectId, !!effectiveProjectId, !!user);
+      if (effectiveProjectId && user) {
+        try {
+          await addToProjectHistory(
+            user,
+            effectiveProjectId,
+            message.role,
+            message.content,
+          );
+
+          // Mark this message as processed
+        } catch (error) {
+          console.error("Failed to save message to backend:", error);
+        }
       }
     },
-    [projectId, user, chatHistory.length],
+    [projectId, user, project, generateProjectName, setProjectTitle, navigate],
   );
 
   // Fetch project data
@@ -107,12 +147,12 @@ const Workspace = () => {
           setProjectTitle(projectData.name);
 
           console.log(projectData);
-          
+
           // Load chat history from project
           if (projectData.chatHistory && projectData.chatHistory.length > 0) {
             setChatHistory(projectData.chatHistory);
           }
-          
+
           // Hydrate compositions from backend format to CompositionConfig format
           if (projectData.compositions && projectData.compositions.length > 0) {
             try {
@@ -236,11 +276,10 @@ const Workspace = () => {
                     initialPrompt={initialPrompt}
                     setInitialPrompt={setInitialPrompt}
                     preUpdateCleanup={clearSelectedProperty}
-                    setProjectTitle={setProjectTitle}
                     project={project}
                     projectId={projectId}
-                    onHistoryUpdate={handleHistoryUpdate}
                     initialHistory={chatHistory}
+                    recordMessage={recordMessage}
                   />
                 </ResizablePanel>
                 <ResizableHandle
