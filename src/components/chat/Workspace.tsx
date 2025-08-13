@@ -73,6 +73,9 @@ const Workspace = () => {
   const [sidebarTab, setSidebarTab] = useState<string>("properties");
   const [propertiesItem, setPropertiesItem] = useState<BaseItem | null>(null);
 
+  // Prevent duplicate project creation in React StrictMode
+  const projectCreationRef = useRef<boolean>(false);
+
   const clearSelectedProperty = React.useCallback(() => {
     setPropertiesItem(null);
   }, []);
@@ -86,31 +89,10 @@ const Workspace = () => {
       // Add to local history
       setChatHistory((prev) => [...prev, message]);
 
-      let effectiveProjectId = projectId;
-      
-      // If no project exists and we have a user, create a new project
-      if (!effectiveProjectId && user && !project) {
-        try {
-          const projectName = generateProjectName();
-          const newProject = await createProject(user, projectName);
-
-          if (newProject) {
-            setProject(newProject);
-            setProjectTitle(projectName);
-            effectiveProjectId = newProject.id;
-            navigate(`/workspace/${newProject.id}`, { replace: true });
-            toast.success(`Project "${projectName}" created successfully`);
-          } else {
-            toast.error("Failed to create project, but message will be stored locally");
-          }
-        } catch (error) {
-          console.error("Error creating project:", error);
-          toast.error("Failed to create project");
-        }
-      }
-
       // Save to backend if we have a project and user
-      console.log("conditions", effectiveProjectId, !!effectiveProjectId, !!user);
+
+      const effectiveProjectId = project?.id || projectId;
+      console.log("conditions", !!effectiveProjectId, !!user);
       if (effectiveProjectId && user) {
         try {
           await addToProjectHistory(
@@ -119,22 +101,56 @@ const Workspace = () => {
             message.role,
             message.content,
           );
-
-          // Mark this message as processed
         } catch (error) {
           console.error("Failed to save message to backend:", error);
         }
       }
     },
-    [projectId, user, project, generateProjectName, setProjectTitle, navigate],
+    [project?.id, projectId, user],
   );
 
-  // Fetch project data
+  // Fetch project data or create new project if none exists
   useEffect(() => {
-    const fetchProject = async () => {
-      console.log("fetchProject called");
-      if (!projectId || !user) {
+    const initializeProject = async () => {
+      console.log("initializeProject called");
+      if (!user) {
         setProjectLoading(false);
+        return;
+      }
+
+      // If no projectId, create a new project
+      if (!projectId) {
+        // Prevent duplicate creation in React StrictMode
+        if (projectCreationRef.current) {
+          console.log("Project creation already in progress, skipping");
+          setProjectLoading(false);
+          return;
+        }
+
+        projectCreationRef.current = true;
+        console.log("No projectId, creating new project");
+        try {
+          const projectName = generateProjectName();
+          const newProject = await createProject(user, projectName);
+
+          if (newProject) {
+            setProject(newProject);
+            setProjectTitle(projectName);
+            navigate(`/workspace/${newProject.id}`, { replace: true });
+            toast.success(`Project "${projectName}" created successfully`);
+            console.log(`Project "${projectName}" created successfully`);
+          } else {
+            toast.error("Failed to create project");
+            navigate("/");
+          }
+        } catch (error) {
+          console.error("Error creating project:", error);
+          toast.error("Failed to create project");
+          navigate("/");
+        } finally {
+          setProjectLoading(false);
+          projectCreationRef.current = false;
+        }
         return;
       }
 
@@ -178,8 +194,8 @@ const Workspace = () => {
       }
     };
 
-    fetchProject();
-  }, [projectId, user, navigate]);
+    initializeProject();
+  }, [projectId, user, navigate, generateProjectName]);
 
   // Update project when compositions change - history is handled separately via chat endpoint
   useEffect(() => {
