@@ -12,7 +12,6 @@ import { CollapsibleText } from "@/components/ui/collapsible-text";
 // import { logCompositionConfig } from "@/helpers/composition-logger";
 import { exampleComp, exampleHistory } from "@/helpers/example-comp";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/AuthContext";
 import type { Project } from "@/client";
 import type { ChatMessage } from "@/types/chat";
 import { createChatMessage } from "@/types/chat";
@@ -71,35 +70,33 @@ const ChatHistory: React.FC<{ history: ChatMessage[] }> = ({ history }) => {
   );
 };
 
-export const ChatBoxPanel: React.FC<{
+interface ChatBoxPanelProps {
   setGeneratedComp: React.Dispatch<
     React.SetStateAction<CompositionConfig[] | null>
   >;
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
   isGenerating: boolean;
-  initialPrompt: string;
-  setInitialPrompt: React.Dispatch<React.SetStateAction<string>>;
   preUpdateCleanup: () => void;
   project: Project | null;
   projectId?: string;
   initialHistory?: ChatMessage[];
   recordMessage: (message: ChatMessage) => Promise<void>;
-}> = ({
+}
+
+export interface ChatBoxPanelRef {
+  generate: (prompt?: string) => Promise<void>;
+}
+
+export const ChatBoxPanel = React.forwardRef<ChatBoxPanelRef, ChatBoxPanelProps>(({
   setGeneratedComp,
   setIsGenerating,
   isGenerating,
-  initialPrompt,
-  setInitialPrompt,
   preUpdateCleanup,
-  projectId,
   initialHistory = [],
   recordMessage,
-}) => {
+}, ref) => {
   const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
   const [prompt, setPrompt] = useState("");
-
-  const initialPromptProcessedRef = React.useRef(false);
-  const { user } = useAuth();
 
   const addMessage = React.useCallback(
     async (msg: ChatMessage) => {
@@ -132,7 +129,6 @@ export const ChatBoxPanel: React.FC<{
 
       if (promptArg !== undefined) {
         usedPrompt = promptArg.trim();
-        setInitialPrompt("");
       }
 
       if (usedPrompt.length == 0) {
@@ -145,7 +141,6 @@ export const ChatBoxPanel: React.FC<{
       const currentPrompt = usedPrompt;
       setPrompt("");
       setIsGenerating(true);
-
 
       if (usedPrompt === "#dev") {
         devMode();
@@ -198,28 +193,14 @@ export const ChatBoxPanel: React.FC<{
       setGeneratedComp,
       setIsGenerating,
       devMode,
-      setInitialPrompt,
       preUpdateCleanup,
-      user,
-      history.length,
     ],
   );
 
-  useEffect(() => {
-    if (!initialPromptProcessedRef.current && initialPrompt.length > 0) {
-      initialPromptProcessedRef.current = true;
-      generate(initialPrompt);
-    }
-  }, [generate, initialPromptProcessedRef, initialPrompt]);
-
-  // Trigger generation if we have an initial prompt and a project becomes available
-  useEffect(() => {
-    if (initialPrompt.length > 0 && projectId && !initialPromptProcessedRef.current) {
-      initialPromptProcessedRef.current = true;
-      generate(initialPrompt);
-    }
-  }, [projectId, initialPrompt, generate]);
-
+  // Expose generate function to parent component
+  React.useImperativeHandle(ref, () => ({
+    generate,
+  }));
 
   // Update history when initialHistory changes
   useEffect(() => {
@@ -265,4 +246,6 @@ export const ChatBoxPanel: React.FC<{
       </div>
     </div>
   );
-};
+});
+
+ChatBoxPanel.displayName = "ChatBoxPanel";

@@ -55,11 +55,13 @@ const Workspace = () => {
   const [project, setProject] = useState<Project | null>(null);
   const [projectLoading, setProjectLoading] = useState(true);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [messageQueue, setMessageQueue] = useState<ChatMessage[]>([]);
 
   // when transitioning from the start to the workspace screen
   const [initialPrompt, setInitialPrompt] = useState<string>(
     location?.state?.initialPrompt || "",
   );
+  const initialPromptProcessedRef = useRef<string>("");
   const [GeneratedComp, setGeneratedComp] = useState<
     CompositionConfig[] | null
   >(null);
@@ -75,6 +77,7 @@ const Workspace = () => {
 
   // Prevent duplicate project creation in React StrictMode
   const projectCreationRef = useRef<boolean>(false);
+  const chatBoxPanelRef = useRef<{ generate: (prompt?: string) => Promise<void> } | null>(null);
 
   const clearSelectedProperty = React.useCallback(() => {
     setPropertiesItem(null);
@@ -84,15 +87,40 @@ const Workspace = () => {
     return "Untitled";
   }, []);
 
+  const processQueuedMessages = React.useCallback(
+    async (targetProjectId: string) => {
+      if (messageQueue.length === 0 || !user) return;
+
+      console.log(`Processing ${messageQueue.length} queued messages for project ${targetProjectId}`);
+      
+      for (const queuedMessage of messageQueue) {
+        try {
+          await addToProjectHistory(
+            user,
+            targetProjectId,
+            queuedMessage.role,
+            queuedMessage.content,
+          );
+        } catch (error) {
+          console.error("Failed to save queued message to backend:", error);
+        }
+      }
+      
+      // Clear the queue after processing
+      setMessageQueue([]);
+    },
+    [messageQueue, user],
+  );
+
   const recordMessage = React.useCallback(
     async (message: ChatMessage) => {
       // Add to local history
       setChatHistory((prev) => [...prev, message]);
 
       // Save to backend if we have a project and user
-
       const effectiveProjectId = project?.id || projectId;
       console.log("conditions", !!effectiveProjectId, !!user);
+      
       if (effectiveProjectId && user) {
         try {
           await addToProjectHistory(
@@ -104,6 +132,10 @@ const Workspace = () => {
         } catch (error) {
           console.error("Failed to save message to backend:", error);
         }
+      } else if (user) {
+        // Queue message if project not ready yet
+        console.log("Queueing message until project is ready:", message.content.slice(0, 30));
+        setMessageQueue((prev) => [...prev, message]);
       }
     },
     [project?.id, projectId, user],
@@ -139,6 +171,9 @@ const Workspace = () => {
             navigate(`/workspace/${newProject.id}`, { replace: true });
             toast.success(`Project "${projectName}" created successfully`);
             console.log(`Project "${projectName}" created successfully`);
+            
+            // Process any queued messages now that project is created
+            await processQueuedMessages(newProject.id);
           } else {
             toast.error("Failed to create project");
             navigate("/");
@@ -163,6 +198,9 @@ const Workspace = () => {
           setProjectTitle(projectData.name);
 
           console.log(projectData);
+
+          // Process any queued messages now that project is loaded
+          await processQueuedMessages(projectData.id);
 
           // Load chat history from project
           if (projectData.chatHistory && projectData.chatHistory.length > 0) {
@@ -195,7 +233,27 @@ const Workspace = () => {
     };
 
     initializeProject();
-  }, [projectId, user, navigate, generateProjectName]);
+  }, [projectId, user, navigate, generateProjectName, processQueuedMessages]);
+
+  // Handle initial prompt processing - only once per project/prompt combination
+  useEffect(() => {
+    const processInitialPrompt = async () => {
+      if (
+        initialPrompt && 
+        initialPrompt.trim().length > 0 && 
+        initialPromptProcessedRef.current !== initialPrompt &&
+        chatBoxPanelRef.current &&
+        !projectLoading
+      ) {
+        console.log("Processing initial prompt:", initialPrompt.slice(0, 30));
+        initialPromptProcessedRef.current = initialPrompt;
+        setInitialPrompt(""); // Clear immediately to prevent re-processing
+        await chatBoxPanelRef.current.generate(initialPrompt);
+      }
+    };
+
+    processInitialPrompt();
+  }, [initialPrompt, projectLoading]);
 
   // Update project when compositions change - history is handled separately via chat endpoint
   useEffect(() => {
@@ -286,11 +344,10 @@ const Workspace = () => {
                   id="chatbox"
                 >
                   <ChatBoxPanel
+                    ref={chatBoxPanelRef}
                     setGeneratedComp={setGeneratedComp}
                     setIsGenerating={setIsGenerating}
                     isGenerating={isGenerating}
-                    initialPrompt={initialPrompt}
-                    setInitialPrompt={setInitialPrompt}
                     preUpdateCleanup={clearSelectedProperty}
                     project={project}
                     projectId={projectId}
