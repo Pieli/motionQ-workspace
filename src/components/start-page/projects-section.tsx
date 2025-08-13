@@ -36,10 +36,11 @@ const ProjectsSection: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const handleProjectAction = (
+  const handleProjectAction = async (
     action: "edit" | "duplicate" | "delete",
     projectId: string,
   ) => {
@@ -69,17 +70,18 @@ const ProjectsSection: React.FC = () => {
       const success = await deleteProject(user, projectToDelete.id);
       if (success) {
         setProjects(projects.filter((p) => p.id !== projectToDelete.id));
-        setDeleteDialogOpen(false);
-        setProjectToDelete(null);
       }
     } catch (error) {
       console.error("Failed to delete project:", error);
     } finally {
       setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setProjectToDelete(null);
     }
   };
 
   const handleDeleteCancel = () => {
+    setIsDeleting(false);
     setDeleteDialogOpen(false);
     setProjectToDelete(null);
   };
@@ -168,13 +170,15 @@ const ProjectsSection: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.isArray(projects) &&
               projects.map((project) => (
-                <Card 
-                  key={project.id} 
-                  className="cursor-pointer hover:shadow-lg transition-shadow group"
-                  onClick={() => navigate(`/workspace/${project.id}`)}
+                <Card
+                  key={project.id}
+                  className="hover:shadow-lg transition-shadow group"
                 >
                   <CardHeader className="p-0">
-                    <div className="relative h-32 bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-xl flex items-center justify-center overflow-hidden">
+                    <div
+                      className="relative h-32 bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-xl flex items-center justify-center overflow-hidden cursor-pointer"
+                      onClick={() => navigate(`/workspace/${project.id}`)}
+                    >
                       {project?.thumbnail ? (
                         <img
                           src={project.thumbnail}
@@ -194,7 +198,10 @@ const ProjectsSection: React.FC = () => {
                     </div>
                     <div className="p-4">
                       <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
+                        <div
+                          className="flex-1 min-w-0 cursor-pointer"
+                          onClick={() => navigate(`/workspace/${project.id}`)}
+                        >
                           <CardTitle className="text-lg truncate group-hover:text-primary transition-colors">
                             {project.name}
                           </CardTitle>
@@ -204,11 +211,13 @@ const ProjectsSection: React.FC = () => {
                               : "Never edited"}
                           </CardDescription>
                         </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            asChild
-                            onClick={(e) => e.stopPropagation()}
-                          >
+                        <DropdownMenu
+                          open={openDropdown === project.id}
+                          onOpenChange={(open) =>
+                            setOpenDropdown(open ? project.id : null)
+                          }
+                        >
+                          <DropdownMenuTrigger asChild>
                             <Button
                               variant="ghost"
                               size="icon"
@@ -237,9 +246,13 @@ const ProjectsSection: React.FC = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               variant="destructive"
-                              onClick={() =>
-                                handleProjectAction("delete", project.id)
-                              }
+                              onClick={async () => {
+                                setOpenDropdown(null);
+                                await new Promise((resolve) =>
+                                  requestAnimationFrame(resolve),
+                                );
+                                handleProjectAction("delete", project.id);
+                              }}
                             >
                               <Trash2 className="size-4" />
                               Delete
@@ -255,7 +268,6 @@ const ProjectsSection: React.FC = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
