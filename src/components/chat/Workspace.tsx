@@ -77,7 +77,9 @@ const Workspace = () => {
 
   // Prevent duplicate project creation in React StrictMode
   const projectCreationRef = useRef<boolean>(false);
-  const chatBoxPanelRef = useRef<{ generate: (prompt?: string) => Promise<void> } | null>(null);
+  const chatBoxPanelRef = useRef<{
+    generate: (prompt?: string) => Promise<void>;
+  } | null>(null);
 
   const clearSelectedProperty = React.useCallback(() => {
     setPropertiesItem(null);
@@ -91,8 +93,10 @@ const Workspace = () => {
     async (targetProjectId: string) => {
       if (messageQueue.length === 0 || !user) return;
 
-      console.log(`Processing ${messageQueue.length} queued messages for project ${targetProjectId}`);
-      
+      console.log(
+        `Processing ${messageQueue.length} queued messages for project ${targetProjectId}`,
+      );
+
       for (const queuedMessage of messageQueue) {
         try {
           await addToProjectHistory(
@@ -105,7 +109,7 @@ const Workspace = () => {
           console.error("Failed to save queued message to backend:", error);
         }
       }
-      
+
       // Clear the queue after processing
       setMessageQueue([]);
     },
@@ -120,7 +124,7 @@ const Workspace = () => {
       // Save to backend if we have a project and user
       const effectiveProjectId = project?.id || projectId;
       console.log("conditions", !!effectiveProjectId, !!user);
-      
+
       if (effectiveProjectId && user) {
         try {
           await addToProjectHistory(
@@ -134,7 +138,10 @@ const Workspace = () => {
         }
       } else if (user) {
         // Queue message if project not ready yet
-        console.log("Queueing message until project is ready:", message.content.slice(0, 30));
+        console.log(
+          "Queueing message until project is ready:",
+          message.content.slice(0, 30),
+        );
         setMessageQueue((prev) => [...prev, message]);
       }
     },
@@ -171,7 +178,7 @@ const Workspace = () => {
             navigate(`/workspace/${newProject.id}`, { replace: true });
             toast.success(`Project "${projectName}" created successfully`);
             console.log(`Project "${projectName}" created successfully`);
-            
+
             // Process any queued messages now that project is created
             await processQueuedMessages(newProject.id);
           } else {
@@ -239,8 +246,8 @@ const Workspace = () => {
   useEffect(() => {
     const processInitialPrompt = async () => {
       if (
-        initialPrompt && 
-        initialPrompt.trim().length > 0 && 
+        initialPrompt &&
+        initialPrompt.trim().length > 0 &&
         initialPromptProcessedRef.current !== initialPrompt &&
         chatBoxPanelRef.current &&
         !projectLoading
@@ -325,7 +332,7 @@ const Workspace = () => {
                     }
                   }}
                 />
-                <ShareDialog />
+                {/* <ShareDialog /> */}
                 <Button>Export</Button>
               </>
             }
