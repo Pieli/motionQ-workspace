@@ -2,7 +2,7 @@ import type { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "./firebase";
-import { getCurrentUser } from "@/lib/api-client";
+import { createUser, getCurrentUser } from "@/lib/api-client";
 import type { UserResponse } from "@/client/types.gen";
 
 interface AuthContextType {
@@ -29,8 +29,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         // Fetch backend user data when Firebase user is authenticated
         try {
-          const userData = await getCurrentUser(user);
-          setBackendUser(userData);
+          const { status, user: bUser } = await getCurrentUser(user);
+
+          if (status == 200) {
+            setBackendUser(bUser);
+          } else if (status == 404) {
+            // fallback user creation
+            const userId = await createUser(user);
+            if (!userId) {
+              throw new Error("fallback user creation failed");
+            }
+
+            // get creawted user
+            const { status, user: bUser } = await getCurrentUser(user);
+            if (status != 201) {
+              throw new Error("fallback user fetching failed");
+            }
+            setBackendUser(bUser);
+          } else {
+            throw new Error("Something went wrong");
+          }
         } catch (error) {
           console.error("Failed to fetch backend user data:", error);
           setBackendUser(null);

@@ -61,15 +61,10 @@ export async function getCurrentUser(firebaseUser: User) {
       },
     });
 
-    if (response.data) {
-      return response.data;
-    }
-
-    console.error("Failed to get user profile:", response.error);
-    return null;
+    return { status: response.response.status, user: response.data || null };
   } catch (error) {
     console.error("Error getting user profile:", error);
-    return null;
+    return { status: 502, user: null };
   }
 }
 
