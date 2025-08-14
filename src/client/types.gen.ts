@@ -733,5 +733,5 @@ export type GetApiUsersMeCreditResponses = {
 export type GetApiUsersMeCreditResponse = GetApiUsersMeCreditResponses[keyof GetApiUsersMeCreditResponses];
 
 export type ClientOptions = {
-    baseUrl: 'http://localhost:8080' | 'http://server-production-b67f.up.railway.app' | (string & {});
+    baseUrl: 'http://localhost:8080' | 'https://api.motionq.ai' | (string & {});
 };

@@ -35,3 +35,4 @@ playwright/.cache/*
 
 # generated code
 # src/client/*
+.env.*

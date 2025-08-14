@@ -15,7 +15,7 @@ import type { Composition, Project } from "@/client/types.gen";
 // Configure production URL when not in dev environment
 if (import.meta.env.VITE_ENV !== "dev") {
   client.setConfig({
-    baseUrl: "http://server-production-b67f.up.railway.app",
+    baseUrl: "https://api.motionq.ai",
   });
 }
 
