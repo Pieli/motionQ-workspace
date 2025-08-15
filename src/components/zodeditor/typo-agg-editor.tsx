@@ -26,6 +26,7 @@ import type {
 } from "@/components/interfaces/compositions";
 
 import { FontCombobox } from "@/components/zodeditor/language-combobox";
+import { TextColorEditor } from "@/components/zodeditor/text-color-editor";
 
 const AlignmentSelectHorizontal: React.FC<{
   readonly compId: string;
@@ -145,23 +146,12 @@ export const TypoAggregateEditor: React.FC<{
           />
 
           {/* Text Color */}
-          <div className="flex gap-2 items-center">
-            <Input
-              type="color"
-              value={composition.props?.["typo_textColor"] || "#ffffff"}
-              onChange={(e) =>
-                handleChange(composition.id, "typo_textColor", e.target.value)
-              }
-              className="w-6 h-6 p-1 m-0 rounded-[50%] inline-block cursor-pointer"
-            />
-            <Input
-              value={composition.props?.["typo_textColor"] || "#ffffff"}
-              placeholder="#ffffff"
-              onChange={(e) =>
-                handleChange(composition.id, "typo_textColor", e.target.value)
-              }
-            />
-          </div>
+          <TextColorEditor
+            compId={composition.id}
+            fieldKey="typo_textColor"
+            value={composition.props?.["typo_textColor"] || "#ffffff"}
+            onChange={handleChange}
+          />
 
           {/* Font Weight and Size */}
           <div className="flex gap-2">
