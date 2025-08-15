@@ -1,10 +1,12 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo} from "react";
 import * as zodTypes from "@remotion/zod-types";
+import { zColor } from "@remotion/zod-types";
 
 import { colorWithNewOpacity } from "@/helpers/color-math";
 import { Spacing } from "@/components/ui/spacing";
 import { Input } from "@/components/ui/input";
 import { Row } from "@/components/ui/row";
+import { useValidatedInput } from "@/hooks/input-validator";
 
 export const ZodColorEditor: React.FC<{
   readonly compId: string;
@@ -13,31 +15,45 @@ export const ZodColorEditor: React.FC<{
   readonly value: string;
   readonly onChange: (compId: string, key: string, value: string) => void;
 }> = ({ compId, fieldKey, label, value, onChange }) => {
-  const { a, b, g, r } = useMemo(
-    () => zodTypes.ZodZypesInternals.parseColor(value),
-    [value],
-  );
 
-  const onValueChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+
+  const success = useCallback((value: string) => {
+    onChange(compId, fieldKey, value)
+  }, [onChange, compId, fieldKey])
+
+
+  const [currentValue, setCurrentValue, onEnterPressed, onValueChange] = useValidatedInput<string>(
+      value, 
+      (value: string) => zColor().safeParse(value).success,
+      success
+  )
+
+  const { a, b, g, r } = useMemo(() => {
+    try {
+      return zodTypes.ZodZypesInternals.parseColor(currentValue);
+    } catch {
+      // Fallback to a default color if even the last valid value fails
+      return zodTypes.ZodZypesInternals.parseColor("#000000");
+    }
+  }, [currentValue]);
+
+  const rgb = useMemo(() => {
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  }, [r, g, b]);
+
+  const onValueChangeExteneded: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       const newColor = colorWithNewOpacity(
         e.target.value,
         Math.round(a),
         zodTypes,
       );
-      onChange(compId, fieldKey, newColor);
-    },
-    [a, compId, fieldKey, onChange],
+      // invalid color
+      onValueChange(newColor);
+
+    }, [a, onValueChange],
   );
 
-  const onTextChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) => {
-      onChange(compId, fieldKey, e.target.value);
-    },
-    [compId, fieldKey, onChange],
-  );
-
-  const rgb = `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 
   return (
     <>
@@ -49,12 +65,17 @@ export const ZodColorEditor: React.FC<{
           <Input
             type="color"
             value={rgb}
-            onChange={onValueChange}
+            onChange={onValueChangeExteneded}
             name={fieldKey}
             className="w-6 h-6 p-1 m-0 rounded-[50%] inline-block cursor-pointer"
           />
           <Spacing x={1} block />
-          <Input value={value} placeholder={value} onChange={onTextChange} />
+          <Input
+            value={currentValue}
+            placeholder={currentValue}
+            onChange={(e) => setCurrentValue(e.target.value)}
+            onKeyDown={onEnterPressed}
+          />
         </Row>
       </div>
     </>
