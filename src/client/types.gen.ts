@@ -633,6 +633,53 @@ export type PostApiUsersMeProjectsByProjectIdChatResponses = {
 
 export type PostApiUsersMeProjectsByProjectIdChatResponse = PostApiUsersMeProjectsByProjectIdChatResponses[keyof PostApiUsersMeProjectsByProjectIdChatResponses];
 
+export type PatchApiUsersMeProjectsByProjectIdNameData = {
+    body: {
+        /**
+         * New project name
+         */
+        name: string;
+    };
+    path: {
+        /**
+         * Project ID (MongoDB ObjectId)
+         */
+        projectId: string;
+    };
+    query?: never;
+    url: '/api/users/me/projects/{projectId}/name';
+};
+
+export type PatchApiUsersMeProjectsByProjectIdNameErrors = {
+    /**
+     * Bad request - invalid input data
+     */
+    400: _Error;
+    /**
+     * Unauthorized - invalid or missing authentication token
+     */
+    401: _Error;
+    /**
+     * Resource not found
+     */
+    404: _Error;
+    /**
+     * Internal server error
+     */
+    500: _Error;
+};
+
+export type PatchApiUsersMeProjectsByProjectIdNameError = PatchApiUsersMeProjectsByProjectIdNameErrors[keyof PatchApiUsersMeProjectsByProjectIdNameErrors];
+
+export type PatchApiUsersMeProjectsByProjectIdNameResponses = {
+    /**
+     * Project name updated
+     */
+    200: Project;
+};
+
+export type PatchApiUsersMeProjectsByProjectIdNameResponse = PatchApiUsersMeProjectsByProjectIdNameResponses[keyof PatchApiUsersMeProjectsByProjectIdNameResponses];
+
 export type PostApiUsersData = {
     body: UserCreateRequest;
     path?: never;

@@ -7,6 +7,7 @@ import {
   putApiUsersMeProjectsByProjectId,
   deleteApiUsersMeProjectsByProjectId,
   postApiUsersMeProjectsByProjectIdChat,
+  patchApiUsersMeProjectsByProjectIdName,
 } from "@/client/sdk.gen";
 import { client } from "@/client/client.gen";
 import type { User } from "firebase/auth";
@@ -222,6 +223,41 @@ export async function addToProjectHistory(
     return response.data !== undefined;
   } catch (error) {
     console.error("Error adding to project history:", error);
+    return false;
+  }
+}
+
+/**
+ * Update project name
+ */
+export async function updateProjectName(
+  firebaseUser: User,
+  projectId: string,
+  name: string,
+): Promise<boolean> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await patchApiUsersMeProjectsByProjectIdName({
+      path: {
+        projectId: projectId,
+      },
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: {
+        name: name,
+      },
+    });
+
+    if (response.response.ok) {
+      return true;
+    }
+
+    console.error("Failed to update project name:", response.error);
+    return false;
+  } catch (error) {
+    console.error("Error updating project name:", error);
     return false;
   }
 }

@@ -30,6 +30,7 @@ import {
   updateProject,
   addToProjectHistory,
   createProject,
+  updateProjectName,
 } from "@/lib/api-client";
 import type { Composition, Project } from "@/client/types.gen";
 import type { ChatMessage } from "@/types/chat";
@@ -319,7 +320,30 @@ const Workspace = () => {
           style={{ "--sidebar-width": "calc(28rem)" } as React.CSSProperties}
         >
           <Navbar
-            centerContent={<ProjectTitle title={projectTitle} />}
+            centerContent={
+              <ProjectTitle
+                title={projectTitle}
+                onTitleChange={async (newTitle) => {
+                  if (user && project) {
+                    setProjectTitle(newTitle);
+                    setProject({ ...project, name: newTitle });
+                    try {
+                      const success = await updateProjectName(
+                        user,
+                        project.id,
+                        newTitle,
+                      );
+
+                      if (!success) {
+                        toast.error("Failed to update project name");
+                      }
+                    } catch (error) {
+                      console.error("Failed to update project name:", error);
+                    }
+                  }
+                }}
+              />
+            }
             rightContent={
               <>
                 <PreviewDialog
