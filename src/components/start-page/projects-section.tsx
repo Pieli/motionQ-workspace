@@ -24,11 +24,13 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { getUserProjects, deleteProject } from "@/lib/api-client";
+import { getUserProjects, deleteProject, updateProjectName } from "@/lib/api-client";
 import type { Project } from "@/client/types.gen";
-import { MoreVertical, Edit, Copy, Trash2, Plus } from "lucide-react";
+import { MoreVertical, Edit, Copy, Trash2, Plus, FileEdit } from "lucide-react";
+import { toast } from "sonner";
 
 const ProjectsSection: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -37,11 +39,15 @@ const ProjectsSection: React.FC = () => {
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [projectToRename, setProjectToRename] = useState<Project | null>(null);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [isRenaming, setIsRenaming] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleProjectAction = async (
-    action: "edit" | "duplicate" | "delete",
+    action: "edit" | "duplicate" | "delete" | "rename",
     projectId: string,
   ) => {
     switch (action) {
@@ -51,6 +57,15 @@ const ProjectsSection: React.FC = () => {
       case "duplicate":
         console.log("Duplicate project:", projectId);
         break;
+      case "rename": {
+        const project = projects.find((p) => p.id === projectId);
+        if (project) {
+          setProjectToRename(project);
+          setNewProjectName(project.name);
+          setRenameDialogOpen(true);
+        }
+        break;
+      }
       case "delete": {
         const project = projects.find((p) => p.id === projectId);
         if (project) {
@@ -84,6 +99,40 @@ const ProjectsSection: React.FC = () => {
     setIsDeleting(false);
     setDeleteDialogOpen(false);
     setProjectToDelete(null);
+  };
+
+  const handleRenameConfirm = async () => {
+    if (!projectToRename || !user || !newProjectName.trim()) return;
+
+    setIsRenaming(true);
+    try {
+      const success = await updateProjectName(user, projectToRename.id, newProjectName.trim());
+      if (success) {
+        setProjects(projects.map(p => 
+          p.id === projectToRename.id 
+            ? { ...p, name: newProjectName.trim() }
+            : p
+        ));
+        toast.success("Project renamed successfully");
+      } else {
+        toast.error("Failed to rename project");
+      }
+    } catch (error) {
+      console.error("Failed to rename project:", error);
+      toast.error("Failed to rename project");
+    } finally {
+      setIsRenaming(false);
+      setRenameDialogOpen(false);
+      setProjectToRename(null);
+      setNewProjectName("");
+    }
+  };
+
+  const handleRenameCancel = () => {
+    setIsRenaming(false);
+    setRenameDialogOpen(false);
+    setProjectToRename(null);
+    setNewProjectName("");
   };
 
   const formatLastAccessed = (date: string) => {
@@ -236,6 +285,15 @@ const ProjectsSection: React.FC = () => {
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
+                              onClick={() => {
+                                setOpenDropdown(null);
+                                handleProjectAction("rename", project.id);
+                              }}
+                            >
+                              <FileEdit className="size-4" />
+                              Rename
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                               onClick={() =>
                                 handleProjectAction("duplicate", project.id)
                               }
@@ -291,6 +349,46 @@ const ProjectsSection: React.FC = () => {
               disabled={isDeleting}
             >
               {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Project</DialogTitle>
+            <DialogDescription>
+              Enter a new name for "{projectToRename?.name}"
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              placeholder="Project name"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleRenameConfirm();
+                }
+              }}
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleRenameCancel}
+              disabled={isRenaming}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleRenameConfirm}
+              disabled={isRenaming || !newProjectName.trim()}
+            >
+              {isRenaming ? "Renaming..." : "Rename"}
             </Button>
           </DialogFooter>
         </DialogContent>
