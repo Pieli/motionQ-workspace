@@ -90,10 +90,10 @@ const EditorElement: React.FC<{
 
   return (
     <div>
-      {Object.keys(shapeDef).map((key, index) => (
-        <div className="py-2" key={index}>
+      {Object.keys(shapeDef).map((key) => (
+        <div className="py-2" key={`${composition.id}-${key}`}>
           <ZodSwitch
-            key={index}
+            key={`${composition.id}-${key}`}
             comp={composition}
             fieldKey={key}
             label={makeUIFriendly(key)}
