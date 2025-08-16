@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { debounce } from "lodash";
 import {
   AlignLeft,
   AlignCenter,
@@ -121,7 +122,16 @@ export const TypoAggregateEditor: React.FC<{
   composition: CompositionConfig;
   handleChange: (compId: string, key: string, value: PropType) => void;
 }> = ({ composition, handleChange }) => {
+  const debouncedHandleChange = useMemo(
+    () =>
+      debounce((compId: string, key: string, value: string) => {
+        handleChange(compId, key, value);
+      }, 300),
+    [handleChange],
+  );
+
   // console.log(composition.props);
+
   return (
     <>
       <Card className="mb-8">
@@ -133,7 +143,7 @@ export const TypoAggregateEditor: React.FC<{
             key={composition.id}
             defaultValue={composition.props?.["typo_text"] || ""}
             onChange={(e) =>
-              handleChange(composition.id, "typo_text", e.target.value)
+              debouncedHandleChange(composition.id, "typo_text", e.target.value)
             }
             placeholder="Enter your text here..."
             className="min-h-[60px] resize-none"
