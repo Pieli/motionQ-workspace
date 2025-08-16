@@ -13,7 +13,7 @@ import {
 import { z } from "zod";
 
 export const StairsMeshPropsSchemaV3 = z.object({
-  backgroundColor: zColor().default("#1e1e1e"),
+  backgroundColor: zColor().default("#262234"),
 });
 
 export type StairsMeshPropsV3 = z.infer<typeof StairsMeshPropsSchemaV3>;
@@ -48,7 +48,7 @@ export const StairsMeshV3: React.FC<StairsMeshPropsV3> = ({
   const blob_2_scale = 1;
 
   return (
-    <AbsoluteFill style={{ backgroundColor }}>
+    <AbsoluteFill>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -57,7 +57,7 @@ export const StairsMeshV3: React.FC<StairsMeshPropsV3> = ({
         fill="none"
       >
         <g id="Plugin / file cover - 7" clipPath="url(#clip0_48746_292)">
-          <path fill="#262234" d="M0 0h1920v1080H0z" />
+          <path fill={backgroundColor} d="M0 0h1920v1080H0z" />
           <g
             id="blob-2-highlight"
             filter="url(#filter0_f_48746_292)"
