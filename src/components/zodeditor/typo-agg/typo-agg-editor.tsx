@@ -7,7 +7,6 @@ import {
   ArrowDown,
   MoveVertical,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Toggle } from "@/components/ui/toggle";
 import {
@@ -26,7 +25,9 @@ import type {
 } from "@/components/interfaces/compositions";
 
 import { FontCombobox } from "@/components/zodeditor/language-combobox";
-import { TextColorEditor } from "@/components/zodeditor/text-color-editor";
+import { TextColorEditor } from "@/components/zodeditor/typo-agg/text-color-editor";
+import { LineHeightEditor } from "@/components/zodeditor/typo-agg/line-height-editor";
+import { LetterSpacingEditor } from "@/components/zodeditor/typo-agg/letter-spacing-editor";
 
 const AlignmentSelectHorizontal: React.FC<{
   readonly compId: string;
@@ -149,7 +150,9 @@ export const TypoAggregateEditor: React.FC<{
           <TextColorEditor
             compId={composition.id}
             fieldKey="typo_textColor"
-            value={composition.props?.["typo_textColor"] || "#ffffff"}
+            value={
+              composition.props?.["typo_textColor"].toString() || "#ffffff"
+            }
             onChange={handleChange}
           />
 
@@ -195,57 +198,19 @@ export const TypoAggregateEditor: React.FC<{
 
           {/* Line Height & Letter Spacing */}
           <div className="flex gap-2">
-            <div className="relative">
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-                <p className="border-y border-y-1 border-muted-foreground py-0.5 leading-none">
-                  A
-                </p>
-              </span>
-              <div className="relative">
-                <Input
-                  className="pl-10 pr-6"
-                  value={composition.props?.["typo_lineHeight"] || ""}
-                  onChange={(e) => {
-                    handleChange(
-                      composition.id,
-                      "typo_lineHeight",
-                      Number(e.target.value),
-                    );
-                  }}
-                  placeholder="100"
-                />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-                  %
-                </span>
-              </div>
-            </div>
+            <LineHeightEditor
+              compId={composition.id}
+              fieldKey="typo_lineHeight"
+              value={composition.props?.["typo_lineHeight"] || ""}
+              onChange={handleChange}
+            />
 
-            <div className="relative">
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-                <p className="border-x border-x-1 border-muted-foreground px-1 leading-none">
-                  A
-                </p>
-              </span>
-              <div className="relative">
-                <Input
-                  className="pl-10 pr-6"
-                  defaultValue={
-                    composition.props?.["typo_letter_spacing"] || ""
-                  }
-                  onChange={(e) => {
-                    handleChange(
-                      composition.id,
-                      "typo_letter_spacing",
-                      Number(e.target.value),
-                    );
-                  }}
-                  placeholder="0"
-                />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-                  %
-                </span>
-              </div>
-            </div>
+            <LetterSpacingEditor
+              compId={composition.id}
+              fieldKey="typo_letter_spacing"
+              value={composition.props?.["typo_letter_spacing"] || ""}
+              onChange={handleChange}
+            />
           </div>
 
           {/* Alignment Buttons */}

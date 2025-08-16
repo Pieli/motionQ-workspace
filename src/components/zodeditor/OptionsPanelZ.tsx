@@ -16,7 +16,7 @@ import type {
 } from "@/components/interfaces/compositions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { modifyPropsInTree } from "@/components/zodeditor/tree-modifier";
-import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg-editor";
+import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg/typo-agg-editor";
 
 import { typographySchema } from "@/remotion-lib/TextFades/schemas";
 
@@ -78,8 +78,8 @@ const EditorElement: React.FC<{
 }> = ({ composition, handleChange }) => {
   const makeUIFriendly = (label: string): string => {
     return label
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/[-_]/g, ' ')
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/[-_]/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
