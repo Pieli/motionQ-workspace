@@ -9,7 +9,7 @@ import {
 } from "remotion";
 
 import type { ScaleUpDownProps } from "@/remotion-lib/TextFades/schemas";
-import { Typography } from "@/components/Typography/Typography";
+import { Typography } from "../Typography/Typography";
 
 loadFont("normal", {
   subsets: ["latin"],

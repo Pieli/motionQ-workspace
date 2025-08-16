@@ -7,8 +7,8 @@ import {
   useVideoConfig,
 } from "remotion";
 
-import type { SlideInProps } from "@/remotion-lib/TextFades/schemas";
-import { Typography } from "@/components/Typography/Typography";
+import type { SlideInProps } from "./schemas";
+import { Typography } from "../Typography/Typography";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 loadFont("normal", {

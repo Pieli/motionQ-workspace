@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { fitText } from "@remotion/layout-utils";
-import { typographySchema } from "@/remotion-lib/TextFades/schemas";
+import { typographySchema } from "../TextFades/schemas";
 
-import { top250 as fonts } from "@/remotion-lib/popular-fonts";
+import { top250 as fonts } from "../popular-fonts";
 import { fontFamily as defaultFontFamily } from "@remotion/google-fonts/Inter";
 export type TypographyProps = z.infer<typeof typographySchema>;
 

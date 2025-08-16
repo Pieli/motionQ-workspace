@@ -8,7 +8,7 @@ import {
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
 import type { SimpleFadeProps } from "./schemas";
-import { Typography } from "@/components/Typography/Typography";
+import { Typography } from "../Typography/Typography";
 
 loadFont("normal", {
   subsets: ["latin"],
