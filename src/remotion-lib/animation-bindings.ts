@@ -14,7 +14,11 @@ import {
   typographySchema,
 } from "@/remotion-lib/TextFades/schemas";
 
-import { GradientMesh, SingleColorGradientMesh, MultiColorGradientMesh } from "./textures/GradientMesh";
+import {
+  GradientMesh,
+  SingleColorGradientMesh,
+  MultiColorGradientMesh,
+} from "./textures/gradientMesh";
 import { GrowingDark } from "./textures/growing-darkess";
 import { PlainBackground } from "./textures/PlainBackground";
 import { StairsMesh } from "./textures/staris-texture";
@@ -178,12 +182,14 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
   },
   {
     name: "singleColorGradientMesh",
-    usecase: "Single color gradient mesh - modern, minimalistic aesthetic. Uses one color for all blobs.",
+    usecase:
+      "Single color gradient mesh - modern, minimalistic aesthetic. Uses one color for all blobs.",
     settings: getSchemaDescription(singleColorGradientMeshSchema),
   },
   {
     name: "multiColorGradientMesh",
-    usecase: "Multi-color gradient mesh - vibrant, dynamic aesthetic. Cycles through multiple colors for visual variety.",
+    usecase:
+      "Multi-color gradient mesh - vibrant, dynamic aesthetic. Cycles through multiple colors for visual variety.",
     settings: getSchemaDescription(multiColorGradientMeshSchema),
   },
   {

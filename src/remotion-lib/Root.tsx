@@ -28,7 +28,7 @@ import {
 } from "./TextFades/schemas";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
-import { GradientMesh } from "./textures/GradientMesh";
+import { GradientMesh } from "./textures/gradientMesh";
 import { GrowingDark } from "./textures/growing-darkess";
 import { StairsMesh } from "./textures/staris-texture";
 import { StairsMeshV2 } from "./textures/staris-texture-v2";
@@ -42,8 +42,6 @@ import {
   stairsMeshSchemaV2,
   stairsMeshSchemaV3,
 } from "./textures/schemas";
-
-
 
 // import { ReactComponent as SaasOverview } from "./public/saas_overview.svg";
 // import { SvgTransition, svgTransitionSchema } from "./ProductPreview/SvgTransition";
@@ -247,7 +245,7 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={twinMeshSchema}
           defaultProps={twinMeshSchema.parse({
-            backgroundColor: "#1e1e1e"
+            backgroundColor: "#1e1e1e",
           })}
         />
         <Composition
@@ -259,7 +257,7 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={stairsMeshSchema}
           defaultProps={stairsMeshSchema.parse({
-            backgroundColor: "#1e1e1e"
+            backgroundColor: "#1e1e1e",
           })}
         />
         <Composition
@@ -271,7 +269,7 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={stairsMeshSchemaV2}
           defaultProps={stairsMeshSchemaV2.parse({
-            backgroundColor: "#1e1e1e"
+            backgroundColor: "#1e1e1e",
           })}
         />
         <Composition
@@ -283,7 +281,7 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={stairsMeshSchemaV3}
           defaultProps={stairsMeshSchemaV3.parse({
-            backgroundColor: "#1e1e1e"
+            backgroundColor: "#1e1e1e",
           })}
         />
         <Composition
@@ -295,11 +293,10 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={growingDarkSchema}
           defaultProps={growingDarkSchema.parse({
-            backgroundColor: "#1e1e1e"
+            backgroundColor: "#1e1e1e",
           })}
         />
       </Folder>
-
 
       {/*
       <Composition
