@@ -1,16 +1,7 @@
-import { zColor } from "@remotion/zod-types";
 import React from "react";
 import { useVideoConfig } from "remotion";
-import { z } from "zod";
 import { StairsTextureBase, type AnimationConfig } from "./stairs-texture-base";
-
-export const StairsMeshPropsSchemaV2 = z.object({
-  backgroundColor: zColor().default("#262234"),
-  blob_1_background_color: zColor().default("#5C4B9F"),
-  blob_2_background_color: zColor().default("#444D9E"),
-});
-
-export type StairsMeshPropsV2 = z.infer<typeof StairsMeshPropsSchemaV2>;
+import { type StairsMeshPropsV2 } from "./schemas";
 
 export const StairsMeshV2: React.FC<StairsMeshPropsV2> = ({
   backgroundColor,

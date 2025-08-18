@@ -1,14 +1,6 @@
-import { zColor } from "@remotion/zod-types";
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
-import { z } from "zod";
-
-export const TwinMeshPropsSchema = z.object({
-  backgroundColor: zColor().default("#1e1e1e"),
-});
-
-
-export type TwinMeshProps = z.infer<typeof TwinMeshPropsSchema>;
+import { type TwinMeshProps } from "./schemas";
 
 export const TwinMesh: React.FC<TwinMeshProps> = ({
   backgroundColor

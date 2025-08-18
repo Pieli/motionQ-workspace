@@ -3,22 +3,16 @@ import { FadeInTransition } from "@/remotion-lib/TextFades/FadeInText";
 import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaleUpDownText";
 import { SimpleTextTyping } from "@/remotion-lib/TextFades/SimpleTextTyping";
 import { SlideInTransition } from "@/remotion-lib/TextFades/SlideInText";
+import { GradientMesh } from "@/remotion-lib/textures/GradientMesh";
+import { GrowingDark } from "@/remotion-lib/textures/growing-darkess";
+import { PlainBackground } from "@/remotion-lib/textures/PlainBackground";
+import { StairsMeshV2 } from "@/remotion-lib/textures/staris-texture-v2";
 import {
-  GradientMesh,
-  GradientMeshPropsSchema,
-} from "@/remotion-lib/textures/GradientMesh";
-import {
-  GrowingDark,
-  GrowingDarkPropsSchema,
-} from "@/remotion-lib/textures/growing-darkess";
-import {
-  PlainBackground,
-  PlainBackgroundSchema,
-} from "@/remotion-lib/textures/PlainBackground";
-import {
-  StairsMeshPropsSchemaV2,
-  StairsMeshV2,
-} from "@/remotion-lib/textures/staris-texture-v2";
+  gradientMeshSchema,
+  growingDarkSchema,
+  plainBackgroundSchema,
+  stairsMeshSchemaV2,
+} from "@/remotion-lib/textures/schemas";
 
 import {
   fadeInSchema,
@@ -59,7 +53,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "intro_slide-background",
       name: "gradientMesh",
       component: GradientMesh,
-      schema: GradientMeshPropsSchema,
+      schema: gradientMeshSchema,
       props: {
         speed: 12,
         backgroundColor: "#1e3c72",
@@ -82,7 +76,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "problem_slide_1-background",
       name: "stairsTextureV2",
       component: StairsMeshV2,
-      schema: StairsMeshPropsSchemaV2,
+      schema: stairsMeshSchemaV2,
       props: {
         speed: 12,
         backgroundColor: "#4b6cb7",
@@ -105,7 +99,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "problem_slide_2-background",
       name: "stairsTextureV2",
       component: StairsMeshV2,
-      schema: StairsMeshPropsSchemaV2,
+      schema: stairsMeshSchemaV2,
       props: {
         speed: 12,
         backgroundColor: "#4b6cb7",
@@ -128,7 +122,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "problem_slide_3-background",
       name: "stairsTextureV2",
       component: StairsMeshV2,
-      schema: StairsMeshPropsSchemaV2,
+      schema: stairsMeshSchemaV2,
       props: {
         speed: 12,
         backgroundColor: "#4b6cb7",
@@ -151,7 +145,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "solution_slide-background",
       name: "growingDark",
       component: GrowingDark,
-      schema: GrowingDarkPropsSchema,
+      schema: growingDarkSchema,
       props: {
         speed: 12,
         backgroundColor: "#0f2027",
@@ -174,7 +168,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "features_intro-background",
       name: "plainBackground",
       component: PlainBackground,
-      schema: PlainBackgroundSchema,
+      schema: plainBackgroundSchema,
       props: {
         speed: 12,
         backgroundColor: "#1f4037",
@@ -197,7 +191,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "feature_1-background",
       name: "gradientMesh",
       component: GradientMesh,
-      schema: GradientMeshPropsSchema,
+      schema: gradientMeshSchema,
       props: {
         speed: 12,
         backgroundColor: "#43cea2",
@@ -220,7 +214,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "feature_2-background",
       name: "gradientMesh",
       component: GradientMesh,
-      schema: GradientMeshPropsSchema,
+      schema: gradientMeshSchema,
       props: {
         speed: 12,
         backgroundColor: "#43cea2",
@@ -243,7 +237,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "feature_3-background",
       name: "gradientMesh",
       component: GradientMesh,
-      schema: GradientMeshPropsSchema,
+      schema: gradientMeshSchema,
       props: {
         speed: 12,
         backgroundColor: "#43cea2",
@@ -266,7 +260,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "feature_4-background",
       name: "gradientMesh",
       component: GradientMesh,
-      schema: GradientMeshPropsSchema,
+      schema: gradientMeshSchema,
       props: {
         speed: 12,
         backgroundColor: "#43cea2",
@@ -289,7 +283,7 @@ export const exampleComp: CompositionConfig[] = [
       id: "call_to_action-background",
       name: "plainBackground",
       component: PlainBackground,
-      schema: PlainBackgroundSchema,
+      schema: plainBackgroundSchema,
       props: {
         speed: 12,
         backgroundColor: "#0f2027",

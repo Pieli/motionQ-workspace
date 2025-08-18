@@ -28,12 +28,20 @@ import {
 } from "./TextFades/schemas";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
-import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
-import { GrowingDark, GrowingDarkPropsSchema } from "./textures/growing-darkess";
-import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
-import { StairsMeshPropsSchemaV2, StairsMeshV2 } from "./textures/staris-texture-v2";
-import { StairsMeshPropsSchemaV3, StairsMeshV3 } from "./textures/staris-texture-v3";
-import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
+import { GradientMesh } from "./textures/GradientMesh";
+import { GrowingDark } from "./textures/growing-darkess";
+import { StairsMesh } from "./textures/staris-texture";
+import { StairsMeshV2 } from "./textures/staris-texture-v2";
+import { StairsMeshV3 } from "./textures/staris-texture-v3";
+import { TwinMesh } from "./textures/twins-texture";
+import {
+  gradientMeshSchema,
+  growingDarkSchema,
+  stairsMeshSchema,
+  twinMeshSchema,
+  stairsMeshSchemaV2,
+  stairsMeshSchemaV3,
+} from "./textures/schemas";
 
 
 
@@ -223,8 +231,8 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={GradientMeshPropsSchema}
-          defaultProps={GradientMeshPropsSchema.parse({
+          schema={gradientMeshSchema}
+          defaultProps={gradientMeshSchema.parse({
             extraPoints: 8,
             size: 60,
             speed: 1,
@@ -237,8 +245,8 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={TwinMeshPropsSchema}
-          defaultProps={TwinMeshPropsSchema.parse({
+          schema={twinMeshSchema}
+          defaultProps={twinMeshSchema.parse({
             backgroundColor: "#1e1e1e"
           })}
         />
@@ -249,8 +257,8 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={StairsMeshPropsSchema}
-          defaultProps={StairsMeshPropsSchema.parse({
+          schema={stairsMeshSchema}
+          defaultProps={stairsMeshSchema.parse({
             backgroundColor: "#1e1e1e"
           })}
         />
@@ -261,8 +269,8 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={StairsMeshPropsSchemaV2}
-          defaultProps={StairsMeshPropsSchemaV2.parse({
+          schema={stairsMeshSchemaV2}
+          defaultProps={stairsMeshSchemaV2.parse({
             backgroundColor: "#1e1e1e"
           })}
         />
@@ -273,8 +281,8 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={StairsMeshPropsSchemaV3}
-          defaultProps={StairsMeshPropsSchemaV3.parse({
+          schema={stairsMeshSchemaV3}
+          defaultProps={stairsMeshSchemaV3.parse({
             backgroundColor: "#1e1e1e"
           })}
         />
@@ -285,8 +293,8 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={GrowingDarkPropsSchema}
-          defaultProps={GrowingDarkPropsSchema.parse({
+          schema={growingDarkSchema}
+          defaultProps={growingDarkSchema.parse({
             backgroundColor: "#1e1e1e"
           })}
         />

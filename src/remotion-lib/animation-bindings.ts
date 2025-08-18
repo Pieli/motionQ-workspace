@@ -14,25 +14,22 @@ import {
   typographySchema,
 } from "@/remotion-lib/TextFades/schemas";
 
-import { GradientMesh, GradientMeshPropsSchema } from "./textures/GradientMesh";
+import { GradientMesh } from "./textures/GradientMesh";
+import { GrowingDark } from "./textures/growing-darkess";
+import { PlainBackground } from "./textures/PlainBackground";
+import { StairsMesh } from "./textures/staris-texture";
+import { StairsMeshV2 } from "./textures/staris-texture-v2";
+import { StairsMeshV3 } from "./textures/staris-texture-v3";
+import { TwinMesh } from "./textures/twins-texture";
 import {
-  GrowingDark,
-  GrowingDarkPropsSchema,
-} from "./textures/growing-darkess";
-import {
-  PlainBackground,
-  PlainBackgroundSchema,
-} from "./textures/PlainBackground";
-import { StairsMesh, StairsMeshPropsSchema } from "./textures/staris-texture";
-import {
-  StairsMeshPropsSchemaV2,
-  StairsMeshV2,
-} from "./textures/staris-texture-v2";
-import {
-  StairsMeshPropsSchemaV3,
-  StairsMeshV3,
-} from "./textures/staris-texture-v3";
-import { TwinMesh, TwinMeshPropsSchema } from "./textures/twins-texture";
+  gradientMeshSchema,
+  growingDarkSchema,
+  plainBackgroundSchema,
+  stairsMeshSchema,
+  stairsMeshSchemaV2,
+  stairsMeshSchemaV3,
+  twinMeshSchema,
+} from "./textures/schemas";
 
 export interface AnimationBinding {
   name: string;
@@ -101,31 +98,31 @@ export const animationMap = {
 export const backgroundMap = {
   gradientMesh: {
     component: GradientMesh,
-    schema: GradientMeshPropsSchema,
+    schema: gradientMeshSchema,
   },
   plainBackground: {
     component: PlainBackground,
-    schema: PlainBackgroundSchema,
+    schema: plainBackgroundSchema,
   },
   twinTexture: {
     component: TwinMesh,
-    schema: TwinMeshPropsSchema,
+    schema: twinMeshSchema,
   },
   stairsTexture: {
     component: StairsMesh,
-    schema: StairsMeshPropsSchema,
+    schema: stairsMeshSchema,
   },
   stairsTextureV2: {
     component: StairsMeshV2,
-    schema: StairsMeshPropsSchemaV2,
+    schema: stairsMeshSchemaV2,
   },
   stairsTextureV3: {
     component: StairsMeshV3,
-    schema: StairsMeshPropsSchemaV3,
+    schema: stairsMeshSchemaV3,
   },
   growingDark: {
     component: GrowingDark,
-    schema: GrowingDarkPropsSchema,
+    schema: growingDarkSchema,
   },
 } as const;
 
@@ -162,38 +159,38 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
     name: "plainBackground",
     usecase:
       "use this sparingly, it is just a simple background, if you use it use also other colors than white",
-    settings: getSchemaDescription(PlainBackgroundSchema),
+    settings: getSchemaDescription(plainBackgroundSchema),
   },
   {
     name: "gradientMesh",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(GradientMeshPropsSchema),
+    settings: getSchemaDescription(gradientMeshSchema),
   },
   {
     name: "twinTexture",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(TwinMeshPropsSchema),
+    settings: getSchemaDescription(twinMeshSchema),
   },
   {
     name: "stairsTexture",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(StairsMeshPropsSchema),
+    settings: getSchemaDescription(stairsMeshSchema),
   },
   {
     name: "stairsTextureV2",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(StairsMeshPropsSchemaV2),
+    settings: getSchemaDescription(stairsMeshSchemaV2),
   },
   {
     name: "stairsTextureV3",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(StairsMeshPropsSchemaV3),
+    settings: getSchemaDescription(stairsMeshSchemaV3),
   },
   {
     name: "growingDark",
     usecase:
       "gradients are aesthetic. more on the techy side. modern feel. Only use white fonts to write on it. Should be 60 frames long",
-    settings: getSchemaDescription(GrowingDarkPropsSchema),
+    settings: getSchemaDescription(growingDarkSchema),
   },
 ];
 

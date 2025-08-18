@@ -1,4 +1,3 @@
-import { zColor } from "@remotion/zod-types";
 import StairsImage from "./stairs-image.png";
 import React from "react";
 import {

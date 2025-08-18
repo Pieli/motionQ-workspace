@@ -1,5 +1,3 @@
-import { zColor } from "@remotion/zod-types";
-
 import React from "react";
 import {
     AbsoluteFill,
@@ -9,13 +7,7 @@ import {
     interpolate,
     Easing,
 } from "remotion";
-import { z } from "zod";
-
-export const GrowingDarkPropsSchema = z.object({
-    backgroundColor: zColor().default("#1e1e1e"),
-});
-
-export type GrowingDarkProps = z.infer<typeof GrowingDarkPropsSchema>;
+import { type GrowingDarkProps } from "./schemas";
 
 export const GrowingDark: React.FC<GrowingDarkProps> = ({ backgroundColor }) => {
     const frame = useCurrentFrame();

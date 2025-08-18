@@ -1,4 +1,3 @@
-import { zColor } from "@remotion/zod-types";
 import * as blobs2 from "blobs/v2";
 import React, { useMemo } from "react";
 import {
@@ -7,46 +6,23 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { z } from "zod";
-
-export const GradientMeshPropsSchema = z.object({
-  speed: z.number().min(1).max(15).default(12),
-  backgroundColor: zColor().default("#fff"),
-  // colors: z.array(zColor())
-});
-
-/*
-export const GradientMeshPropsSchema = z.object({
-    extraPoints: z.number().min(0).default(8),
-    size: z.number().min(1).max(150).default(60),
-    speed: z.number().min(0).default(1.0),
-    blur: z.number().min(0).max(500).default(50),
-    edginess: z.number().min(0).max(300).default(4),
-    positionSeed: z.number().min(0).max(1000).default(1),
-    directionSeed: z.number().min(0).max(1000).default(42),
-    backgroundColor: zColor().default("#1e1e1e"), // Default to black
-});
-
-
-*/
-
-export type GradientMeshProps = z.infer<typeof GradientMeshPropsSchema>;
+import { type GradientMeshProps } from "./schemas";
 
 export const GradientMesh: React.FC<GradientMeshProps> = ({
-  speed: movement_speed,
+  extraPoints,
+  size,
+  speed,
+  blur,
+  edginess,
+  positionSeed,
+  directionSeed,
   backgroundColor,
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
 
-  const extraPoints = 14;
-  const size = 30;
-  const blur = 200;
-  const edginess = 25;
-  const positionSeed = 3;
-  const directionSeed = 47;
-
   const num_blobs = 5;
+
   // const colors = ["6d213c", "946846", "baab68", "e3c16f","faff70"]
   const blobSize = useMemo(
     () => (Math.max(width, height) * size) / 100,
@@ -98,10 +74,8 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
           const directionY =
             random(`${directionSeed}-blob-direction-y-${index}`) * 2 - 1;
 
-          const x =
-            initialPositions[index].x + frame * movement_speed * directionX;
-          const y =
-            initialPositions[index].y + frame * movement_speed * directionY;
+          const x = initialPositions[index].x + frame * speed * directionX;
+          const y = initialPositions[index].y + frame * speed * directionY;
 
           return (
             <svg
