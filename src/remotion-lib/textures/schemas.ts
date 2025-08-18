@@ -23,9 +23,9 @@ export const singleColorGradientMeshSchema = baseGradientMeshSchema.extend({
   color: zColor().default("#ff0000"),
 });
 
-// Multi Color Gradient Mesh Schema  
+// Multi Color Gradient Mesh Schema
 export const multiColorGradientMeshSchema = baseGradientMeshSchema.extend({
-  colors: z.array(zColor()).default(["#6d213c", "#946846", "#baab68", "#e3c16f", "#faff70"]),
+  // colors: z.array(zColor()).default(["#6d213c", "#946846", "#baab68", "#e3c16f", "#faff70"]),
 });
 
 // Legacy Gradient Mesh Schema (for backward compatibility)
@@ -64,8 +64,12 @@ export const stairsMeshSchemaV3 = z.object({
 
 // Type exports
 export type PlainBackgroundProps = z.infer<typeof plainBackgroundSchema>;
-export type SingleColorGradientMeshProps = z.infer<typeof singleColorGradientMeshSchema>;
-export type MultiColorGradientMeshProps = z.infer<typeof multiColorGradientMeshSchema>;
+export type SingleColorGradientMeshProps = z.infer<
+  typeof singleColorGradientMeshSchema
+>;
+export type MultiColorGradientMeshProps = z.infer<
+  typeof multiColorGradientMeshSchema
+>;
 export type GradientMeshProps = z.infer<typeof gradientMeshSchema>; // Legacy type
 export type TwinMeshProps = z.infer<typeof twinMeshSchema>;
 export type GrowingDarkProps = z.infer<typeof growingDarkSchema>;
