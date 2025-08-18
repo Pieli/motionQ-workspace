@@ -27,7 +27,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { getUserProjects, deleteProject, updateProjectName } from "@/lib/api-client";
+import {
+  getUserProjects,
+  deleteProject,
+  updateProjectName,
+} from "@/lib/api-client";
 import type { Project } from "@/client/types.gen";
 import { MoreVertical, Edit, Copy, Trash2, Plus, FileEdit } from "lucide-react";
 import { toast } from "sonner";
@@ -106,13 +110,19 @@ const ProjectsSection: React.FC = () => {
 
     setIsRenaming(true);
     try {
-      const success = await updateProjectName(user, projectToRename.id, newProjectName.trim());
+      const success = await updateProjectName(
+        user,
+        projectToRename.id,
+        newProjectName.trim(),
+      );
       if (success) {
-        setProjects(projects.map(p => 
-          p.id === projectToRename.id 
-            ? { ...p, name: newProjectName.trim() }
-            : p
-        ));
+        setProjects(
+          projects.map((p) =>
+            p.id === projectToRename.id
+              ? { ...p, name: newProjectName.trim() }
+              : p,
+          ),
+        );
         toast.success("Project renamed successfully");
       } else {
         toast.error("Failed to rename project");
@@ -156,7 +166,6 @@ const ProjectsSection: React.FC = () => {
 
       try {
         const userProjects = await getUserProjects(user);
-        console.log("Fetched projects:", userProjects);
         if (userProjects && Array.isArray(userProjects)) {
           setProjects(userProjects);
         } else {

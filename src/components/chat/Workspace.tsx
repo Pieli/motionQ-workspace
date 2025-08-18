@@ -123,7 +123,6 @@ const Workspace = () => {
 
       // Save to backend if we have a project and user
       const effectiveProjectId = project?.id || projectId;
-      console.log("conditions", !!effectiveProjectId, !!user);
 
       if (effectiveProjectId && user) {
         try {
@@ -138,10 +137,7 @@ const Workspace = () => {
         }
       } else if (user) {
         // Queue message if project not ready yet
-        console.log(
-          "Queueing message until project is ready:",
-          message.content.slice(0, 30),
-        );
+        // console.log( "Queueing message until project is ready:", message.content.slice(0, 30),);
         setMessageQueue((prev) => [...prev, message]);
       }
     },
@@ -151,7 +147,7 @@ const Workspace = () => {
   // Fetch project data or create new project if none exists
   useEffect(() => {
     const initializeProject = async () => {
-      console.log("initializeProject called");
+      // console.log("initializeProject called");
       if (!user) {
         setProjectLoading(false);
         return;
@@ -161,13 +157,13 @@ const Workspace = () => {
       if (!projectId) {
         // Prevent duplicate creation in React StrictMode
         if (projectCreationRef.current) {
-          console.log("Project creation already in progress, skipping");
+          // console.log("Project creation already in progress, skipping");
           setProjectLoading(false);
           return;
         }
 
         projectCreationRef.current = true;
-        console.log("No projectId, creating new project");
+        // console.log("No projectId, creating new project");
         try {
           const projectName = generateProjectName();
           const newProject = await createProject(user, projectName);
@@ -177,7 +173,7 @@ const Workspace = () => {
             setProjectTitle(projectName);
             navigate(`/workspace/${newProject.id}`, { replace: true });
             toast.success(`Project "${projectName}" created successfully`);
-            console.log(`Project "${projectName}" created successfully`);
+            // console.log(`Project "${projectName}" created successfully`);
 
             // Process any queued messages now that project is created
             await processQueuedMessages(newProject.id);
@@ -196,15 +192,13 @@ const Workspace = () => {
         return;
       }
 
-      console.log("fetchProject here");
-
       try {
         const projectData = await getProject(user, projectId);
         if (projectData) {
           setProject(projectData);
           setProjectTitle(projectData.name);
 
-          console.log(projectData);
+          // console.log(projectData);
 
           // Process any queued messages now that project is loaded
           await processQueuedMessages(projectData.id);
@@ -235,7 +229,7 @@ const Workspace = () => {
         navigate("/");
       } finally {
         setProjectLoading(false);
-        console.log("fetchProject there");
+        // console.log("fetchProject there");
       }
     };
 
@@ -252,7 +246,7 @@ const Workspace = () => {
         chatBoxPanelRef.current &&
         !projectLoading
       ) {
-        console.log("Processing initial prompt:", initialPrompt.slice(0, 30));
+        // console.log("Processing initial prompt:", initialPrompt.slice(0, 30));
         initialPromptProcessedRef.current = initialPrompt;
         setInitialPrompt(""); // Clear immediately to prevent re-processing
         await chatBoxPanelRef.current.generate(initialPrompt);
@@ -280,7 +274,7 @@ const Workspace = () => {
 
           if (Object.keys(updateData).length > 0) {
             await updateProject(user, projectId, updateData);
-            console.log("Project updated with:", Object.keys(updateData));
+            // console.log("Project updated with:", Object.keys(updateData));
           }
         } catch (error) {
           console.error("Failed to update project:", error);
