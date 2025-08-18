@@ -6,9 +6,20 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { type GradientMeshProps } from "./schemas";
+import { type SingleColorGradientMeshProps, type MultiColorGradientMeshProps } from "./schemas";
 
-export const GradientMesh: React.FC<GradientMeshProps> = ({
+interface BaseGradientMeshProps {
+  extraPoints: number;
+  size: number;
+  speed: number;
+  blur: number;
+  edginess: number;
+  positionSeed: number;
+  directionSeed: number;
+  backgroundColor: string;
+}
+
+const BaseGradientMesh: React.FC<BaseGradientMeshProps & { getBlobColor: (index: number) => string }> = ({
   extraPoints,
   size,
   speed,
@@ -17,6 +28,7 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
   positionSeed,
   directionSeed,
   backgroundColor,
+  getBlobColor,
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
@@ -91,8 +103,7 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
             >
               <path
                 d={blob}
-                // fill={`#${colors[index]}`}
-                fill={"red"}
+                fill={getBlobColor(index)}
               />
             </svg>
           );
@@ -101,3 +112,22 @@ export const GradientMesh: React.FC<GradientMeshProps> = ({
     </AbsoluteFill>
   );
 };
+
+export const SingleColorGradientMesh: React.FC<SingleColorGradientMeshProps> = ({
+  color,
+  ...baseProps
+}) => {
+  const getBlobColor = () => color;
+  return <BaseGradientMesh {...baseProps} getBlobColor={getBlobColor} />;
+};
+
+export const MultiColorGradientMesh: React.FC<MultiColorGradientMeshProps> = ({
+  colors,
+  ...baseProps
+}) => {
+  const getBlobColor = (index: number) => colors[index % colors.length];
+  return <BaseGradientMesh {...baseProps} getBlobColor={getBlobColor} />;
+};
+
+// Legacy component for backward compatibility
+export const GradientMesh = SingleColorGradientMesh;

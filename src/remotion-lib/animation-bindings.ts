@@ -14,7 +14,7 @@ import {
   typographySchema,
 } from "@/remotion-lib/TextFades/schemas";
 
-import { GradientMesh } from "./textures/GradientMesh";
+import { GradientMesh, SingleColorGradientMesh, MultiColorGradientMesh } from "./textures/GradientMesh";
 import { GrowingDark } from "./textures/growing-darkess";
 import { PlainBackground } from "./textures/PlainBackground";
 import { StairsMesh } from "./textures/staris-texture";
@@ -23,6 +23,8 @@ import { StairsMeshV3 } from "./textures/staris-texture-v3";
 import { TwinMesh } from "./textures/twins-texture";
 import {
   gradientMeshSchema,
+  singleColorGradientMeshSchema,
+  multiColorGradientMeshSchema,
   growingDarkSchema,
   plainBackgroundSchema,
   stairsMeshSchema,
@@ -100,6 +102,14 @@ export const backgroundMap = {
     component: GradientMesh,
     schema: gradientMeshSchema,
   },
+  singleColorGradientMesh: {
+    component: SingleColorGradientMesh,
+    schema: singleColorGradientMeshSchema,
+  },
+  multiColorGradientMesh: {
+    component: MultiColorGradientMesh,
+    schema: multiColorGradientMeshSchema,
+  },
   plainBackground: {
     component: PlainBackground,
     schema: plainBackgroundSchema,
@@ -165,6 +175,16 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
     name: "gradientMesh",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
     settings: getSchemaDescription(gradientMeshSchema),
+  },
+  {
+    name: "singleColorGradientMesh",
+    usecase: "Single color gradient mesh - modern, minimalistic aesthetic. Uses one color for all blobs.",
+    settings: getSchemaDescription(singleColorGradientMeshSchema),
+  },
+  {
+    name: "multiColorGradientMesh",
+    usecase: "Multi-color gradient mesh - vibrant, dynamic aesthetic. Cycles through multiple colors for visual variety.",
+    settings: getSchemaDescription(multiColorGradientMeshSchema),
   },
   {
     name: "twinTexture",
