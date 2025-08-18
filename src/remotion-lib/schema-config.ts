@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 /**
  * Configuration for blacklisting schema fields from LLM input
  * Fields listed here will be excluded from the llm_schema used for AI generation
@@ -57,12 +59,55 @@ export function getBlacklistedFields(componentName: string): string[] {
 }
 
 /**
- * Check if a field should be blacklisted for a component
+ * Create filtered schema for LLM by removing blacklisted fields, defaults, and optionals
  */
-export function isFieldBlacklisted(
+export function getFilteredSchema(
+  schema: z.AnyZodObject,
   componentName: string,
-  fieldName: string,
-): boolean {
+): z.AnyZodObject {
   const blacklistedFields = getBlacklistedFields(componentName);
-  return blacklistedFields.includes(fieldName);
+
+  const filteredShape = Object.entries(schema.shape)
+    .filter(([key]) => !blacklistedFields.includes(key))
+    .reduce(
+      (acc, [key, value]) => {
+        let processedValue = value as z.ZodTypeAny;
+
+        // Recursively remove defaults and optionals
+        processedValue = removeDefaultsAndOptionals(processedValue);
+
+        acc[key] = processedValue;
+        return acc;
+      },
+      {} as Record<string, z.ZodTypeAny>,
+    );
+
+  return z.object(filteredShape);
+}
+
+/**
+ * Remove defaults and optionals from a Zod type
+ */
+function removeDefaultsAndOptionals(zodType: z.ZodTypeAny): z.ZodTypeAny {
+  let current = zodType;
+  let hasChanges = true;
+
+  // Keep processing until no more changes
+  while (hasChanges) {
+    hasChanges = false;
+
+    // Remove defaults
+    if (current instanceof z.ZodDefault) {
+      current = current.removeDefault();
+      hasChanges = true;
+    }
+
+    // Remove optionals
+    if (current instanceof z.ZodOptional) {
+      current = current.unwrap();
+      hasChanges = true;
+    }
+  }
+
+  return current;
 }

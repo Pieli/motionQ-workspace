@@ -10,7 +10,7 @@ if (schemas.length < 2) {
 export const UnionAvailableSchemas = z.union(schemas as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]);
 
 // Background Union of Schemas
-const backSchemas: z.ZodType[] = Object.values(backgroundMap).map((back) => back.schema);
+const backSchemas: z.ZodType[] = Object.values(backgroundMap).map((back) => back.llm_schema);
 if (backSchemas.length < 2) {
     throw Error("Too few schemas provided... at leas 2 needed");
 }

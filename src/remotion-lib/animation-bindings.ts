@@ -1,6 +1,8 @@
 import * as zodTypes from "@remotion/zod-types";
 import { z } from "zod";
 
+import { getFilteredSchema, getBlacklistedFields } from "@/remotion-lib/schema-config";
+
 import { FadeInTransition } from "@/remotion-lib/TextFades/FadeInText";
 import { ScaleUpDownTransition } from "@/remotion-lib/TextFades/ScaleUpDownText";
 import { SimpleTextTyping } from "@/remotion-lib/TextFades/SimpleTextTyping";
@@ -11,7 +13,6 @@ import {
   scaleUpDownSchema,
   simpleTypingSchema,
   slideInSchema,
-  typographySchema,
 } from "@/remotion-lib/TextFades/schemas";
 
 import {
@@ -43,37 +44,6 @@ export interface AnimationBinding {
   settings: string;
 }
 
-const exceptions = ["typo_textColor", "typo_text"];
-const blacklist = Object.keys(typographySchema.shape).filter(
-  (key) => !exceptions.includes(key),
-);
-
-function getFilteredSchema(schema: z.AnyZodObject): z.AnyZodObject {
-  // filter out blacklist + remove defaults / optionals
-  const filteredShape = Object.entries(schema.shape)
-    .filter(([key]) => !blacklist.includes(key))
-    .reduce(
-      (acc, [key, value]) => {
-        let processedValue = value as z.ZodTypeAny;
-
-        // Remove defaults
-        if (processedValue instanceof z.ZodDefault) {
-          processedValue = processedValue.removeDefault();
-        }
-
-        // Remove optionals
-        if (processedValue instanceof z.ZodOptional) {
-          processedValue = processedValue.unwrap();
-        }
-
-        acc[key] = processedValue;
-        return acc;
-      },
-      {} as Record<string, z.ZodTypeAny>,
-    );
-
-  return z.object(filteredShape);
-}
 
 // Create a map for animations
 // schema -> contains all the possilbe changeable pareameters with defaults etc.
@@ -82,22 +52,22 @@ export const animationMap = {
   slideInTransition: {
     component: SlideInTransition,
     schema: slideInSchema,
-    llm_schema: getFilteredSchema(slideInSchema),
+    llm_schema: getFilteredSchema(slideInSchema, "typography"),
   },
   fadeInTransition: {
     component: FadeInTransition,
     schema: fadeInSchema,
-    llm_schema: getFilteredSchema(fadeInSchema),
+    llm_schema: getFilteredSchema(fadeInSchema, "typography"),
   },
   simpleTextTyping: {
     component: SimpleTextTyping,
     schema: simpleTypingSchema,
-    llm_schema: getFilteredSchema(simpleTypingSchema),
+    llm_schema: getFilteredSchema(simpleTypingSchema, "typography"),
   },
   scaleUpDownTransition: {
     component: ScaleUpDownTransition,
     schema: scaleUpDownSchema,
-    llm_schema: getFilteredSchema(scaleUpDownSchema),
+    llm_schema: getFilteredSchema(scaleUpDownSchema, "typography"),
   },
 } as const;
 
@@ -105,38 +75,47 @@ export const backgroundMap = {
   gradientMesh: {
     component: GradientMesh,
     schema: gradientMeshSchema,
+    llm_schema: getFilteredSchema(gradientMeshSchema, "gradientMesh"),
   },
   singleColorGradientMesh: {
     component: SingleColorGradientMesh,
     schema: singleColorGradientMeshSchema,
+    llm_schema: getFilteredSchema(singleColorGradientMeshSchema, "singleColorGradientMesh"),
   },
   multiColorGradientMesh: {
     component: MultiColorGradientMesh,
     schema: multiColorGradientMeshSchema,
+    llm_schema: getFilteredSchema(multiColorGradientMeshSchema, "multiColorGradientMesh"),
   },
   plainBackground: {
     component: PlainBackground,
     schema: plainBackgroundSchema,
+    llm_schema: getFilteredSchema(plainBackgroundSchema, "plainBackground"),
   },
   twinTexture: {
     component: TwinMesh,
     schema: twinMeshSchema,
+    llm_schema: getFilteredSchema(twinMeshSchema, "twinTexture"),
   },
   stairsTexture: {
     component: StairsMesh,
     schema: stairsMeshSchema,
+    llm_schema: getFilteredSchema(stairsMeshSchema, "stairsTexture"),
   },
   stairsTextureV2: {
     component: StairsMeshV2,
     schema: stairsMeshSchemaV2,
+    llm_schema: getFilteredSchema(stairsMeshSchemaV2, "stairsTextureV2"),
   },
   stairsTextureV3: {
     component: StairsMeshV3,
     schema: stairsMeshSchemaV3,
+    llm_schema: getFilteredSchema(stairsMeshSchemaV3, "stairsTextureV3"),
   },
   growingDark: {
     component: GrowingDark,
     schema: growingDarkSchema,
+    llm_schema: getFilteredSchema(growingDarkSchema, "growingDark"),
   },
 } as const;
 
@@ -146,25 +125,25 @@ export const bindings: AnimationBinding[] = [
     name: "slideInTransition",
     usecase:
       "Moving text into frame from left to right direction. Best for dramatic entrances or sequential reveals.",
-    settings: getSchemaDescription(slideInSchema),
+    settings: getSchemaDescription(slideInSchema, "typography"),
   },
   {
     name: "fadeInTransition",
     usecase:
       "Smooth fade in effects. Ideal for subtle transitions or gentle text appearances. soft.",
-    settings: getSchemaDescription(fadeInSchema),
+    settings: getSchemaDescription(fadeInSchema, "typography"),
   },
   {
     name: "scaleUpDownTransition",
     usecase:
       "Text scales up from the center. Text jumps out to present something. This is used to specifically emphazise a word.",
-    settings: getSchemaDescription(scaleUpDownSchema),
+    settings: getSchemaDescription(scaleUpDownSchema, "typography"),
   },
   {
     name: "simpleTextTyping",
     usecase:
       "Reveals text gradually. For points that visualize typing, manual entry, but also to highlight the longer written text, because the viewers wait to see the content unveiled.",
-    settings: getSchemaDescription(simpleTypingSchema),
+    settings: getSchemaDescription(simpleTypingSchema, "typography"),
   },
 ];
 
@@ -173,50 +152,50 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
     name: "plainBackground",
     usecase:
       "use this sparingly, it is just a simple background, if you use it use also other colors than white",
-    settings: getSchemaDescription(plainBackgroundSchema),
+    settings: getSchemaDescription(plainBackgroundSchema, "plainBackground"),
   },
   {
     name: "gradientMesh",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(gradientMeshSchema),
+    settings: getSchemaDescription(gradientMeshSchema, "gradientMesh"),
   },
   {
     name: "singleColorGradientMesh",
     usecase:
       "Single color gradient mesh - modern, minimalistic aesthetic. Uses one color for all blobs.",
-    settings: getSchemaDescription(singleColorGradientMeshSchema),
+    settings: getSchemaDescription(singleColorGradientMeshSchema, "singleColorGradientMesh"),
   },
   {
     name: "multiColorGradientMesh",
     usecase:
       "Multi-color gradient mesh - vibrant, dynamic aesthetic. Cycles through multiple colors for visual variety.",
-    settings: getSchemaDescription(multiColorGradientMeshSchema),
+    settings: getSchemaDescription(multiColorGradientMeshSchema, "multiColorGradientMesh"),
   },
   {
     name: "twinTexture",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(twinMeshSchema),
+    settings: getSchemaDescription(twinMeshSchema, "twinTexture"),
   },
   {
     name: "stairsTexture",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(stairsMeshSchema),
+    settings: getSchemaDescription(stairsMeshSchema, "stairsTexture"),
   },
   {
     name: "stairsTextureV2",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(stairsMeshSchemaV2),
+    settings: getSchemaDescription(stairsMeshSchemaV2, "stairsTextureV2"),
   },
   {
     name: "stairsTextureV3",
     usecase: "gradients are aesthetic. more on the techy side. modern feel.",
-    settings: getSchemaDescription(stairsMeshSchemaV3),
+    settings: getSchemaDescription(stairsMeshSchemaV3, "stairsTextureV3"),
   },
   {
     name: "growingDark",
     usecase:
       "gradients are aesthetic. more on the techy side. modern feel. Only use white fonts to write on it. Should be 60 frames long",
-    settings: getSchemaDescription(growingDarkSchema),
+    settings: getSchemaDescription(growingDarkSchema, "growingDark"),
   },
 ];
 
@@ -231,9 +210,11 @@ function getDefault(zodType: z.ZodTypeAny): unknown {
   return undefined;
 }
 
-export function getSchemaDescription(schema: z.AnyZodObject) {
+export function getSchemaDescription(schema: z.AnyZodObject, componentName?: string) {
+  const blacklistedFields = componentName ? getBlacklistedFields(componentName) : [];
+  
   return Object.entries(schema.shape)
-    .filter(([key]) => !blacklist.includes(key))
+    .filter(([key]) => !blacklistedFields.includes(key))
     .map(([key, value]) => {
       let type: string;
       let constraints = "";
