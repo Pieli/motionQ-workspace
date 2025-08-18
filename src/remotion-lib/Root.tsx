@@ -28,7 +28,7 @@ import {
 } from "./TextFades/schemas";
 import { SearchBarAnimation } from "./experimental-jitter/searchbar";
 
-import { GradientMesh } from "./textures/gradientMesh";
+import { GradientMesh, SingleColorGradientMesh, MultiColorGradientMesh } from "./textures/gradientMesh";
 import { GrowingDark } from "./textures/growing-darkess";
 import { StairsMesh } from "./textures/staris-texture";
 import { StairsMeshV2 } from "./textures/staris-texture-v2";
@@ -36,6 +36,8 @@ import { StairsMeshV3 } from "./textures/staris-texture-v3";
 import { TwinMesh } from "./textures/twins-texture";
 import {
   gradientMeshSchema,
+  singleColorGradientMeshSchema,
+  multiColorGradientMeshSchema,
   growingDarkSchema,
   stairsMeshSchema,
   twinMeshSchema,
@@ -231,6 +233,35 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           schema={gradientMeshSchema}
           defaultProps={gradientMeshSchema.parse({
+            extraPoints: 8,
+            size: 60,
+            speed: 1,
+          })}
+        />
+        <Composition
+          id="SingleColorGradientMesh"
+          component={SingleColorGradientMesh}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={singleColorGradientMeshSchema}
+          defaultProps={singleColorGradientMeshSchema.parse({
+            extraPoints: 8,
+            size: 60,
+            speed: 1,
+            color: "#ff6b6b",
+          })}
+        />
+        <Composition
+          id="MultiColorGradientMesh"
+          component={MultiColorGradientMesh}
+          durationInFrames={150}
+          fps={30}
+          width={1920}
+          height={1080}
+          schema={multiColorGradientMeshSchema}
+          defaultProps={multiColorGradientMeshSchema.parse({
             extraPoints: 8,
             size: 60,
             speed: 1,
