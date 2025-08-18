@@ -123,10 +123,9 @@ export const SingleColorGradientMesh: React.FC<
 };
 
 export const MultiColorGradientMesh: React.FC<MultiColorGradientMeshProps> = ({
-  // colors,
+  colors,
   ...baseProps
 }) => {
-  const colors = ["#6d213c", "#946846", "#baab68", "#e3c16f", "#faff70"];
   const getBlobColor = (index: number) => colors[index % colors.length];
   return <BaseGradientMesh {...baseProps} getBlobColor={getBlobColor} />;
 };

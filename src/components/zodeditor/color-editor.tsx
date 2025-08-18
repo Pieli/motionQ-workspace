@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo} from "react";
+import React, { useCallback, useMemo } from "react";
 import * as zodTypes from "@remotion/zod-types";
 import { zColor } from "@remotion/zod-types";
 
@@ -11,22 +11,23 @@ import { useValidatedInput } from "@/hooks/input-validator";
 export const ZodColorEditor: React.FC<{
   readonly compId: string;
   readonly fieldKey: string;
-  readonly label: string;
+  readonly label?: string;
   readonly value: string;
   readonly onChange: (compId: string, key: string, value: string) => void;
 }> = ({ compId, fieldKey, label, value, onChange }) => {
+  const success = useCallback(
+    (value: string) => {
+      onChange(compId, fieldKey, value);
+    },
+    [onChange, compId, fieldKey],
+  );
 
-
-  const success = useCallback((value: string) => {
-    onChange(compId, fieldKey, value)
-  }, [onChange, compId, fieldKey])
-
-
-  const [currentValue, setCurrentValue, onEnterPressed, onValueChange] = useValidatedInput<string>(
-      value, 
+  const [currentValue, setCurrentValue, onEnterPressed, onValueChange] =
+    useValidatedInput<string>(
+      value,
       (value: string) => zColor().safeParse(value).success,
-      success
-  )
+      success,
+    );
 
   const { a, b, g, r } = useMemo(() => {
     try {
@@ -41,25 +42,27 @@ export const ZodColorEditor: React.FC<{
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
   }, [r, g, b]);
 
-  const onValueChangeExteneded: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) => {
-      const newColor = colorWithNewOpacity(
-        e.target.value,
-        Math.round(a),
-        zodTypes,
-      );
-      // invalid color
-      onValueChange(newColor);
-
-    }, [a, onValueChange],
-  );
-
+  const onValueChangeExteneded: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      (e) => {
+        const newColor = colorWithNewOpacity(
+          e.target.value,
+          Math.round(a),
+          zodTypes,
+        );
+        // invalid color
+        onValueChange(newColor);
+      },
+      [a, onValueChange],
+    );
 
   return (
     <>
-      <label className="block text-sm text-foreground font-medium mb-1">
-        {label}
-      </label>
+      {label && (
+        <label className="block text-sm text-foreground font-medium mb-1">
+          {label}
+        </label>
+      )}
       <div style={{ width: "100%" }}>
         <Row align="center">
           <Input

@@ -8,6 +8,7 @@ import { ZodColorEditor } from "@/components/zodeditor/color-editor";
 import { ZodEnumEditor } from "@/components/zodeditor/enum-editor";
 import { ZodNumberEditor } from "@/components/zodeditor/number-editor";
 import { ZodTextEditor } from "@/components/zodeditor/text-editor";
+import { ZodArrayEditor } from "@/components/zodeditor/array-editor";
 
 import type { BaseItem } from "@/components/timeline/Timeline";
 import type {
@@ -253,6 +254,17 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
           value={String(currentValue)}
           onChange={onFieldChange}
           schema={fieldSchema as z.ZodEnum<[string, ...string[]]>}
+        />
+      );
+    case z.ZodFirstPartyTypeKind.ZodArray:
+      return (
+        <ZodArrayEditor
+          compId={comp.id}
+          fieldKey={fieldKey}
+          label={label}
+          value={Array.isArray(currentValue) ? currentValue : []}
+          onChange={onFieldChange}
+          schema={fieldSchema as z.ZodArray<z.ZodTypeAny>}
         />
       );
     case z.ZodFirstPartyTypeKind.ZodEffects: {

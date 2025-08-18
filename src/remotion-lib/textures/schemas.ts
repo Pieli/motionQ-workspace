@@ -25,7 +25,9 @@ export const singleColorGradientMeshSchema = baseGradientMeshSchema.extend({
 
 // Multi Color Gradient Mesh Schema
 export const multiColorGradientMeshSchema = baseGradientMeshSchema.extend({
-  // colors: z.array(zColor()).default(["#6d213c", "#946846", "#baab68", "#e3c16f", "#faff70"]),
+  colors: z
+    .array(zColor())
+    .default(["#6d213c", "#946846", "#baab68", "#e3c16f", "#faff70"]),
 });
 
 // Legacy Gradient Mesh Schema (for backward compatibility)
