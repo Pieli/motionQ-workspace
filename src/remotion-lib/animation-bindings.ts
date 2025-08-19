@@ -178,17 +178,17 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
   },
   {
     name: "stairsTexture",
-    usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+    usecase: "this contains two blobs with stair like textures that glow. Variation nr. 0.",
     settings: getSchemaDescription(stairsMeshSchema, "stairsTexture"),
   },
   {
     name: "stairsTextureV2",
-    usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+    usecase: "this contains two blobs with stair like textures that glow. Variation nr. 1.",
     settings: getSchemaDescription(stairsMeshSchemaV2, "stairsTextureV2"),
   },
   {
     name: "stairsTextureV3",
-    usecase: "gradients are aesthetic. more on the techy side. modern feel.",
+    usecase: "this contains two blobs with stair like textures that glow. Variation nr. 2.",
     settings: getSchemaDescription(stairsMeshSchemaV3, "stairsTextureV3"),
   },
   {
