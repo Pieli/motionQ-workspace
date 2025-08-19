@@ -46,22 +46,22 @@ export const growingDarkSchema = z.object({
 // Stairs Mesh Schema (Original)
 export const stairsMeshSchema = z.object({
   backgroundColor: zColor().default("#262234"),
-  blob_1_background_color: zColor().default("#5C4B9F"),
-  blob_2_background_color: zColor().default("#444D9E"),
+  blob_one_color: zColor().default("#5C4B9F"),
+  blob_two_color: zColor().default("#444D9E"),
 });
 
 // Stairs Mesh V2 Schema
 export const stairsMeshSchemaV2 = z.object({
   backgroundColor: zColor().default("#262234"),
-  blob_1_background_color: zColor().default("#5C4B9F"),
-  blob_2_background_color: zColor().default("#444D9E"),
+  blob_one_color: zColor().default("#5C4B9F"),
+  blob_two_color: zColor().default("#444D9E"),
 });
 
 // Stairs Mesh V3 Schema
 export const stairsMeshSchemaV3 = z.object({
   backgroundColor: zColor().default("#262234"),
-  blob_1_background_color: zColor().default("#5C4B9F"),
-  blob_2_background_color: zColor().default("#444D9E"),
+  blob_one_color: zColor().default("#5C4B9F"),
+  blob_two_color: zColor().default("#444D9E"),
 });
 
 // Type exports

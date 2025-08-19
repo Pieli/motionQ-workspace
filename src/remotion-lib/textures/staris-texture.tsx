@@ -5,9 +5,14 @@ import { type StairsMeshProps } from "./schemas";
 
 export const StairsMesh: React.FC<StairsMeshProps> = ({
   backgroundColor,
-  blob_1_background_color,
-  blob_2_background_color,
+  blob_one_color,
+  blob_two_color,
 }) => {
+  console.log("StairsMesh received props:", {
+    backgroundColor,
+    blob_one_color,
+    blob_two_color,
+  });
   const { fps } = useVideoConfig();
 
   const animationConfig: AnimationConfig = {
@@ -28,8 +33,8 @@ export const StairsMesh: React.FC<StairsMeshProps> = ({
   return (
     <StairsTextureBase
       backgroundColor={backgroundColor}
-      blob1Color={blob_1_background_color}
-      blob2Color={blob_2_background_color}
+      blob1Color={blob_one_color}
+      blob2Color={blob_two_color}
       animationConfig={animationConfig}
     />
   );
