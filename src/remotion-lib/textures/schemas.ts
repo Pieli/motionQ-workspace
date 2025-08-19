@@ -3,6 +3,7 @@ import { zColor } from "@remotion/zod-types";
 
 // Plain Background Schema
 export const plainBackgroundSchema = z.object({
+  type: z.literal("plainBackground"),
   backgroundColor: zColor().default("#1e1e1e"),
 });
 
@@ -20,31 +21,39 @@ const baseGradientMeshSchema = z.object({
 
 // Single Color Gradient Mesh Schema
 export const singleColorGradientMeshSchema = baseGradientMeshSchema.extend({
+  type: z.literal("singleColorGradientMesh"),
   color: zColor().default("#ff0000"),
 });
 
 // Multi Color Gradient Mesh Schema
 export const multiColorGradientMeshSchema = baseGradientMeshSchema.extend({
+  type: z.literal("multiColorGradientMesh"),
   colors: z
     .array(zColor())
     .default(["#6d213c", "#946846", "#baab68", "#e3c16f", "#faff70"]),
 });
 
-// Legacy Gradient Mesh Schema (for backward compatibility)
-export const gradientMeshSchema = singleColorGradientMeshSchema;
+// Legacy Gradient Mesh Schema (for backward compatibility)  
+export const gradientMeshSchema = baseGradientMeshSchema.extend({
+  type: z.literal("gradientMesh"),
+  color: zColor().default("#ff0000"),
+});
 
 // Twin Mesh Schema
 export const twinMeshSchema = z.object({
+  type: z.literal("twinTexture"),
   backgroundColor: zColor().default("#1e1e1e"),
 });
 
 // Growing Dark Schema
 export const growingDarkSchema = z.object({
+  type: z.literal("growingDark"),
   backgroundColor: zColor().default("#1e1e1e"),
 });
 
 // Stairs Mesh Schema (Original)
 export const stairsMeshSchema = z.object({
+  type: z.literal("stairsTexture"),
   backgroundColor: zColor().default("#262234"),
   blob_one_color: zColor().default("#5C4B9F"),
   blob_two_color: zColor().default("#444D9E"),
@@ -52,6 +61,7 @@ export const stairsMeshSchema = z.object({
 
 // Stairs Mesh V2 Schema
 export const stairsMeshSchemaV2 = z.object({
+  type: z.literal("stairsTextureV2"),
   backgroundColor: zColor().default("#262234"),
   blob_one_color: zColor().default("#5C4B9F"),
   blob_two_color: zColor().default("#444D9E"),
@@ -59,6 +69,7 @@ export const stairsMeshSchemaV2 = z.object({
 
 // Stairs Mesh V3 Schema
 export const stairsMeshSchemaV3 = z.object({
+  type: z.literal("stairsTextureV3"),
   backgroundColor: zColor().default("#262234"),
   blob_one_color: zColor().default("#5C4B9F"),
   blob_two_color: zColor().default("#444D9E"),

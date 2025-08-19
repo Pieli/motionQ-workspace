@@ -3,7 +3,8 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } fr
 import { type TwinMeshProps } from "./schemas";
 
 export const TwinMesh: React.FC<TwinMeshProps> = ({
-  backgroundColor
+  backgroundColor,
+  type: _type, // Accept discriminator but don't use it
 }) => {
 
 

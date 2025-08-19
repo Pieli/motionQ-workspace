@@ -9,7 +9,10 @@ import {
 } from "remotion";
 import { type GrowingDarkProps } from "./schemas";
 
-export const GrowingDark: React.FC<GrowingDarkProps> = ({ backgroundColor }) => {
+export const GrowingDark: React.FC<GrowingDarkProps> = ({ 
+    backgroundColor,
+    type: _type, // Accept discriminator but don't use it
+}) => {
     const frame = useCurrentFrame();
     const { fps, width, height } = useVideoConfig();
 

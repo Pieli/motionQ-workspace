@@ -7,6 +7,7 @@ export const StairsMeshV3: React.FC<StairsMeshPropsV3> = ({
   backgroundColor,
   blob_one_color,
   blob_two_color,
+  type: _type, // Accept discriminator but don't use it
 }) => {
   const { fps } = useVideoConfig();
 

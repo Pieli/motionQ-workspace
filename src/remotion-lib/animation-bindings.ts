@@ -178,17 +178,17 @@ export const backgroundTexturesBindings: AnimationBinding[] = [
   },
   {
     name: "stairsTexture",
-    usecase: "this contains two blobs with stair like textures that glow. Variation nr. 0.",
+    usecase: "contains two blobs with stair like textures that glow. You can modify the backgroud and the blob colors, default colorscheme is violet.",
     settings: getSchemaDescription(stairsMeshSchema, "stairsTexture"),
   },
   {
     name: "stairsTextureV2",
-    usecase: "this contains two blobs with stair like textures that glow. Variation nr. 1.",
+    usecase: "contains two blobs with stair like textures that glow. You can modify the backgroud and the blob colors, default colorscheme is violet.",
     settings: getSchemaDescription(stairsMeshSchemaV2, "stairsTextureV2"),
   },
   {
     name: "stairsTextureV3",
-    usecase: "this contains two blobs with stair like textures that glow. Variation nr. 2.",
+    usecase: "contains two blobs with stair like textures that glow. You can modify the backgroud and the blob colors, default colorscheme is violet.",
     settings: getSchemaDescription(stairsMeshSchemaV3, "stairsTextureV3"),
   },
   {

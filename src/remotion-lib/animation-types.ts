@@ -9,12 +9,12 @@ if (schemas.length < 2) {
 }
 export const UnionAvailableSchemas = z.union(schemas as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]);
 
-// Background Union of Schemas
-const backSchemas: z.ZodType[] = Object.values(backgroundMap).map((back) => back.llm_schema);
+// Background Discriminated Union of Schemas
+const backSchemas: z.AnyZodObject[] = Object.values(backgroundMap).map((back) => back.llm_schema);
 if (backSchemas.length < 2) {
     throw Error("Too few schemas provided... at least 2 needed");
 }
-export const UnionAvailableBackSchemas = z.union(backSchemas as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]);
+export const UnionAvailableBackSchemas = z.discriminatedUnion("type", backSchemas as [z.AnyZodObject, z.AnyZodObject, ...z.AnyZodObject[]]);
 
 // Create the AvailableAnimations enum dynamically from the keys of the map
 export const EnumAvailableAnimations = z.enum(
