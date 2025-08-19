@@ -35,7 +35,6 @@ import { StairsMeshV2 } from "./textures/staris-texture-v2";
 import { StairsMeshV3 } from "./textures/staris-texture-v3";
 import { TwinMesh } from "./textures/twins-texture";
 import {
-  gradientMeshSchema,
   singleColorGradientMeshSchema,
   multiColorGradientMeshSchema,
   growingDarkSchema,
@@ -231,11 +230,13 @@ export const RemotionRoot: React.FC = () => {
           fps={30}
           width={1920}
           height={1080}
-          schema={gradientMeshSchema}
-          defaultProps={gradientMeshSchema.parse({
+          schema={singleColorGradientMeshSchema}
+          defaultProps={singleColorGradientMeshSchema.parse({
+            type: "singleColorGradientMesh",
             extraPoints: 8,
             size: 60,
             speed: 1,
+            color: "#ff0000",
           })}
         />
         <Composition
