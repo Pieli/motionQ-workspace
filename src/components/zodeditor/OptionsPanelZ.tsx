@@ -10,11 +10,12 @@ import { ZodNumberEditor } from "@/components/zodeditor/number-editor";
 import { ZodTextEditor } from "@/components/zodeditor/text-editor";
 import { ZodArrayEditor } from "@/components/zodeditor/array-editor";
 
-import type { BaseItem } from "@/components/timeline/Timeline";
 import type {
   CompositionConfig,
   PropType,
 } from "@/components/interfaces/compositions";
+import { useComposition } from "@/lib/CompositionContext";
+import type { BaseItem } from "@/components/timeline/Timeline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { modifyPropsInTree } from "@/components/zodeditor/tree-modifier";
 import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg/typo-agg-editor";
@@ -22,31 +23,19 @@ import { TypoAggregateEditor } from "@/components/zodeditor/typo-agg/typo-agg-ed
 import { typographySchema } from "@/remotion-lib/TextFades/schemas";
 
 export const OptionsPanelZ: React.FC<{
-  compositions: CompositionConfig[];
-  setCompositions: React.Dispatch<
-    React.SetStateAction<CompositionConfig[] | null>
-  >;
   selectedItem?: BaseItem | null;
-}> = ({ compositions, setCompositions, selectedItem }) => {
-  const [comps, setComps] = React.useState(compositions);
+}> = ({ selectedItem }) => {
+  const { compositions, setCompositions } = useComposition();
   const [selectedComp, setSelectedComp] =
     React.useState<CompositionConfig | null>(null);
 
-  useEffect(() => {
-    setCompositions(comps);
-  }, [comps, setCompositions]);
-
-  useEffect(() => {
-    setComps(compositions);
-  }, [compositions]);
-
   // When selectedItem changes, open its accordion section
   useEffect(() => {
-    if (selectedItem) {
-      const selectedComp = comps.find((comp) => comp.id === selectedItem.id);
+    if (selectedItem && compositions) {
+      const selectedComp = compositions.find((comp) => comp.id === selectedItem.id);
       setSelectedComp(selectedComp || null);
     }
-  }, [selectedItem, compositions, comps]);
+  }, [selectedItem, compositions]);
 
   return (
     <>
@@ -54,8 +43,8 @@ export const OptionsPanelZ: React.FC<{
         <ScrollArea className="h-full w-full">
           <div className="w-full space-y-4">
             <ZodEditor
-              compositions={comps}
-              setCompositions={setComps}
+              compositions={compositions || []}
+              setCompositions={(newComps) => setCompositions(newComps as CompositionConfig[])}
               selectedComp={selectedComp}
             />
           </div>

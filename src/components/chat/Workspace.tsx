@@ -21,8 +21,6 @@ import { Timeline } from "@/components/timeline/Timeline";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Spacing } from "@/components/ui/spacing";
 
-import type { CompositionConfig } from "@/components/interfaces/compositions";
-import type { BaseItem } from "@/components/timeline/Timeline";
 import { FPS } from "@/globals";
 import { useAuth } from "@/lib/AuthContext";
 import {
@@ -41,8 +39,9 @@ import {
 
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
 import { toast } from "sonner";
+import { CompositionProvider, useComposition } from "@/lib/CompositionContext";
 
-const Workspace = () => {
+const WorkspaceContent = () => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
 
@@ -50,6 +49,13 @@ const Workspace = () => {
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
   const { user } = useAuth();
+  const {
+    compositions,
+    setCompositions,
+    selectedItem,
+    setSelectedItem,
+    isGenerating,
+  } = useComposition();
 
   // Project state
   const [project, setProject] = useState<Project | null>(null);
@@ -62,10 +68,6 @@ const Workspace = () => {
     location?.state?.initialPrompt || "",
   );
   const initialPromptProcessedRef = useRef<string>("");
-  const [GeneratedComp, setGeneratedComp] = useState<
-    CompositionConfig[] | null
-  >(null);
-  const [isGenerating, setIsGenerating] = useState(location.state || false);
   const [projectTitle, setProjectTitle] = useState<string>("Untitled");
 
   const [loop, setLoop] = useState(true);
@@ -73,7 +75,6 @@ const Workspace = () => {
   // Initialize sidebar state as closed
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [sidebarTab, setSidebarTab] = useState<string>("properties");
-  const [propertiesItem, setPropertiesItem] = useState<BaseItem | null>(null);
 
   // Prevent duplicate project creation in React StrictMode
   const projectCreationRef = useRef<boolean>(false);
@@ -81,9 +82,6 @@ const Workspace = () => {
     generate: (prompt?: string) => Promise<void>;
   } | null>(null);
 
-  const clearSelectedProperty = React.useCallback(() => {
-    setPropertiesItem(null);
-  }, []);
 
   const generateProjectName = React.useCallback((): string => {
     return "Untitled";
@@ -214,11 +212,11 @@ const Workspace = () => {
               const hydratedCompositions = hydrateCompositions(
                 projectData.compositions as Composition[],
               );
-              setGeneratedComp(hydratedCompositions);
+              setCompositions(hydratedCompositions);
             } catch (error) {
               console.error("Failed to hydrate compositions:", error);
               // Set empty compositions if hydration fails
-              setGeneratedComp([]);
+              setCompositions([]);
             }
           }
         } else {
@@ -234,7 +232,7 @@ const Workspace = () => {
     };
 
     initializeProject();
-  }, [projectId, user, navigate, generateProjectName, processQueuedMessages]);
+  }, [projectId, user, navigate, generateProjectName, processQueuedMessages, setCompositions]);
 
   // Handle initial prompt processing - only once per project/prompt combination
   useEffect(() => {
@@ -259,15 +257,15 @@ const Workspace = () => {
   // Update project when compositions change - history is handled separately via chat endpoint
   useEffect(() => {
     const updateProjectInternal = async () => {
-      if (projectId && user && GeneratedComp) {
+      if (projectId && user && compositions) {
         try {
           const updateData: {
             compositions?: Composition[];
             name?: string;
           } = {};
 
-          if (GeneratedComp) {
-            const dehydratedCompositions = dehydrateCompositions(GeneratedComp);
+          if (compositions) {
+            const dehydratedCompositions = dehydrateCompositions(compositions);
             updateData.compositions = dehydratedCompositions;
             updateData.name = project?.name || "Untitled";
           }
@@ -283,18 +281,18 @@ const Workspace = () => {
     };
 
     updateProjectInternal();
-  }, [GeneratedComp, projectId, user, project?.name]);
+  }, [compositions, projectId, user, project?.name]);
 
   const totalDuration = useMemo(
     () =>
-      GeneratedComp?.reduce((acc, comp) => {
+      compositions?.reduce((acc, comp) => {
         const { duration } = comp;
         return acc + duration;
       }, 0),
-    [GeneratedComp],
+    [compositions],
   );
 
-  const inputProps = useMemo(() => GeneratedComp, [GeneratedComp]);
+  const inputProps = useMemo(() => compositions, [compositions]);
   const playerRef = useRef<PlayerRef>(null);
 
   // Show loading state while fetching project
@@ -341,7 +339,7 @@ const Workspace = () => {
             rightContent={
               <>
                 <PreviewDialog
-                  compositions={GeneratedComp}
+                  compositions={compositions}
                   totalDuration={totalDuration}
                   handleOpenChange={(open) => {
                     if (open) {
@@ -369,15 +367,10 @@ const Workspace = () => {
                 >
                   <ChatBoxPanel
                     ref={chatBoxPanelRef}
-                    setGeneratedComp={setGeneratedComp}
-                    setIsGenerating={setIsGenerating}
-                    isGenerating={isGenerating}
-                    preUpdateCleanup={clearSelectedProperty}
                     project={project}
                     projectId={projectId}
                     initialHistory={chatHistory}
                     recordMessage={recordMessage}
-                    currentCompositions={GeneratedComp}
                   />
                 </ResizablePanel>
                 <ResizableHandle
@@ -420,19 +413,19 @@ const Workspace = () => {
                                 controls
                                 loop={loop}
                                 inFrame={
-                                  propertiesItem ? propertiesItem.start : null
+                                  selectedItem ? selectedItem.start : null
                                 }
                                 outFrame={
-                                  propertiesItem ? propertiesItem.end - 1 : null
+                                  selectedItem ? selectedItem.end - 1 : null
                                 }
                               />
                               <Spacing y={1} />
                               <div className="flex justify-center items-center px-4">
-                                {inputProps && propertiesItem && (
+                                {inputProps && selectedItem && (
                                   <Button
                                     className="cursor-pointer"
                                     onClick={() => {
-                                      setPropertiesItem(null);
+                                      setSelectedItem(null);
                                     }}
                                   >
                                     <X />
@@ -458,13 +451,10 @@ const Workspace = () => {
                         <ResizablePanel defaultSize={30} id="inputProps">
                           <div className="overflow-hidden px-4 pb-4">
                             <Timeline
-                              comps={GeneratedComp || []}
                               playerRef={playerRef}
                               setLoop={setLoop}
                               setSidebarOpen={setSidebarOpen}
                               setSidebarTab={setSidebarTab}
-                              selectedItem={propertiesItem}
-                              setSelectedItem={setPropertiesItem}
                             />
                           </div>
                         </ResizablePanel>
@@ -475,17 +465,22 @@ const Workspace = () => {
               </ResizablePanelGroup>
             </SidebarInset>
             <AppSidebar
-              setComps={setGeneratedComp}
-              comps={GeneratedComp}
               sidebarOpen={sidebarOpen}
               setSidebarOpen={setSidebarOpen}
               sidebarTab={sidebarTab}
-              propertiesItem={propertiesItem}
             />
           </div>
         </SidebarProvider>
       </div>
     </>
+  );
+};
+
+const Workspace = () => {
+  return (
+    <CompositionProvider>
+      <WorkspaceContent />
+    </CompositionProvider>
   );
 };
 

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { NullLLMService, OpenAIService } from "@/api/llm";
 
 import { ChatInput } from "@/components/chat/chat-input";
-import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { LLMService } from "@/components/interfaces/llm";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,6 +18,7 @@ import {
   createAgentMessageFromResponse,
   extractMessageContent,
 } from "@/types/chat";
+import { useComposition } from "@/lib/CompositionContext";
 
 // keep service null if undefined env
 let llm: LLMService = new NullLLMService();
@@ -75,17 +75,10 @@ const ChatHistory: React.FC<{ history: ChatMessage[] }> = ({ history }) => {
 };
 
 interface ChatBoxPanelProps {
-  setGeneratedComp: React.Dispatch<
-    React.SetStateAction<CompositionConfig[] | null>
-  >;
-  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
-  isGenerating: boolean;
-  preUpdateCleanup: () => void;
   project: Project | null;
   projectId?: string;
   initialHistory?: ChatMessage[];
   recordMessage: (message: ChatMessage) => Promise<void>;
-  currentCompositions: CompositionConfig[] | null;
 }
 
 export interface ChatBoxPanelRef {
@@ -98,16 +91,18 @@ export const ChatBoxPanel = React.forwardRef<
 >(
   (
     {
-      setGeneratedComp,
-      setIsGenerating,
-      isGenerating,
-      preUpdateCleanup,
       initialHistory = [],
       recordMessage,
-      currentCompositions,
     },
     ref,
   ) => {
+    const {
+      compositions,
+      setCompositions,
+      isGenerating,
+      setIsGenerating,
+      clearSelectedProperty,
+    } = useComposition();
     const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
     const [prompt, setPrompt] = useState("");
 
@@ -125,10 +120,10 @@ export const ChatBoxPanel = React.forwardRef<
       for (const message of exampleHistory) {
         await addMessage(message);
       }
-      preUpdateCleanup();
-      setGeneratedComp(exampleComp);
+      clearSelectedProperty();
+      setCompositions(exampleComp);
       setIsGenerating(false);
-    }, [addMessage, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
+    }, [addMessage, setCompositions, setIsGenerating, clearSelectedProperty]);
 
     const stopGeneration = React.useCallback(() => {
       llm.abort();
@@ -164,7 +159,7 @@ export const ChatBoxPanel = React.forwardRef<
           const response = await llm.generateCompositions(
             currentPrompt,
             history,
-            currentCompositions,
+            compositions,
           );
           if (!response) {
             throw new Error("Failed to generate compositions");
@@ -173,8 +168,8 @@ export const ChatBoxPanel = React.forwardRef<
           if (!composition) {
             throw new Error("Failed to parse generated compositions");
           }
-          preUpdateCleanup();
-          setGeneratedComp(composition);
+          clearSelectedProperty();
+          setCompositions(composition);
           toast.success("Animation has been generated.");
           // logCompositionConfig(composition)
 
@@ -195,8 +190,8 @@ export const ChatBoxPanel = React.forwardRef<
 
           console.error("Error during generation:", e);
 
-          preUpdateCleanup();
-          setGeneratedComp(null);
+          clearSelectedProperty();
+          setCompositions(null);
           // In case of error, you might also want to add an error message to history
           const errorMessage = createChatMessage(
             "agent",
@@ -210,12 +205,12 @@ export const ChatBoxPanel = React.forwardRef<
       [
         prompt,
         addMessage,
-        setGeneratedComp,
+        setCompositions,
         setIsGenerating,
         devMode,
-        preUpdateCleanup,
+        clearSelectedProperty,
         history,
-        currentCompositions,
+        compositions,
       ],
     );
 

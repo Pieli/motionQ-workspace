@@ -1,29 +1,20 @@
-import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import React, { useEffect, useRef, useState } from "react";
+import { useComposition } from "@/lib/CompositionContext";
 
 import { Pencil } from "lucide-react";
 
-interface TranscriptProps {
-  GeneratedComp: CompositionConfig[] | null;
-  setGeneratedComp: React.Dispatch<
-    React.SetStateAction<CompositionConfig[] | null>
-  >;
-}
-
-export const Transcript: React.FC<TranscriptProps> = ({
-  GeneratedComp,
-  setGeneratedComp,
-}) => {
+export const Transcript: React.FC = () => {
+  const { compositions, setCompositions } = useComposition();
   const [editedText, setEditedText] = useState<Record<string, string>>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  // Initialize refs array when component mounts or GeneratedComp changes
+  // Initialize refs array when component mounts or compositions changes
   useEffect(() => {
-    itemRefs.current = itemRefs.current.slice(0, GeneratedComp?.length ?? 0);
-  }, [GeneratedComp]);
+    itemRefs.current = itemRefs.current.slice(0, compositions?.length ?? 0);
+  }, [compositions]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,9 +39,9 @@ export const Transcript: React.FC<TranscriptProps> = ({
   };
 
   const handleSave = (id: string) => {
-    if (!GeneratedComp) return;
+    if (!compositions) return;
 
-    const updatedComp = GeneratedComp.map((comp) => {
+    const updatedComp = compositions.map((comp) => {
       if (comp.id === id) {
         return {
           ...comp,
@@ -63,7 +54,7 @@ export const Transcript: React.FC<TranscriptProps> = ({
       return comp;
     });
 
-    setGeneratedComp(updatedComp);
+    setCompositions(updatedComp);
     setEditingId(null);
   };
 
@@ -77,17 +68,17 @@ export const Transcript: React.FC<TranscriptProps> = ({
     }
   };
 
-  if (!GeneratedComp) {
+  if (!compositions) {
     return <div className="p-4">No compositions available.</div>;
   }
 
   return (
     <ScrollArea className="p-4" onClick={handleContainerClick}>
-      {GeneratedComp.map((comp, index) => {
+      {compositions.map((comp, index) => {
         const starttime =
           index === 0
             ? 0
-            : GeneratedComp.slice(0, index).reduce(
+            : compositions.slice(0, index).reduce(
                 (acc, curr) => acc + curr.duration,
                 0,
               );

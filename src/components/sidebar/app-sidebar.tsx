@@ -3,7 +3,7 @@ import React, { useMemo, useState, useEffect } from "react";
 
 import { Transcript } from "@/components/sidebar/transcript";
 import { OptionsPanelZ } from "@/components/zodeditor/OptionsPanelZ";
-import type { BaseItem } from "@/components/timeline/Timeline";
+import { useComposition } from "@/lib/CompositionContext";
 
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
@@ -20,7 +20,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { AssetBar } from "@/components/sidebar/asset-bar";
 
 // This is sample data
@@ -59,20 +58,15 @@ const data = {
 };
 
 export const AppSidebar: React.FC<{
-  comps: CompositionConfig[] | null;
-  setComps: React.Dispatch<React.SetStateAction<CompositionConfig[] | null>>;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
   sidebarTab: string;
-  propertiesItem: BaseItem | null;
 }> = ({
-  comps,
-  setComps,
   setSidebarOpen,
   sidebarOpen,
   sidebarTab,
-  propertiesItem,
 }) => {
+  const { compositions, selectedItem } = useComposition();
   const [activeItem, setActiveItem] = useState(() => {
     const foundItem = data.navMain.find(
       (item) => item.title.toLowerCase() === sidebarTab.toLowerCase(),
@@ -121,11 +115,9 @@ export const AppSidebar: React.FC<{
       case "Properties":
         return (
           <div className="p-4">
-            {comps && comps.length > 0 && propertiesItem ? (
+            {compositions && compositions.length > 0 && selectedItem ? (
               <OptionsPanelZ
-                compositions={comps}
-                setCompositions={setComps}
-                selectedItem={propertiesItem}
+                selectedItem={selectedItem}
               />
             ) : (
               <span>Select a composition to edit its properties</span>
@@ -133,13 +125,13 @@ export const AppSidebar: React.FC<{
           </div>
         );
       case "Transcript":
-        return <Transcript GeneratedComp={comps} setGeneratedComp={setComps} />;
+        return <Transcript />;
       case "Assets":
         return <AssetBar />;
       default:
         return <div className="p-4">Default content goes here.</div>;
     }
-  }, [comps, activeItem, setComps, propertiesItem]);
+  }, [compositions, activeItem, selectedItem]);
 
   return (
     <Sidebar

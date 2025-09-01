@@ -13,6 +13,7 @@ import type { CompositionConfig } from "@/components/interfaces/compositions";
 import { PlayPauseButton } from "@/components/timeline/PlayPauseButton";
 import { useCurrentPlayerFrame } from "@/components/timeline/user-current-player-frame";
 import { FPS } from "@/globals";
+import { useComposition } from "@/lib/CompositionContext";
 
 export type BaseItem = {
   id: string;
@@ -241,45 +242,44 @@ const Cursor: React.FC<{
 };
 
 export const Timeline: React.FC<{
-  comps: CompositionConfig[];
   playerRef: React.RefObject<PlayerRef | null>;
   setLoop: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarTab: React.Dispatch<React.SetStateAction<string>>;
-  selectedItem: BaseItem | null;
-  setSelectedItem: React.Dispatch<React.SetStateAction<BaseItem | null>>;
 }> = ({
-  comps,
   playerRef,
   setLoop,
   setSidebarOpen,
   setSidebarTab,
-  selectedItem,
-  setSelectedItem,
 }) => {
+  const { compositions, selectedItem, setSelectedItem } = useComposition();
   const [tracks, setTracks] = useState<Track[]>([]);
 
   const frame = useCurrentPlayerFrame(playerRef);
 
   useEffect(() => {
-    let currentStartTime = 0;
-    setTracks([
-      {
-        name: `A-0`,
-        items: comps?.map((com: CompositionConfig) => {
-          const item: BaseItem = {
-            id: com.id,
-            start: currentStartTime,
-            end: currentStartTime + com.duration,
-            duration: com.duration,
-          };
+    if (compositions) {
+      let currentStartTime = 0;
+      setTracks([
+        {
+          name: `A-0`,
+          items: compositions.map((com: CompositionConfig) => {
+            const item: BaseItem = {
+              id: com.id,
+              start: currentStartTime,
+              end: currentStartTime + com.duration,
+              duration: com.duration,
+            };
 
-          currentStartTime += com.duration; // Update start time for next track
-          return item;
-        }),
-      },
-    ]);
-  }, [comps]);
+            currentStartTime += com.duration; // Update start time for next track
+            return item;
+          }),
+        },
+      ]);
+    } else {
+      setTracks([]);
+    }
+  }, [compositions]);
 
   const maxDuration: number = 120;
 
