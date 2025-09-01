@@ -21,7 +21,10 @@ import {
 
 export class NullLLMService implements LLMService {
   async generateCompositions(prompt: string): Promise<ResponseType> {
-    console.warn("No LLM service configured. Returning empty response.", prompt);
+    console.warn(
+      "No LLM service configured. Returning empty response.",
+      prompt,
+    );
     return {
       compositions: [],
       comment: "No LLM service configured.",
