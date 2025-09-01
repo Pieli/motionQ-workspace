@@ -40,9 +40,13 @@ import {
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
 import { toast } from "sonner";
 import { CompositionProvider, useComposition } from "@/lib/CompositionContext";
-import { ColorPaletteProvider } from "@/lib/ColorPaletteContext";
+import { ColorPaletteProvider, useColorPalette, type ColorPalette } from "@/lib/ColorPaletteContext";
 
-const WorkspaceContent = () => {
+const WorkspaceInner = ({ 
+  setProjectPalette 
+}: {
+  setProjectPalette: React.Dispatch<React.SetStateAction<ColorPalette | null>>;
+}) => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
 
@@ -55,8 +59,8 @@ const WorkspaceContent = () => {
     setCompositions,
     selectedItem,
     setSelectedItem,
-    isGenerating,
   } = useComposition();
+  const { currentPalette } = useColorPalette();
 
   // Project state
   const [project, setProject] = useState<Project | null>(null);
@@ -68,6 +72,7 @@ const WorkspaceContent = () => {
   const [initialPrompt, setInitialPrompt] = useState<string>(
     location?.state?.initialPrompt || "",
   );
+  const initialPalette = location?.state?.initialPalette || null;
   const initialPromptProcessedRef = useRef<string>("");
   const [projectTitle, setProjectTitle] = useState<string>("Untitled");
 
@@ -213,6 +218,16 @@ const WorkspaceContent = () => {
             setChatHistory(projectData.chatHistory);
           }
 
+          // Load project's color palette if it exists
+          if (projectData.colorScheme) {
+            try {
+              const projectColorPalette = projectData.colorScheme as ColorPalette;
+              setProjectPalette(projectColorPalette);
+            } catch (error) {
+              console.error("Failed to load project color palette:", error);
+            }
+          }
+
           // Hydrate compositions from backend format to CompositionConfig format
           if (projectData.compositions && projectData.compositions.length > 0) {
             try {
@@ -261,20 +276,25 @@ const WorkspaceContent = () => {
     processInitialPrompt();
   }, [initialPrompt, projectLoading]);
 
-  // Update project when compositions change - history is handled separately via chat endpoint
+  // Update project when compositions or palette change - history is handled separately via chat endpoint
   useEffect(() => {
     const updateProjectInternal = async () => {
-      if (projectId && user && compositions) {
+      if (projectId && user && (compositions || currentPalette)) {
         try {
           const updateData: {
             compositions?: Composition[];
             name?: string;
+            colorScheme?: ColorPalette;
           } = {};
 
           if (compositions) {
             const dehydratedCompositions = dehydrateCompositions(compositions);
             updateData.compositions = dehydratedCompositions;
             updateData.name = project?.name || "Untitled";
+          }
+
+          if (currentPalette) {
+            updateData.colorScheme = currentPalette;
           }
 
           if (Object.keys(updateData).length > 0) {
@@ -288,7 +308,7 @@ const WorkspaceContent = () => {
     };
 
     updateProjectInternal();
-  }, [compositions, projectId, user, project?.name]);
+  }, [compositions, currentPalette, projectId, user, project?.name]);
 
   const totalDuration = useMemo(
     () =>
@@ -481,13 +501,26 @@ const WorkspaceContent = () => {
   );
 };
 
+const WorkspaceContent = () => {
+  const location = useLocation();
+  const initialPaletteFromRoute = location?.state?.initialPalette || null;
+  const [projectPalette, setProjectPalette] = useState<ColorPalette | null>(null);
+
+  // Determine which palette to use: project palette (for existing projects) or route palette (for new projects)
+  const activePalette = projectPalette || initialPaletteFromRoute;
+
+  return (
+    <ColorPaletteProvider initialPalette={activePalette}>
+      <WorkspaceInner setProjectPalette={setProjectPalette} />
+    </ColorPaletteProvider>
+  );
+};
+
 const Workspace = () => {
   return (
-    <ColorPaletteProvider>
-      <CompositionProvider>
-        <WorkspaceContent />
-      </CompositionProvider>
-    </ColorPaletteProvider>
+    <CompositionProvider>
+      <WorkspaceContent />
+    </CompositionProvider>
   );
 };
 

@@ -26,7 +26,10 @@ const StartPageContent: React.FC = () => {
       : prompt;
 
     navigate("/workspace", {
-      state: { initialPrompt: fullPrompt },
+      state: { 
+        initialPrompt: fullPrompt,
+        initialPalette: currentPalette 
+      },
     });
   };
 

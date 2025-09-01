@@ -91,7 +91,7 @@ export class OpenAIService implements LLMService {
         model: "gpt-4.1-nano-2025-04-14",
         messages,
         temperature: 0.7,
-        max_tokens: 1500,
+        max_tokens: 10000,
         response_format: zodResponseFormat(Response, "response"),
       },
       {

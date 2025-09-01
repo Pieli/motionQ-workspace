@@ -38,9 +38,31 @@ interface ColorPalettePanelProps {
 }
 
 export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({ onApplyPalette }) => {
-  const { currentPalette, updatePalette } = useColorPalette();
+  const { currentPalette, updatePalette, setCurrentPalette } = useColorPalette();
   const [palettes, setPalettes] = useState<Palette[]>(PREMADE_PALETTES);
   const [selectedPaletteIndex, setSelectedPaletteIndex] = useState<number>(0);
+
+  // Sync selectedPaletteIndex with currentPalette when component mounts or currentPalette changes
+  React.useEffect(() => {
+    if (currentPalette) {
+      // Find matching palette in premade palettes
+      const matchingIndex = palettes.findIndex(p => {
+        const paletteColors = [p.primary, p.secondary, ...p.additional];
+        return currentPalette.colors.length === paletteColors.length &&
+               currentPalette.colors.every((color, idx) => color === paletteColors[idx]);
+      });
+      
+      if (matchingIndex !== -1) {
+        setSelectedPaletteIndex(matchingIndex);
+      } else {
+        // Check if it's a custom palette that was added
+        const customIndex = palettes.findIndex(p => p.name === "Custom");
+        if (customIndex !== -1) {
+          setSelectedPaletteIndex(customIndex);
+        }
+      }
+    }
+  }, [currentPalette, palettes]);
 
   const isPremade = (idx: number) => idx < PREMADE_PALETTES.length;
 
@@ -49,7 +71,12 @@ export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({ onApplyPal
     const selectedPalette = palettes[idx];
     if (selectedPalette) {
       const colors = [selectedPalette.primary, selectedPalette.secondary, ...selectedPalette.additional];
-      updatePalette(colors);
+      const newPalette = {
+        id: isPremade(idx) ? `${selectedPalette.name.toLowerCase()}-premade` : `palette-${Date.now()}`,
+        name: selectedPalette.name,
+        colors: colors
+      };
+      setCurrentPalette(newPalette);
     }
   };
 

@@ -137,6 +137,7 @@ export async function updateProject(
     name?: string;
     history?: string[];
     compositions?: Composition[];
+    colorScheme?: any;
   },
 ): Promise<Project | null> {
   try {

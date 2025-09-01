@@ -16,9 +16,14 @@ interface ColorPaletteContextType {
 
 const ColorPaletteContext = createContext<ColorPaletteContextType | undefined>(undefined);
 
-
-export function ColorPaletteProvider({ children }: { children: React.ReactNode }) {
-  const [currentPalette, setCurrentPalette] = useState<ColorPalette | null>(null);
+export function ColorPaletteProvider({ 
+  children, 
+  initialPalette 
+}: { 
+  children: React.ReactNode;
+  initialPalette?: ColorPalette | null;
+}) {
+  const [currentPalette, setCurrentPalette] = useState<ColorPalette | null>(initialPalette || null);
 
   const updatePalette = useCallback((colors: string[]) => {
     const newPalette: ColorPalette = {
