@@ -3,19 +3,36 @@ import React, { useState } from "react";
 import { Navbar } from "@/components/navbar/navbar";
 import { ChatInput } from "@/components/chat/chat-input";
 import ProjectsSection from "@/components/start-page/projects-section";
+import { CreatePalette } from "@/components/sidebar/create-palette";
 
 import { useNavigate } from "react-router-dom";
+import { useColorPalette } from "@/lib/ColorPaletteContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Palette } from "lucide-react";
 
 const StartPage: React.FC = () => {
   const [prompt, setPrompt] = useState("");
+  const [showPaletteSelector, setShowPaletteSelector] = useState(false);
+  const { currentPalette, updatePalette, formatPaletteForPrompt } = useColorPalette();
   const navigate = useNavigate();
 
   const handleSend = () => {
     if (!prompt.trim()) return;
 
+    const palettePrompt = formatPaletteForPrompt();
+    const fullPrompt = palettePrompt 
+      ? `${prompt}\n\n${palettePrompt}`
+      : prompt;
+
     navigate("/workspace", {
-      state: { initialPrompt: prompt },
+      state: { initialPrompt: fullPrompt },
     });
+  };
+
+  const handlePaletteCreate = (colors: string[]) => {
+    updatePalette(colors);
+    setShowPaletteSelector(false);
   };
 
   return (
@@ -38,7 +55,41 @@ const StartPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto space-y-4">
+            <div className="flex items-center gap-2 justify-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowPaletteSelector(!showPaletteSelector)}
+                className="flex items-center gap-2"
+              >
+                <Palette className="w-4 h-4" />
+                {currentPalette ? "Change Colors" : "Set Color Palette"}
+              </Button>
+              {currentPalette && (
+                <div className="flex gap-1">
+                  {currentPalette.colors.map((color, index) => (
+                    <div
+                      key={index}
+                      className="w-4 h-4 rounded-full border border-gray-300"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {showPaletteSelector && (
+              <Card className="max-w-md mx-auto">
+                <CardHeader>
+                  <CardTitle className="text-lg">Choose Color Palette</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CreatePalette onCreate={handlePaletteCreate} />
+                </CardContent>
+              </Card>
+            )}
+
             <ChatInput
               prompt={prompt}
               setPrompt={setPrompt}

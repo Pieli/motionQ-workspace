@@ -40,6 +40,7 @@ import {
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
 import { toast } from "sonner";
 import { CompositionProvider, useComposition } from "@/lib/CompositionContext";
+import { ColorPaletteProvider } from "@/lib/ColorPaletteContext";
 
 const WorkspaceContent = () => {
   const compositionWidth = 1920;
@@ -81,6 +82,12 @@ const WorkspaceContent = () => {
   const chatBoxPanelRef = useRef<{
     generate: (prompt?: string) => Promise<void>;
   } | null>(null);
+
+  const handleApplyPalette = React.useCallback(async (palettePrompt: string) => {
+    if (chatBoxPanelRef.current) {
+      await chatBoxPanelRef.current.generate(palettePrompt);
+    }
+  }, []);
 
 
   const generateProjectName = React.useCallback((): string => {
@@ -468,6 +475,7 @@ const WorkspaceContent = () => {
               sidebarOpen={sidebarOpen}
               setSidebarOpen={setSidebarOpen}
               sidebarTab={sidebarTab}
+              onApplyPalette={handleApplyPalette}
             />
           </div>
         </SidebarProvider>
@@ -478,9 +486,11 @@ const WorkspaceContent = () => {
 
 const Workspace = () => {
   return (
-    <CompositionProvider>
-      <WorkspaceContent />
-    </CompositionProvider>
+    <ColorPaletteProvider>
+      <CompositionProvider>
+        <WorkspaceContent />
+      </CompositionProvider>
+    </ColorPaletteProvider>
   );
 };
 

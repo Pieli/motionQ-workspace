@@ -6,6 +6,7 @@ import { systemPrompt } from "@/api/system-prompt";
 import {
   convertChatHistoryToOpenAI,
   createCompositionContextMessage,
+  createColorPaletteContextMessage,
 } from "@/api/llm-utils";
 
 import type { ResponseType } from "@/api/llm-types";
@@ -16,6 +17,7 @@ import type {
   AnimationComponents,
   BackgroundComponents,
 } from "@/remotion-lib/animation-factories";
+import type { ColorPalette } from "@/lib/ColorPaletteContext";
 
 import {
   animationFactory,
@@ -29,12 +31,14 @@ export class NullLLMService implements LLMService {
     prompt: string,
     chatHistory: ChatMessage[],
     currentCompositions: CompositionConfig[] | null,
+    colorPalette?: ColorPalette | null,
   ): Promise<ResponseType> {
     console.warn(
       "No LLM service configured. Returning empty response.",
       prompt,
       chatHistory,
       currentCompositions,
+      colorPalette,
     );
     return {
       compositions: [],
@@ -64,15 +68,18 @@ export class OpenAIService implements LLMService {
     prompt: string,
     chatHistory: ChatMessage[],
     currentCompositions: CompositionConfig[] | null,
+    colorPalette?: ColorPalette | null,
   ): Promise<ResponseType> {
     this.abortController = new AbortController();
 
     const historyMessages = convertChatHistoryToOpenAI(chatHistory);
     const compositionContextMessage = createCompositionContextMessage(currentCompositions);
+    const colorPaletteContextMessage = createColorPaletteContextMessage(colorPalette || null);
     
     const messages = [
       { role: "system" as const, content: systemPrompt },
       ...(compositionContextMessage ? [compositionContextMessage] : []),
+      ...(colorPaletteContextMessage ? [colorPaletteContextMessage] : []),
       ...historyMessages,
       { role: "user" as const, content: prompt },
     ];

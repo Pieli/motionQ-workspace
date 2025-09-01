@@ -19,7 +19,7 @@ function isColorLight(hex: string) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 150;
 }
 
-const PALETTE_SIZE = 5;
+const PALETTE_SIZE = 3;
 const MIN_COLORS = 2;
 const MAX_COLORS = 5;
 
@@ -138,7 +138,7 @@ export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
                     cursor: "grab",
                   }}
                   aria-label="Drag color"
-                // Drag handled by parent div
+                  // Drag handled by parent div
                 >
                   <GripVertical className="w-4 h-4" style={{ color: fg }} />
                 </button>

@@ -11,13 +11,16 @@ import { Toaster } from "sonner";
 import DevAnimationTest from "./components/dev-mode/animation-tester";
 import "./index.css";
 import { AuthProvider } from "./lib/AuthContext";
+import { ColorPaletteProvider } from "./lib/ColorPaletteContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <StartPage />
+        <ColorPaletteProvider>
+          <StartPage />
+        </ColorPaletteProvider>
       </ProtectedRoute>
     ),
   },

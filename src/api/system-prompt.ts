@@ -43,6 +43,7 @@ ${generateAnimationContext(backgroundTexturesBindings)}
 
 - IMPORTANT: think about the color you use for (foreground + background). Text needs to be readable.
 - IMPORTANT: it is prefereable to use more complex backgrounds than PlainBackground, but still use it here and there.
+- IMPORTANT: If a color palette is provided, use those colors consistently throughout the animation while maintaining good contrast and readability.
 
 
 # Output Format

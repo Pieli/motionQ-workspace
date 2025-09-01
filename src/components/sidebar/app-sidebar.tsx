@@ -1,4 +1,4 @@
-import { Captions, Command, Component, Folders, ListMusic } from "lucide-react";
+import { Captions, Command, Component, Folders, ListMusic, Palette } from "lucide-react";
 import React, { useMemo, useState, useEffect } from "react";
 
 import { Transcript } from "@/components/sidebar/transcript";
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { AssetBar } from "@/components/sidebar/asset-bar";
+import { ColorPalettePanel } from "@/components/sidebar/color-palette-panel";
 
 // This is sample data
 const data = {
@@ -54,6 +55,12 @@ const data = {
       icon: ListMusic,
       isActive: false,
     },
+    {
+      title: "Colors",
+      url: "#",
+      icon: Palette,
+      isActive: false,
+    },
   ],
 };
 
@@ -61,10 +68,12 @@ export const AppSidebar: React.FC<{
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
   sidebarTab: string;
+  onApplyPalette?: (palettePrompt: string) => void;
 }> = ({
   setSidebarOpen,
   sidebarOpen,
   sidebarTab,
+  onApplyPalette,
 }) => {
   const { compositions, selectedItem } = useComposition();
   const [activeItem, setActiveItem] = useState(() => {
@@ -128,10 +137,12 @@ export const AppSidebar: React.FC<{
         return <Transcript />;
       case "Assets":
         return <AssetBar />;
+      case "Colors":
+        return <ColorPalettePanel onApplyPalette={onApplyPalette} />;
       default:
         return <div className="p-4">Default content goes here.</div>;
     }
-  }, [compositions, activeItem, selectedItem]);
+  }, [compositions, activeItem, selectedItem, onApplyPalette]);
 
   return (
     <Sidebar

@@ -19,6 +19,7 @@ import {
   extractMessageContent,
 } from "@/types/chat";
 import { useComposition } from "@/lib/CompositionContext";
+import { useColorPalette } from "@/lib/ColorPaletteContext";
 
 // keep service null if undefined env
 let llm: LLMService = new NullLLMService();
@@ -103,6 +104,7 @@ export const ChatBoxPanel = React.forwardRef<
       setIsGenerating,
       clearSelectedProperty,
     } = useComposition();
+    const { currentPalette } = useColorPalette();
     const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
     const [prompt, setPrompt] = useState("");
 
@@ -160,6 +162,7 @@ export const ChatBoxPanel = React.forwardRef<
             currentPrompt,
             history,
             compositions,
+            currentPalette,
           );
           if (!response) {
             throw new Error("Failed to generate compositions");
@@ -211,6 +214,7 @@ export const ChatBoxPanel = React.forwardRef<
         clearSelectedProperty,
         history,
         compositions,
+        currentPalette,
       ],
     );
 
