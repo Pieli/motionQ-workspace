@@ -1,15 +1,19 @@
+import type { ResponseType } from "@/api/llm-types";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
+import type { ChatMessage } from "@/types/chat";
 
 export interface LLMService {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  generateCompositions(prompt: string): Promise<any>;
+  generateCompositions(
+    prompt: string,
+    chatHistory: ChatMessage[],
+    currentCompositions: CompositionConfig[] | null,
+  ): Promise<ResponseType>;
   responseToGeneratedComposition(resp: object): CompositionConfig[];
   abort(): void;
 }
 
-
 export interface AnimationBinding {
-    name: string,
-    usecase: string,
-    settings: string,
+  name: string;
+  usecase: string;
+  settings: string;
 }

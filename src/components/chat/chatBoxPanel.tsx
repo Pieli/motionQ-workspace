@@ -14,7 +14,11 @@ import { exampleComp, exampleHistory } from "@/helpers/example-comp";
 import { toast } from "sonner";
 import type { Project } from "@/client";
 import type { ChatMessage } from "@/types/chat";
-import { createChatMessage } from "@/types/chat";
+import {
+  createChatMessage,
+  createAgentMessageFromResponse,
+  extractMessageContent,
+} from "@/types/chat";
 
 // keep service null if undefined env
 let llm: LLMService = new NullLLMService();
@@ -48,7 +52,7 @@ const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({
           {isUser ? "You" : "Agent"}
         </span>
         <CollapsibleText
-          text={message.content}
+          text={extractMessageContent(message).displayContent}
           maxLength={346}
           style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
         />
@@ -81,171 +85,190 @@ interface ChatBoxPanelProps {
   projectId?: string;
   initialHistory?: ChatMessage[];
   recordMessage: (message: ChatMessage) => Promise<void>;
+  currentCompositions: CompositionConfig[] | null;
 }
 
 export interface ChatBoxPanelRef {
   generate: (prompt?: string) => Promise<void>;
 }
 
-export const ChatBoxPanel = React.forwardRef<ChatBoxPanelRef, ChatBoxPanelProps>(({
-  setGeneratedComp,
-  setIsGenerating,
-  isGenerating,
-  preUpdateCleanup,
-  initialHistory = [],
-  recordMessage,
-}, ref) => {
-  const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
-  const [prompt, setPrompt] = useState("");
-
-  const addMessage = React.useCallback(
-    async (msg: ChatMessage) => {
-      console.log("Registering message:", msg.content.slice(0, 30));
-      setHistory((prev) => [...prev, msg]);
-      await recordMessage(msg);
-    },
-    [recordMessage, setHistory],
-  );
-
-  const devMode = React.useCallback(async () => {
-    // Add each example message individually
-    for (const message of exampleHistory) {
-      await addMessage(message);
-    }
-    preUpdateCleanup();
-    setGeneratedComp(exampleComp);
-    setIsGenerating(false);
-  }, [addMessage, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
-
-  const stopGeneration = React.useCallback(() => {
-    llm.abort();
-    setIsGenerating(false);
-    toast.info("Agent call interrupted");
-  }, [setIsGenerating]);
-
-  const generate = React.useCallback(
-    async (promptArg?: string) => {
-      let usedPrompt = prompt.trim();
-
-      if (promptArg !== undefined) {
-        usedPrompt = promptArg.trim();
-      }
-
-      if (usedPrompt.length == 0) {
-        setIsGenerating(false);
-        return;
-      }
-
-      const userMessage = createChatMessage("user", usedPrompt);
-      await addMessage(userMessage);
-      const currentPrompt = usedPrompt;
-      setPrompt("");
-      setIsGenerating(true);
-
-      if (usedPrompt === "#dev") {
-        devMode();
-        return;
-      }
-
-      try {
-        const response = await llm.generateCompositions(currentPrompt);
-        if (!response) {
-          throw new Error("Failed to generate compositions");
-        }
-        const composition = llm.responseToGeneratedComposition(response);
-        if (!composition) {
-          throw new Error("Failed to parse generated compositions");
-        }
-        preUpdateCleanup();
-        setGeneratedComp(composition);
-        toast.success("Animation has been generated.");
-        // logCompositionConfig(composition)
-
-        // Append the agent's comment to the history
-        const agentMessage = createChatMessage("agent", response.comment);
-        await addMessage(agentMessage);
-      } catch (e) {
-        if (typeof e == "string") {
-          console.error(e);
-          return;
-        }
-        if (e instanceof Error && e.message == "Request was aborted.") {
-          return;
-        }
-
-        console.error("Error during generation:", e);
-
-        preUpdateCleanup();
-        setGeneratedComp(null);
-        // In case of error, you might also want to add an error message to history
-        const errorMessage = createChatMessage(
-          "agent",
-          "An error occurred during generation.",
-        );
-        await addMessage(errorMessage);
-      }
-
-      setIsGenerating(false);
-    },
-    [
-      prompt,
-      addMessage,
+export const ChatBoxPanel = React.forwardRef<
+  ChatBoxPanelRef,
+  ChatBoxPanelProps
+>(
+  (
+    {
       setGeneratedComp,
       setIsGenerating,
-      devMode,
+      isGenerating,
       preUpdateCleanup,
-    ],
-  );
+      initialHistory = [],
+      recordMessage,
+      currentCompositions,
+    },
+    ref,
+  ) => {
+    const [history, setHistory] = useState<ChatMessage[]>(initialHistory);
+    const [prompt, setPrompt] = useState("");
 
-  // Expose generate function to parent component
-  React.useImperativeHandle(ref, () => ({
-    generate,
-  }));
+    const addMessage = React.useCallback(
+      async (msg: ChatMessage) => {
+        // console.log("Registering message:", msg.content.slice(0, 30));
+        setHistory((prev) => [...prev, msg]);
+        await recordMessage(msg);
+      },
+      [recordMessage, setHistory],
+    );
 
-  // Update history when initialHistory changes
-  useEffect(() => {
-    if (initialHistory.length > 0 && history.length === 0) {
-      setHistory(initialHistory);
-    }
-  }, [initialHistory, history.length]);
+    const devMode = React.useCallback(async () => {
+      // Add each example message individually
+      for (const message of exampleHistory) {
+        await addMessage(message);
+      }
+      preUpdateCleanup();
+      setGeneratedComp(exampleComp);
+      setIsGenerating(false);
+    }, [addMessage, setGeneratedComp, setIsGenerating, preUpdateCleanup]);
 
-  return (
-    <div className="flex flex-col h-full w-full px-2 bg-background relative">
-      <div className="flex-1 overflow-y-auto pb-[60px]">
-        {history.length > 0 ? (
-          <ChatHistory history={history} />
-        ) : (
-          <div className="text-muted-foreground p-4 text-center h-[calc(100vh-180px)] w-full">
-            No history available
-          </div>
-        )}
-      </div>
-      {/* Gradient overlay for fade effect */}
-      <div className="relative">
-        <div className="absolute left-0 right-0 bottom-0 bg-transparent z-20 px-4 pb-4 pointer-events-auto">
-          <div className="h-10 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
-          <div className="bg-background">
-            {isGenerating && (
-              <div className="b-1 text-right">
-                <AnimatedGradientText className="text-sm font-semibold">
-                  Generating Animation
-                </AnimatedGradientText>
+    const stopGeneration = React.useCallback(() => {
+      llm.abort();
+      setIsGenerating(false);
+      toast.info("Agent call interrupted");
+    }, [setIsGenerating]);
+
+    const generate = React.useCallback(
+      async (promptArg?: string) => {
+        let usedPrompt = prompt.trim();
+
+        if (promptArg !== undefined) {
+          usedPrompt = promptArg.trim();
+        }
+
+        if (usedPrompt.length == 0) {
+          setIsGenerating(false);
+          return;
+        }
+
+        const userMessage = createChatMessage("user", usedPrompt);
+        await addMessage(userMessage);
+        const currentPrompt = usedPrompt;
+        setPrompt("");
+        setIsGenerating(true);
+
+        if (usedPrompt === "#dev") {
+          devMode();
+          return;
+        }
+
+        try {
+          const response = await llm.generateCompositions(
+            currentPrompt,
+            history,
+            currentCompositions,
+          );
+          if (!response) {
+            throw new Error("Failed to generate compositions");
+          }
+          const composition = llm.responseToGeneratedComposition(response);
+          if (!composition) {
+            throw new Error("Failed to parse generated compositions");
+          }
+          preUpdateCleanup();
+          setGeneratedComp(composition);
+          toast.success("Animation has been generated.");
+          // logCompositionConfig(composition)
+
+          // Store full response with comment for display
+          const agentMessage = createAgentMessageFromResponse(
+            response,
+            response.comment,
+          );
+          await addMessage(agentMessage);
+        } catch (e) {
+          if (typeof e == "string") {
+            console.error(e);
+            return;
+          }
+          if (e instanceof Error && e.message == "Request was aborted.") {
+            return;
+          }
+
+          console.error("Error during generation:", e);
+
+          preUpdateCleanup();
+          setGeneratedComp(null);
+          // In case of error, you might also want to add an error message to history
+          const errorMessage = createChatMessage(
+            "agent",
+            "An error occurred during generation.",
+          );
+          await addMessage(errorMessage);
+        }
+
+        setIsGenerating(false);
+      },
+      [
+        prompt,
+        addMessage,
+        setGeneratedComp,
+        setIsGenerating,
+        devMode,
+        preUpdateCleanup,
+        history,
+        currentCompositions,
+      ],
+    );
+
+    // Expose generate function to parent component
+    React.useImperativeHandle(ref, () => ({
+      generate,
+    }));
+
+    // Update history when initialHistory changes
+    useEffect(() => {
+      if (initialHistory.length > 0 && history.length === 0) {
+        setHistory(initialHistory);
+      }
+    }, [initialHistory, history.length]);
+
+    return (
+      <div className="flex flex-col h-full w-full px-2 bg-background relative">
+        <div className="flex-1 overflow-y-auto pb-[60px]">
+          {history.length > 0 ? (
+            <ChatHistory history={history} />
+          ) : (
+            <div className="text-muted-foreground p-4 text-center h-[calc(100vh-180px)] w-full">
+              No history available
+            </div>
+          )}
+        </div>
+        {/* Gradient overlay for fade effect */}
+        <div className="relative">
+          <div className="absolute left-0 right-0 bottom-0 bg-transparent z-20 px-4 pb-4 pointer-events-auto">
+            <div className="h-10 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
+            <div className="bg-background">
+              {isGenerating && (
+                <div className="b-1 text-right">
+                  <AnimatedGradientText className="text-sm font-semibold">
+                    Generating Animation
+                  </AnimatedGradientText>
+                </div>
+              )}
+              <div className="block align-bottom">
+                <ChatInput
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  onSend={() => generate()}
+                  onStop={stopGeneration}
+                  isGenerating={isGenerating}
+                />
               </div>
-            )}
-            <div className="block align-bottom">
-              <ChatInput
-                prompt={prompt}
-                setPrompt={setPrompt}
-                onSend={() => generate()}
-                onStop={stopGeneration}
-                isGenerating={isGenerating}
-              />
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 ChatBoxPanel.displayName = "ChatBoxPanel";

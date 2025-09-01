@@ -1,11 +1,16 @@
 import type { AnimationBinding } from "@/remotion-lib/animation-bindings";
-import { backgroundTexturesBindings, bindings } from "@/remotion-lib/animation-bindings";
-
+import {
+  backgroundTexturesBindings,
+  bindings,
+} from "@/remotion-lib/animation-bindings";
 
 export function generateAnimationContext(bindings: AnimationBinding[]): string {
-    return bindings.map(animation =>
-        `Name: ${animation.name}\nUse case: ${animation.usecase}\nParameters: ${animation.settings}\n`
-    ).join('\n');
+  return bindings
+    .map(
+      (animation) =>
+        `Name: ${animation.name}\nUse case: ${animation.usecase}\nParameters: ${animation.settings}\n`,
+    )
+    .join("\n");
 }
 
 export const systemPrompt = `
@@ -33,7 +38,7 @@ If the user prefers a different structure, follow their request.
 You can choose from the following animation components:
 ${generateAnimationContext(bindings)}
 
-For backgrounds following options exist: 
+For backgrounds following options exist:
 ${generateAnimationContext(backgroundTexturesBindings)}
 
 - IMPORTANT: think about the color you use for (foreground + background). Text needs to be readable.
@@ -49,7 +54,7 @@ Return a JSON object containing:
   - "animationSettings": The parameters of the animation
   - "duration": Frame length (max 45)
   - "background": the background of each animation
-- A "commentary" field explaining the overall narrative
+- A "commentary" field explaining what you did
 
 # Notes
 - You do not need Internet access

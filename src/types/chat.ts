@@ -31,3 +31,48 @@ export function createChatMessage(
     timestamp: new Date().toISOString(),
   };
 }
+
+/**
+ * Utility to create an agent message from full LLM response
+ * Stores full response for context but extracts comment for display
+ */
+export function createAgentMessageFromResponse(
+  fullResponse: object,
+  displayComment: string,
+  id?: string,
+): ChatMessage {
+  const content = JSON.stringify({
+    type: "llm_response",
+    fullResponse,
+    displayComment,
+  });
+  
+  return createChatMessage("agent", content, id);
+}
+
+/**
+ * Extract display content from agent message
+ * Returns the comment for UI display, full response for LLM context
+ */
+export function extractMessageContent(message: ChatMessage): {
+  displayContent: string;
+  fullResponse?: object;
+} {
+  if (message.role === "user") {
+    return { displayContent: message.content };
+  }
+
+  try {
+    const parsed = JSON.parse(message.content);
+    if (parsed.type === "llm_response") {
+      return {
+        displayContent: parsed.displayComment,
+        fullResponse: parsed.fullResponse,
+      };
+    }
+  } catch {
+    // Fallback for old format messages
+  }
+  
+  return { displayContent: message.content };
+}

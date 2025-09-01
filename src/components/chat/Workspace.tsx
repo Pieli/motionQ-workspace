@@ -377,6 +377,7 @@ const Workspace = () => {
                     projectId={projectId}
                     initialHistory={chatHistory}
                     recordMessage={recordMessage}
+                    currentCompositions={GeneratedComp}
                   />
                 </ResizablePanel>
                 <ResizableHandle

@@ -3,10 +3,15 @@ import { zodResponseFormat } from "openai/helpers/zod";
 
 import { Response } from "@/api/llm-types";
 import { systemPrompt } from "@/api/system-prompt";
+import {
+  convertChatHistoryToOpenAI,
+  createCompositionContextMessage,
+} from "@/api/llm-utils";
 
 import type { ResponseType } from "@/api/llm-types";
 import type { CompositionConfig } from "@/components/interfaces/compositions";
 import type { LLMService } from "@/components/interfaces/llm";
+import type { ChatMessage } from "@/types/chat";
 import type {
   AnimationComponents,
   BackgroundComponents,
@@ -20,10 +25,16 @@ import {
 } from "@/remotion-lib/animation-factories";
 
 export class NullLLMService implements LLMService {
-  async generateCompositions(prompt: string): Promise<ResponseType> {
+  async generateCompositions(
+    prompt: string,
+    chatHistory: ChatMessage[],
+    currentCompositions: CompositionConfig[] | null,
+  ): Promise<ResponseType> {
     console.warn(
       "No LLM service configured. Returning empty response.",
       prompt,
+      chatHistory,
+      currentCompositions,
     );
     return {
       compositions: [],
@@ -49,16 +60,29 @@ export class OpenAIService implements LLMService {
     this.client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true });
   }
 
-  async generateCompositions(prompt: string): Promise<ResponseType> {
+  async generateCompositions(
+    prompt: string,
+    chatHistory: ChatMessage[],
+    currentCompositions: CompositionConfig[] | null,
+  ): Promise<ResponseType> {
     this.abortController = new AbortController();
+
+    const historyMessages = convertChatHistoryToOpenAI(chatHistory);
+    const compositionContextMessage = createCompositionContextMessage(currentCompositions);
+    
+    const messages = [
+      { role: "system" as const, content: systemPrompt },
+      ...(compositionContextMessage ? [compositionContextMessage] : []),
+      ...historyMessages,
+      { role: "user" as const, content: prompt },
+    ];
+
+    console.log(messages);
 
     const completion = await this.client.beta.chat.completions.parse(
       {
         model: "gpt-4.1-nano-2025-04-14",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: prompt },
-        ],
+        messages,
         temperature: 0.7,
         max_tokens: 1500,
         response_format: zodResponseFormat(Response, "response"),
