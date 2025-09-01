@@ -214,6 +214,8 @@ const ZodSwitch: React.FC<ZodSwitchProps> = ({
   currentValue = currentValue ?? "";
 
   switch (typeName) {
+    case z.ZodFirstPartyTypeKind.ZodLiteral:  // we ignore literals
+        return
     case z.ZodFirstPartyTypeKind.ZodString:
       return (
         <ZodTextEditor
