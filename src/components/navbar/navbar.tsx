@@ -37,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary">
+    <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background-secondary backdrop-blur-sm">
       <div className="flex h-12 w-full items-center gap-2 px-4">
         <div className="flex items-center gap-4 flex-1">
           <DropdownMenu>
