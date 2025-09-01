@@ -446,9 +446,6 @@ const WorkspaceContent = () => {
                               Animation Preview will be shown here
                             </div>
                           )}
-                          {isGenerating && (
-                            <div style={{ color: "#888" }}>Loading…</div>
-                          )}
                         </div>
                       </>
                     </ResizablePanel>
