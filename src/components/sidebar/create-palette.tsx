@@ -105,9 +105,13 @@ export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
               onDragOver={(e) => e.preventDefault()}
             >
               <div
-                className="w-full h-full flex flex-col justify-end items-center"
+                className="w-full h-full flex flex-col justify-end items-center cursor-pointer"
                 style={{ minHeight: 64, height: "100%" }}
-                onClick={() => {}}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const colorInput = document.getElementById(`color-input-${idx}`) as HTMLInputElement;
+                  colorInput?.click();
+                }}
               >
                 <span
                   className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-mono px-1 rounded"

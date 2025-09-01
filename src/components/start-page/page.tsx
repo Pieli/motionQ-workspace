@@ -6,12 +6,12 @@ import ProjectsSection from "@/components/start-page/projects-section";
 import { CreatePalette } from "@/components/sidebar/create-palette";
 
 import { useNavigate } from "react-router-dom";
-import { useColorPalette } from "@/lib/ColorPaletteContext";
+import { ColorPaletteProvider, useColorPalette } from "@/lib/ColorPaletteContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Palette } from "lucide-react";
 
-const StartPage: React.FC = () => {
+const StartPageContent: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [showPaletteSelector, setShowPaletteSelector] = useState(false);
   const { currentPalette, updatePalette, formatPaletteForPrompt } = useColorPalette();
@@ -102,6 +102,14 @@ const StartPage: React.FC = () => {
       </section>
       <ProjectsSection />
     </div>
+  );
+};
+
+const StartPage: React.FC = () => {
+  return (
+    <ColorPaletteProvider>
+      <StartPageContent />
+    </ColorPaletteProvider>
   );
 };
 
