@@ -84,18 +84,16 @@ const ProjectsSection: React.FC = () => {
   const handleDeleteConfirm = async () => {
     if (!projectToDelete || !user) return;
 
-    setIsDeleting(true);
     try {
-      const success = await deleteProject(user, projectToDelete.id);
-      if (success) {
-        setProjects(projects.filter((p) => p.id !== projectToDelete.id));
-      }
+     setIsDeleting(true);
+     setProjects(projects.filter((p) => p.id !== projectToDelete.id));
+     deleteProject(user, projectToDelete.id);
+     setIsDeleting(false);
+     setDeleteDialogOpen(false);
+     setProjectToDelete(null);
     } catch (error) {
       console.error("Failed to delete project:", error);
     } finally {
-      setIsDeleting(false);
-      setDeleteDialogOpen(false);
-      setProjectToDelete(null);
     }
   };
 
