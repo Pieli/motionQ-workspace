@@ -1,4 +1,4 @@
-//go:generate go tool oapi-codegen -config ../../api/config.yaml ../../api/api.yaml
+//go:generate go tool oapi-codegen -config ../../api/config.yaml ../../../shared/api.yaml
 
 package main
 
