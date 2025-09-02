@@ -207,6 +207,41 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /api/users/me/projects/{projectId}/name:
+    patch:
+      summary: Update project name
+      tags:
+        - Projects Edits
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  description: New project name
+                  example: My Updated Animation
+      responses:
+        '200':
+          description: Project name updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 
   /api/users:
     post:
