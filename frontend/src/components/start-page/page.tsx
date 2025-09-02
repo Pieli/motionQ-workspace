@@ -6,7 +6,10 @@ import ProjectsSection from "@/components/start-page/projects-section";
 import { CreatePalette } from "@/components/sidebar/create-palette";
 
 import { useNavigate } from "react-router-dom";
-import { ColorPaletteProvider, useColorPalette } from "@/lib/ColorPaletteContext";
+import {
+  ColorPaletteProvider,
+  useColorPalette,
+} from "@/lib/ColorPaletteContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Palette } from "lucide-react";
@@ -14,21 +17,20 @@ import { Palette } from "lucide-react";
 const StartPageContent: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [showPaletteSelector, setShowPaletteSelector] = useState(false);
-  const { currentPalette, updatePalette, formatPaletteForPrompt } = useColorPalette();
+  const { currentPalette, updatePalette, formatPaletteForPrompt } =
+    useColorPalette();
   const navigate = useNavigate();
 
   const handleSend = () => {
     if (!prompt.trim()) return;
 
     const palettePrompt = formatPaletteForPrompt();
-    const fullPrompt = palettePrompt 
-      ? `${prompt}\n\n${palettePrompt}`
-      : prompt;
+    const fullPrompt = palettePrompt ? `${prompt}\n\n${palettePrompt}` : prompt;
 
     navigate("/workspace", {
-      state: { 
+      state: {
         initialPrompt: fullPrompt,
-        initialPalette: currentPalette 
+        initialPalette: currentPalette,
       },
     });
   };
@@ -59,6 +61,13 @@ const StartPageContent: React.FC = () => {
           </div>
 
           <div className="max-w-2xl mx-auto space-y-4">
+            <ChatInput
+              prompt={prompt}
+              setPrompt={setPrompt}
+              onSend={handleSend}
+              onStop={() => {}}
+              isGenerating={false}
+            />
             <div className="flex items-center gap-2 justify-center">
               <Button
                 variant="outline"
@@ -81,25 +90,22 @@ const StartPageContent: React.FC = () => {
                 </div>
               )}
             </div>
-            
+
             {showPaletteSelector && (
               <Card className="max-w-md mx-auto">
                 <CardHeader>
-                  <CardTitle className="text-lg">Choose Color Palette</CardTitle>
+                  <CardTitle className="text-lg">
+                    Choose Color Palette
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CreatePalette onCreate={handlePaletteCreate} startingPalette={currentPalette?.colors}/>
+                  <CreatePalette
+                    onCreate={handlePaletteCreate}
+                    startingPalette={currentPalette?.colors}
+                  />
                 </CardContent>
               </Card>
             )}
-
-            <ChatInput
-              prompt={prompt}
-              setPrompt={setPrompt}
-              onSend={handleSend}
-              onStop={() => {}}
-              isGenerating={false}
-            />
           </div>
         </div>
       </section>
