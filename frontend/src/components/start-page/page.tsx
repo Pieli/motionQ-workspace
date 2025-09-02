@@ -88,7 +88,7 @@ const StartPageContent: React.FC = () => {
                   <CardTitle className="text-lg">Choose Color Palette</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CreatePalette onCreate={handlePaletteCreate} />
+                  <CreatePalette onCreate={handlePaletteCreate} startingPalette={currentPalette?.colors}/>
                 </CardContent>
               </Card>
             )}

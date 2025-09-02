@@ -25,10 +25,12 @@ const MAX_COLORS = 5;
 
 type CreatePaletteProps = {
   onCreate: (colors: string[]) => void;
+  startingPalette?: string[];
 };
 
-export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
+export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate, startingPalette}) => {
   const [colors, setColors] = useState<string[]>(() =>
+    startingPalette ??
     Array.from({ length: PALETTE_SIZE }, randomColor),
   );
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
@@ -109,7 +111,9 @@ export const CreatePalette: React.FC<CreatePaletteProps> = ({ onCreate }) => {
                 style={{ minHeight: 64, height: "100%" }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  const colorInput = document.getElementById(`color-input-${idx}`) as HTMLInputElement;
+                  const colorInput = document.getElementById(
+                    `color-input-${idx}`,
+                  ) as HTMLInputElement;
                   colorInput?.click();
                 }}
               >
