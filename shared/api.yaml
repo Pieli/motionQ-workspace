@@ -1,0 +1,946 @@
+openapi: 3.0.2
+info:
+  title: MotionQ Backend API
+  description: AI-powered animation platform backend API for user management, authentication, credits, and project operations
+  version: 1.0.0
+  contact:
+    name: MotionQ Support
+    email: support@motionq.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://api.motionq.ai
+    description: Production server
+
+security:
+  - FirebaseAuth: []
+
+paths:
+
+  /api/users/me/projects:
+    get:
+      summary: List all projects
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create a new project
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/users/me/projects/{projectId}:
+    get:
+      summary: Get a specific project
+      tags:
+        - Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: Update project compositions
+      tags:
+        - Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                compositions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Composition'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: Delete a project
+      tags:
+        - Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      responses:
+        '204':
+          description: Project deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/users/me/projects/{projectId}/compositions:
+    put:
+      summary: Update project compositions
+      tags:
+        - Projects Edits
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                compositions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Composition'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/users/me/projects/{projectId}/chat:
+    post:
+      summary: Add message to project chat history
+      tags:
+        - Projects Edits
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChatMessage'
+      responses:
+        '200':
+          description: Message added to chat history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/users/me/projects/{projectId}/name:
+    patch:
+      summary: Update project name
+      tags:
+        - Projects Edits
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  description: New project name
+                  example: My Updated Animation
+      responses:
+        '200':
+          description: Project name updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+  /api/users:
+    post:
+      summary: Create current user profile
+      description: Create a user
+      tags:
+        - Users
+      security:
+        - FirebaseAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '200':
+          description: User profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+  /api/users/me:
+    get:
+      summary: Get current user profile
+      description: Retrieve the authenticated user's profile information
+      tags:
+        - Users
+      security:
+        - FirebaseAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/users/me/credit:
+    get:
+      summary: Get current user credit information
+      description: Retrieve the authenticated user's current credit balance and transaction history
+      tags:
+        - Users
+        - Credits
+      security:
+        - FirebaseAuth: []
+      responses:
+        '200':
+          description: User credit information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCredits'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+components:
+  securitySchemes:
+    FirebaseAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Firebase JWT token obtained from Firebase Authentication
+
+  schemas:
+    Composition:
+      type: object
+      required: [id, name, props, duration]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          description: "Reference to the React component type"
+        props:
+          type: object
+        duration:
+          type: number
+        background:
+          $ref: '#/components/schemas/Composition'
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            bson: "_id"
+          description: MongoDB ObjectId
+          example: 507f1f77bcf86cd799439011
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: user@example.com
+        isVerified:
+          type: boolean
+          description: Email verification status
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+          example: 2024-01-15T10:30:00Z
+      required:
+        - id
+        - email
+        - isVerified
+        - createdAt
+
+    CreatedUser:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: MongoDB ObjectId
+          example: 507f1f77bcf86cd799439011
+      required:
+        - userId
+
+
+    PublicUser:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoDB ObjectId
+          example: 507f1f77bcf86cd799439011
+        displayName:
+          type: string
+          description: User display name
+          example: John Doe
+        isVerified:
+          type: boolean
+          description: Email verification status
+          example: true
+        paymentTier:
+          type: string
+          enum: [free, basic, pro, enterprise]
+          description: User's payment tier
+          example: free
+        createdAt:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+          example: 2024-01-15T10:30:00Z
+      required:
+        - _id
+        - displayName
+        - isVerified
+        - paymentTier
+        - createdAt
+
+    UserCreateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Updated email address
+          example: jane.smith@example.com
+      required:
+        - email
+      additionalProperties: false
+
+    Credits:
+      type: object
+      properties:
+        current:
+          type: integer
+          minimum: 0
+          description: Current available credits
+          example: 45
+        monthly:
+          type: integer
+          minimum: 0
+          description: Monthly credit allowance
+          example: 50
+        lastReset:
+          type: string
+          format: date-time
+          description: Last monthly reset timestamp
+          example: 2024-01-01T00:00:00Z
+        transactions:
+          type: array
+          description: Recent credit transactions
+          items:
+            $ref: '#/components/schemas/CreditTransaction'
+      required:
+        - current
+        - monthly
+        - lastReset
+        - transactions
+
+    UserCredits:
+      type: object
+      properties:
+        credits:
+          $ref: '#/components/schemas/Credits'
+        tier:
+          $ref: '#/components/schemas/PaymentTier'
+        usage:
+          $ref: '#/components/schemas/UsageStats'
+      required:
+        - credits
+        - tier
+        - usage
+
+    CreditTransaction:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoDB ObjectId
+          example: 507f1f77bcf86cd799439012
+        userId:
+          type: string
+          description: User ID (MongoDB ObjectId)
+          example: 507f1f77bcf86cd799439011
+        amount:
+          type: integer
+          description: Credit amount (negative for deduction, positive for addition)
+          example: -5
+        operation:
+          type: string
+          description: Type of operation
+          enum:
+            - generate_animation
+            - export_hd_video
+            - export_4k_video
+            - export_8k_video
+            - ai_chat_message
+            - asset_upload
+            - composition_save
+            - monthly_reset
+            - purchase
+          example: generate_animation
+        description:
+          type: string
+          description: Human-readable description of the transaction
+          example: Generated animation for project "My First Animation"
+        metadata:
+          type: object
+          description: Additional transaction metadata
+          additionalProperties: true
+          example:
+            projectId: 507f1f77bcf86cd799439013
+            projectName: My First Animation
+        createdAt:
+          type: string
+          format: date-time
+          description: Transaction timestamp
+          example: 2024-01-20T15:30:00Z
+      required:
+        - _id
+        - userId
+        - amount
+        - operation
+        - description
+        - createdAt
+
+    PaymentTier:
+      type: object
+      properties:
+        name:
+          type: string
+          enum: [free, basic, pro, enterprise]
+          description: Tier name
+          example: free
+        monthlyCredits:
+          type: integer
+          description: Monthly credit allowance
+          example: 50
+        price:
+          type: number
+          format: float
+          description: Monthly price in USD
+          example: 0.00
+        features:
+          type: array
+          items:
+            type: string
+          description: List of tier features
+          example:
+            - Basic animations
+            - HD exports
+            - Community support
+      required:
+        - name
+        - monthlyCredits
+        - price
+        - features
+
+    UsageStats:
+      type: object
+      properties:
+        currentMonth:
+          type: object
+          properties:
+            used:
+              type: integer
+              description: Credits used this month
+              example: 5
+            remaining:
+              type: integer
+              description: Credits remaining this month
+              example: 45
+          required:
+            - used
+            - remaining
+        lastMonth:
+          type: object
+          properties:
+            used:
+              type: integer
+              description: Credits used last month
+              example: 30
+            total:
+              type: integer
+              description: Total credits available last month
+              example: 50
+          required:
+            - used
+            - total
+        topOperations:
+          type: array
+          description: Most frequently used operations
+          items:
+            type: object
+            properties:
+              operation:
+                type: string
+                example: generate_animation
+              count:
+                type: integer
+                example: 3
+              creditsUsed:
+                type: integer
+                example: 15
+            required:
+              - operation
+              - count
+              - creditsUsed
+      required:
+        - currentMonth
+        - lastMonth
+        - topOperations
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Project ID
+          example: 507f1f77bcf86cd799439011
+          x-oapi-codegen-extra-tags:
+            bson: "_id"
+        userId:
+          type: string
+          description: Owner user ID (MongoDB ObjectId)
+          example: 507f1f77bcf86cd799439011
+        thumbnail:
+          type: string
+          description: thumbnail for the project
+          example: example.com/thumb.jpeg
+        name:
+          type: string
+          description: Project name
+          example: My First Animation
+        description:
+          type: string
+          description: Project description
+          example: A simple animation project for learning
+        metadata:
+          $ref: '#/components/schemas/ProjectMetadata'
+        chatHistory:
+          type: array
+          description: AI chat conversation history
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+        colorScheme:
+          type: object
+          description: Project color scheme
+          additionalProperties: true
+        assets:
+          $ref: '#/components/schemas/ProjectAssets'
+        compositions:
+          type: array
+          description: Animation compositions
+          items:
+            $ref: '#/components/schemas/Composition'
+        exportedVideos:
+          type: array
+          description: Exported video files
+          items:
+            $ref: '#/components/schemas/ExportedVideo'
+        settings:
+          type: object
+          description: Project settings
+          additionalProperties: true
+      required:
+        - id
+        - userId
+        - name
+        - metadata
+        - chatHistory
+        - assets
+        - compositions
+        - exportedVideos
+
+    ProjectMetadata:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          example: 2024-01-15T10:00:00Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2024-01-20T14:30:00Z
+        lastAccessed:
+          type: string
+          format: date-time
+          example: 2024-01-20T16:45:00Z
+        status:
+          type: string
+          enum: [draft, active, completed, archived]
+          example: active
+        tags:
+          type: array
+          items:
+            type: string
+          example: [animation, beginner, tutorial]
+      required:
+        - createdAt
+        - updatedAt
+        - lastAccessed
+        - status
+        - tags
+
+    ProjectAssets:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        audio:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        fonts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        other:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+      required:
+        - images
+        - videos
+        - audio
+        - fonts
+        - other
+
+    Asset:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Asset ID
+          example: asset_123456
+        name:
+          type: string
+          description: Asset filename
+          example: background.jpg
+        type:
+          type: string
+          description: Asset MIME type
+          example: image/jpeg
+        size:
+          type: integer
+          description: File size in bytes
+          example: 1048576
+        url:
+          type: string
+          format: uri
+          description: Asset URL
+          example: https://cdn.motionq.com/assets/background.jpg
+        uploadedAt:
+          type: string
+          format: date-time
+          example: 2024-01-15T11:00:00Z
+      required:
+        - id
+        - name
+        - type
+        - size
+        - url
+        - uploadedAt
+
+    CreateChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, agent]
+          description: Message sender role
+          example: user
+        content:
+          type: string
+          description: Message content
+          example: Can you help me create a bouncing ball animation?
+      required:
+        - role
+        - content
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Message ID
+          example: msg_123456
+        role:
+          type: string
+          enum: [user, agent]
+          description: Message sender role
+          example: user
+        content:
+          type: string
+          description: Message content
+          example: Can you help me create a bouncing ball animation?
+        timestamp:
+          type: string
+          format: date-time
+          example: 2024-01-20T15:00:00Z
+        metadata:
+          type: object
+          description: Additional message metadata
+          additionalProperties: true
+      required:
+        - id
+        - role
+        - content
+        - timestamp
+
+    ExportedVideo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Export ID
+          example: export_123456
+        quality:
+          type: string
+          enum: [HD, 4K, 8K]
+          description: Video quality
+          example: HD
+        format:
+          type: string
+          description: Video format
+          example: mp4
+        url:
+          type: string
+          format: uri
+          description: Download URL
+          example: https://cdn.motionq.com/exports/video.mp4
+        size:
+          type: integer
+          description: File size in bytes
+          example: 10485760
+        duration:
+          type: number
+          format: float
+          description: Video duration in seconds
+          example: 30.5
+        creditsUsed:
+          type: integer
+          description: Credits consumed for this export
+          example: 10
+        exportedAt:
+          type: string
+          format: date-time
+          example: 2024-01-20T16:00:00Z
+      required:
+        - id
+        - quality
+        - format
+        - url
+        - size
+        - duration
+        - creditsUsed
+        - exportedAt
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type or category
+          example: ValidationError
+        message:
+          type: string
+          description: Human-readable error message
+          example: Invalid input data
+        requestId:
+          type: string
+          description: Unique request identifier for tracking
+          example: req_123456789
+      required:
+        - error
+        - message
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized - invalid or missing authentication token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  parameters:
+    ProjectIdParam:
+      name: projectId
+      in: path
+      required: true
+      description: Project ID (MongoDB ObjectId)
+      schema:
+        type: string
+        example: 507f1f77bcf86cd799439013
+
+tags:
+  - name: Users
+    description: User management operations
+  - name: Credits
+    description: Credit system operations
+  - name: Projects
+    description: Project management operations
+  - name: Project Edits
+    description: Project editing operations
