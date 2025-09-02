@@ -87,8 +87,9 @@ const WorkspaceInner = () => {
   } | null>(null);
 
   const handleApplyPalette = React.useCallback(
-    async (palettePrompt: string) => {
+    async (colors: string[]) => {
       if (chatBoxPanelRef.current) {
+        const palettePrompt = `Please adjust the current animations to use the new color palette: ${colors.join(", ")}. Keep the same content and timing but update the colors to match this palette while ensuring good contrast and readability.`;
         await chatBoxPanelRef.current.generate(palettePrompt, "developer");
       }
     },
@@ -103,9 +104,7 @@ const WorkspaceInner = () => {
     async (targetProjectId: string) => {
       if (messageQueue.length === 0 || !user) return;
 
-      console.log(
-        `Processing ${messageQueue.length} queued messages for project ${targetProjectId}`,
-      );
+      // console.log( `Processing ${messageQueue.length} queued messages for project ${targetProjectId}`,);
 
       for (const queuedMessage of messageQueue) {
         try {

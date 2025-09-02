@@ -75,7 +75,7 @@ export const AppSidebar: React.FC<{
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
   sidebarTab: string;
-  onApplyPalette?: (palettePrompt: string) => void;
+  onApplyPalette?: (colors: string[]) => void;
 }> = ({ setSidebarOpen, sidebarOpen, sidebarTab, onApplyPalette }) => {
   const { compositions, selectedItem } = useComposition();
   const [activeItem, setActiveItem] = useState(() => {

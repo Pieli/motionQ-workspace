@@ -34,7 +34,7 @@ const PREMADE_PALETTES: Palette[] = [
 ];
 
 interface ColorPalettePanelProps {
-  onApplyPalette?: (palettePrompt: string) => void;
+  onApplyPalette?: (colors: string[]) => void;
 }
 
 export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({
@@ -120,8 +120,7 @@ export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({
 
   const handleApplyNow = async () => {
     if (currentPalette && onApplyPalette) {
-      const adjustPrompt = `Please adjust the current animations to use the new color palette: ${currentPalette.colors.join(", ")}. Keep the same content and timing but update the colors to match this palette while ensuring good contrast and readability.`;
-      onApplyPalette(adjustPrompt);
+      onApplyPalette(currentPalette.colors);
     }
   };
 
