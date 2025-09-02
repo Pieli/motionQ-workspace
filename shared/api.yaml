@@ -110,6 +110,12 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/Composition'
+                colorScheme:
+                  $ref: '#/components/schemas/ColorPalette'
+                  description: Project color palette
+                name:
+                  type: string
+                  description: Project name
       responses:
         '200':
           description: Project updated
@@ -162,6 +168,9 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/Composition'
+                colorScheme:
+                  $ref: '#/components/schemas/ColorPalette'
+                  description: Project color palette
       responses:
         '200':
           description: Project updated
@@ -242,6 +251,39 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /api/users/me/projects/{projectId}/colorScheme:
+    patch:
+      summary: Update project color scheme
+      tags:
+        - Projects Edits
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [colorScheme]
+              properties:
+                colorScheme:
+                  $ref: '#/components/schemas/ColorPalette'
+                  description: New color palette for the project
+      responses:
+        '200':
+          description: Project color scheme updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /api/users:
     post:
@@ -342,6 +384,30 @@ components:
           type: number
         background:
           $ref: '#/components/schemas/Composition'
+
+    ColorPalette:
+      type: object
+      required: [id, name, colors]
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the color palette
+          example: palette-123456
+        name:
+          type: string
+          description: Display name for the color palette
+          example: Ocean Sunset
+        colors:
+          type: array
+          description: Array of hex color codes
+          items:
+            type: string
+            pattern: '^#[0-9A-Fa-f]{6}$'
+            description: Hex color code
+            example: '#FF5733'
+          minItems: 2
+          maxItems: 8
+          example: ['#FF5733', '#FFC300', '#C70039']
 
     UserResponse:
       type: object
@@ -643,9 +709,8 @@ components:
           items:
             $ref: '#/components/schemas/ChatMessage'
         colorScheme:
-          type: object
-          description: Project color scheme
-          additionalProperties: true
+          $ref: '#/components/schemas/ColorPalette'
+          description: Project color palette
         assets:
           $ref: '#/components/schemas/ProjectAssets'
         compositions:
