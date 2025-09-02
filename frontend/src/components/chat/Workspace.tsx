@@ -72,7 +72,6 @@ const WorkspaceInner = ({
   const [initialPrompt, setInitialPrompt] = useState<string>(
     location?.state?.initialPrompt || "",
   );
-  const initialPalette = location?.state?.initialPalette || null;
   const initialPromptProcessedRef = useRef<string>("");
   const [projectTitle, setProjectTitle] = useState<string>("Untitled");
 
@@ -221,8 +220,15 @@ const WorkspaceInner = ({
           // Load project's color palette if it exists
           if (projectData.colorScheme) {
             try {
-              const projectColorPalette = projectData.colorScheme as ColorPalette;
-              setProjectPalette(projectColorPalette);
+              const colorScheme = projectData.colorScheme as { [key: string]: unknown };
+              if (colorScheme && typeof colorScheme.id === 'string' && typeof colorScheme.name === 'string' && Array.isArray(colorScheme.colors)) {
+                const projectColorPalette: ColorPalette = {
+                  id: colorScheme.id,
+                  name: colorScheme.name,
+                  colors: colorScheme.colors as string[]
+                };
+                setProjectPalette(projectColorPalette);
+              }
             } catch (error) {
               console.error("Failed to load project color palette:", error);
             }
