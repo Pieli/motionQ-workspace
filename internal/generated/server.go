@@ -664,3 +664,92 @@ func (s Server) GetApiUsersMe(ctx context.Context, request GetApiUsersMeRequestO
 func (s Server) GetApiUsersMeCredit(ctx context.Context, request GetApiUsersMeCreditRequestObject) (GetApiUsersMeCreditResponseObject, error) {
 	return nil, nil
 }
+
+// Update project name
+// (PATCH /api/users/me/projects/{projectId}/name)
+func (s Server) PatchApiUsersMeProjectsProjectIdName(ctx context.Context, request PatchApiUsersMeProjectsProjectIdNameRequestObject) (PatchApiUsersMeProjectsProjectIdNameResponseObject, error) {
+	projectsColl := s.userStorage.db.Collection("projects")
+	userColl := s.userStorage.Collection()
+	uid := ctx.Value("uid").(string)
+
+	// Get user ID from UID
+	user, err := util.GetGenericUID[UserResponse](uid, userColl, ctx)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return PatchApiUsersMeProjectsProjectIdName404JSONResponse{NotFoundJSONResponse{
+				Error:   "User not found",
+				Message: "The user with the specified ID does not exist.",
+			}}, nil
+		}
+		return PatchApiUsersMeProjectsProjectIdName500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to get user information.",
+		}}, nil
+	}
+
+	// Validate project ID format
+	_, err = primitive.ObjectIDFromHex(request.ProjectId)
+	if err != nil {
+		return PatchApiUsersMeProjectsProjectIdName400JSONResponse{BadRequestJSONResponse{
+			Error:   "Invalid project ID",
+			Message: "The provided project ID is not valid.",
+		}}, nil
+	}
+
+	// Get the project using generic function to verify it exists and belongs to user
+	project, err := util.GetGeneric[Project](request.ProjectId, projectsColl, ctx)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return PatchApiUsersMeProjectsProjectIdName404JSONResponse{NotFoundJSONResponse{
+				Error:   "Project not found",
+				Message: "The project with the specified ID does not exist.",
+			}}, nil
+		}
+		return PatchApiUsersMeProjectsProjectIdName500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to retrieve project.",
+		}}, nil
+	}
+
+	// Verify the project belongs to the current user
+	if project.UserId != user.Id {
+		return PatchApiUsersMeProjectsProjectIdName404JSONResponse{NotFoundJSONResponse{
+			Error:   "Project not found",
+			Message: "The project with the specified ID does not exist or does not belong to you.",
+		}}, nil
+	}
+
+	// Update the project name using generic function
+	updateData := struct {
+		Name     string `bson:"name"`
+		Metadata struct {
+			UpdatedAt time.Time `bson:"updatedAt"`
+		} `bson:"metadata"`
+	}{
+		Name: request.Body.Name,
+		Metadata: struct {
+			UpdatedAt time.Time `bson:"updatedAt"`
+		}{
+			UpdatedAt: time.Now(),
+		},
+	}
+
+	err = util.UpdateGeneric(request.ProjectId, updateData, projectsColl, ctx)
+	if err != nil {
+		return PatchApiUsersMeProjectsProjectIdName500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to update project name.",
+		}}, nil
+	}
+
+	// Fetch and return the updated project
+	updatedProject, err := util.GetGeneric[Project](request.ProjectId, projectsColl, ctx)
+	if err != nil {
+		return PatchApiUsersMeProjectsProjectIdName500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to retrieve updated project.",
+		}}, nil
+	}
+
+	return PatchApiUsersMeProjectsProjectIdName200JSONResponse(updatedProject), nil
+}
