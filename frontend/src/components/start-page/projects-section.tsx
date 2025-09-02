@@ -146,9 +146,12 @@ const ProjectsSection: React.FC = () => {
   const formatLastAccessed = (date: string) => {
     const projectDate = new Date(date);
     const now = new Date();
+    
+    // Ensure both dates are in the same timezone context
     const diffTime = Math.abs(now.getTime() - projectDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
+    if (diffDays === 0) return "Today";
     if (diffDays === 1) return "Yesterday";
     if (diffDays < 7) return `${diffDays} days ago`;
     if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
