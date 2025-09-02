@@ -8,10 +8,11 @@ import {
   deleteApiUsersMeProjectsByProjectId,
   postApiUsersMeProjectsByProjectIdChat,
   patchApiUsersMeProjectsByProjectIdName,
+  patchApiUsersMeProjectsByProjectIdColorScheme,
 } from "@/client/sdk.gen";
 import { client } from "@/client/client.gen";
 import type { User } from "firebase/auth";
-import type { Composition, Project } from "@/client/types.gen";
+import type { Composition, Project, ColorPalette } from "@/client/types.gen";
 
 // Configure production URL when not in dev environment
 if (import.meta.env.VITE_ENV !== "dev") {
@@ -137,7 +138,7 @@ export async function updateProject(
     name?: string;
     history?: string[];
     compositions?: Composition[];
-    colorScheme?: any;
+    colorScheme?: ColorPalette;
   },
 ): Promise<Project | null> {
   try {
@@ -171,6 +172,7 @@ export async function updateProject(
 export async function createProject(
   firebaseUser: User,
   projectName: string,
+  initialPalette?: ColorPalette | null,
 ): Promise<Project | null> {
   try {
     const idToken = await firebaseUser.getIdToken();
@@ -185,6 +187,15 @@ export async function createProject(
     });
 
     if (response.data) {
+      // If we have an initial palette, update the project with it
+      if (initialPalette) {
+        const updatedProject = await updateProjectColorScheme(
+          firebaseUser,
+          response.data.id,
+          initialPalette,
+        );
+        return updatedProject || response.data;
+      }
       return response.data;
     }
 
@@ -260,6 +271,41 @@ export async function updateProjectName(
   } catch (error) {
     console.error("Error updating project name:", error);
     return false;
+  }
+}
+
+/**
+ * Update project color scheme
+ */
+export async function updateProjectColorScheme(
+  firebaseUser: User,
+  projectId: string,
+  colorScheme: ColorPalette,
+): Promise<Project | null> {
+  try {
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await patchApiUsersMeProjectsByProjectIdColorScheme({
+      path: {
+        projectId: projectId,
+      },
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: {
+        colorScheme: colorScheme,
+      },
+    });
+
+    if (response.data) {
+      return response.data;
+    }
+
+    console.error("Failed to update project color scheme:", response.error);
+    return null;
+  } catch (error) {
+    console.error("Error updating project color scheme:", error);
+    return null;
   }
 }
 

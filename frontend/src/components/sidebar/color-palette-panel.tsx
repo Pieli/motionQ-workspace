@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreatePalette } from "@/components/sidebar/create-palette";
@@ -37,26 +37,34 @@ interface ColorPalettePanelProps {
   onApplyPalette?: (palettePrompt: string) => void;
 }
 
-export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({ onApplyPalette }) => {
-  const { currentPalette, updatePalette, setCurrentPalette } = useColorPalette();
+export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({
+  onApplyPalette,
+}) => {
+  const { currentPalette, updatePalette, setCurrentPalette } =
+    useColorPalette();
   const [palettes, setPalettes] = useState<Palette[]>(PREMADE_PALETTES);
   const [selectedPaletteIndex, setSelectedPaletteIndex] = useState<number>(0);
 
   // Sync selectedPaletteIndex with currentPalette when component mounts or currentPalette changes
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log(currentPalette);
     if (currentPalette) {
       // Find matching palette in premade palettes
-      const matchingIndex = palettes.findIndex(p => {
+      const matchingIndex = palettes.findIndex((p) => {
         const paletteColors = [p.primary, p.secondary, ...p.additional];
-        return currentPalette.colors.length === paletteColors.length &&
-               currentPalette.colors.every((color, idx) => color === paletteColors[idx]);
+        return (
+          currentPalette.colors.length === paletteColors.length &&
+          currentPalette.colors.every(
+            (color, idx) => color === paletteColors[idx],
+          )
+        );
       });
-      
+
       if (matchingIndex !== -1) {
         setSelectedPaletteIndex(matchingIndex);
       } else {
         // Check if it's a custom palette that was added
-        const customIndex = palettes.findIndex(p => p.name === "Custom");
+        const customIndex = palettes.findIndex((p) => p.name === "Custom");
         if (customIndex !== -1) {
           setSelectedPaletteIndex(customIndex);
         }
@@ -70,11 +78,17 @@ export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({ onApplyPal
     setSelectedPaletteIndex(idx);
     const selectedPalette = palettes[idx];
     if (selectedPalette) {
-      const colors = [selectedPalette.primary, selectedPalette.secondary, ...selectedPalette.additional];
+      const colors = [
+        selectedPalette.primary,
+        selectedPalette.secondary,
+        ...selectedPalette.additional,
+      ];
       const newPalette = {
-        id: isPremade(idx) ? `${selectedPalette.name.toLowerCase()}-premade` : `palette-${Date.now()}`,
+        id: isPremade(idx)
+          ? `${selectedPalette.name.toLowerCase()}-premade`
+          : `palette-${Date.now()}`,
         name: selectedPalette.name,
-        colors: colors
+        colors: colors,
       };
       setCurrentPalette(newPalette);
     }
@@ -99,9 +113,10 @@ export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({ onApplyPal
     if (isPremade(idx)) return;
     const newPalettes = palettes.filter((_, i) => i !== idx);
     setPalettes(newPalettes);
-    setSelectedPaletteIndex((prev) => (prev === idx ? 0 : prev > idx ? prev - 1 : prev));
+    setSelectedPaletteIndex((prev) =>
+      prev === idx ? 0 : prev > idx ? prev - 1 : prev,
+    );
   };
-
 
   const handleApplyNow = async () => {
     if (currentPalette && onApplyPalette) {
@@ -126,11 +141,15 @@ export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({ onApplyPal
               <div
                 key={p.name + idx}
                 className={`flex items-center gap-2 rounded border px-2 py-2 cursor-pointer ${
-                  selectedPaletteIndex === idx ? "border-primary" : "border-muted"
+                  selectedPaletteIndex === idx
+                    ? "border-primary"
+                    : "border-muted"
                 }`}
                 onClick={() => handlePaletteSelect(idx)}
               >
-                <span className="font-medium min-w-[60px] text-xs">{p.name}</span>
+                <span className="font-medium min-w-[60px] text-xs">
+                  {p.name}
+                </span>
                 <span
                   className="inline-block rounded-full"
                   style={{

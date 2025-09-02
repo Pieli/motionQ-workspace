@@ -1,4 +1,11 @@
-import { Captions, Command, Component, Folders, ListMusic, Palette } from "lucide-react";
+import {
+  Captions,
+  Command,
+  Component,
+  Folders,
+  ListMusic,
+  Palette,
+} from "lucide-react";
 import React, { useMemo, useState, useEffect } from "react";
 
 import { Transcript } from "@/components/sidebar/transcript";
@@ -69,12 +76,7 @@ export const AppSidebar: React.FC<{
   sidebarOpen: boolean;
   sidebarTab: string;
   onApplyPalette?: (palettePrompt: string) => void;
-}> = ({
-  setSidebarOpen,
-  sidebarOpen,
-  sidebarTab,
-  onApplyPalette,
-}) => {
+}> = ({ setSidebarOpen, sidebarOpen, sidebarTab, onApplyPalette }) => {
   const { compositions, selectedItem } = useComposition();
   const [activeItem, setActiveItem] = useState(() => {
     const foundItem = data.navMain.find(
@@ -125,9 +127,7 @@ export const AppSidebar: React.FC<{
         return (
           <div className="p-4">
             {compositions && compositions.length > 0 && selectedItem ? (
-              <OptionsPanelZ
-                selectedItem={selectedItem}
-              />
+              <OptionsPanelZ selectedItem={selectedItem} />
             ) : (
               <span>Select a composition to edit its properties</span>
             )}
@@ -210,8 +210,7 @@ export const AppSidebar: React.FC<{
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter>
-          </SidebarFooter>
+          <SidebarFooter />
         </Sidebar>
         <Sidebar collapsible="none" className="bg-background">
           <SidebarHeader className="gap-3.5 border-b p-4">

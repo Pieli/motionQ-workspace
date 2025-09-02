@@ -40,10 +40,14 @@ import {
 import { SequenceBuilder } from "@/components/tree-builder/sequence";
 import { toast } from "sonner";
 import { CompositionProvider, useComposition } from "@/lib/CompositionContext";
-import { ColorPaletteProvider, useColorPalette, type ColorPalette } from "@/lib/ColorPaletteContext";
+import {
+  ColorPaletteProvider,
+  useColorPalette,
+  type ColorPalette,
+} from "@/lib/ColorPaletteContext";
 
-const WorkspaceInner = ({ 
-  setProjectPalette 
+const WorkspaceInner = ({
+  setProjectPalette,
 }: {
   setProjectPalette: React.Dispatch<React.SetStateAction<ColorPalette | null>>;
 }) => {
@@ -54,12 +58,8 @@ const WorkspaceInner = ({
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
   const { user } = useAuth();
-  const {
-    compositions,
-    setCompositions,
-    selectedItem,
-    setSelectedItem,
-  } = useComposition();
+  const { compositions, setCompositions, selectedItem, setSelectedItem } =
+    useComposition();
   const { currentPalette } = useColorPalette();
 
   // Project state
@@ -87,12 +87,14 @@ const WorkspaceInner = ({
     generate: (prompt?: string) => Promise<void>;
   } | null>(null);
 
-  const handleApplyPalette = React.useCallback(async (palettePrompt: string) => {
-    if (chatBoxPanelRef.current) {
-      await chatBoxPanelRef.current.generate(palettePrompt);
-    }
-  }, []);
-
+  const handleApplyPalette = React.useCallback(
+    async (palettePrompt: string) => {
+      if (chatBoxPanelRef.current) {
+        await chatBoxPanelRef.current.generate(palettePrompt);
+      }
+    },
+    [],
+  );
 
   const generateProjectName = React.useCallback((): string => {
     return "Untitled";
@@ -175,7 +177,11 @@ const WorkspaceInner = ({
         // console.log("No projectId, creating new project");
         try {
           const projectName = generateProjectName();
-          const newProject = await createProject(user, projectName);
+          const newProject = await createProject(
+            user,
+            projectName,
+            currentPalette,
+          );
 
           if (newProject) {
             setProject(newProject);
@@ -218,20 +224,9 @@ const WorkspaceInner = ({
           }
 
           // Load project's color palette if it exists
+          console.log("here", projectData.colorScheme);
           if (projectData.colorScheme) {
-            try {
-              const colorScheme = projectData.colorScheme as { [key: string]: unknown };
-              if (colorScheme && typeof colorScheme.id === 'string' && typeof colorScheme.name === 'string' && Array.isArray(colorScheme.colors)) {
-                const projectColorPalette: ColorPalette = {
-                  id: colorScheme.id,
-                  name: colorScheme.name,
-                  colors: colorScheme.colors as string[]
-                };
-                setProjectPalette(projectColorPalette);
-              }
-            } catch (error) {
-              console.error("Failed to load project color palette:", error);
-            }
+            setProjectPalette(projectData.colorScheme);
           }
 
           // Hydrate compositions from backend format to CompositionConfig format
@@ -260,7 +255,14 @@ const WorkspaceInner = ({
     };
 
     initializeProject();
-  }, [projectId, user, navigate, generateProjectName, processQueuedMessages, setCompositions]);
+  }, [
+    projectId,
+    user,
+    navigate,
+    generateProjectName,
+    processQueuedMessages,
+    setCompositions,
+  ]);
 
   // Handle initial prompt processing - only once per project/prompt combination
   useEffect(() => {
@@ -510,7 +512,9 @@ const WorkspaceInner = ({
 const WorkspaceContent = () => {
   const location = useLocation();
   const initialPaletteFromRoute = location?.state?.initialPalette || null;
-  const [projectPalette, setProjectPalette] = useState<ColorPalette | null>(null);
+  const [projectPalette, setProjectPalette] = useState<ColorPalette | null>(
+    null,
+  );
 
   // Determine which palette to use: project palette (for existing projects) or route palette (for new projects)
   const activePalette = projectPalette || initialPaletteFromRoute;
