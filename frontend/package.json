@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate": "openapi-ts --input ../shared/api.yaml --output ./src/client",
-    "build": "tsc -b && vite build",
+    "build": "pnpm generate && tsc -b && vite build",
     "openapi-ts": "openapi-ts"
  },
   "dependencies": {
