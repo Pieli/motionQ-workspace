@@ -7,7 +7,7 @@
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate": "openapi-ts --input http://localhost:8080/swagger/api.yaml --output ./src/client",
+    "generate": "openapi-ts --input ../shared/api.yaml --output ./src/client",
     "build": "tsc -b && vite build",
     "openapi-ts": "openapi-ts"
  },
