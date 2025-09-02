@@ -46,11 +46,7 @@ import {
   type ColorPalette,
 } from "@/lib/ColorPaletteContext";
 
-const WorkspaceInner = ({
-  setProjectPalette,
-}: {
-  setProjectPalette: React.Dispatch<React.SetStateAction<ColorPalette | null>>;
-}) => {
+const WorkspaceInner = () => {
   const compositionWidth = 1920;
   const compositionHeight = 1080;
 
@@ -60,7 +56,7 @@ const WorkspaceInner = ({
   const { user } = useAuth();
   const { compositions, setCompositions, selectedItem, setSelectedItem } =
     useComposition();
-  const { currentPalette } = useColorPalette();
+  const { currentPalette, setCurrentPalette } = useColorPalette();
 
   // Project state
   const [project, setProject] = useState<Project | null>(null);
@@ -223,12 +219,6 @@ const WorkspaceInner = ({
             setChatHistory(projectData.chatHistory);
           }
 
-          // Load project's color palette if it exists
-          console.log("here", projectData.colorScheme);
-          if (projectData.colorScheme) {
-            setProjectPalette(projectData.colorScheme);
-          }
-
           // Hydrate compositions from backend format to CompositionConfig format
           if (projectData.compositions && projectData.compositions.length > 0) {
             try {
@@ -263,6 +253,13 @@ const WorkspaceInner = ({
     processQueuedMessages,
     setCompositions,
   ]);
+
+  // Sync project palette to ColorPaletteContext when project loads
+  useEffect(() => {
+    if (project?.colorScheme) {
+      setCurrentPalette(project.colorScheme);
+    }
+  }, [project?.colorScheme, setCurrentPalette]);
 
   // Handle initial prompt processing - only once per project/prompt combination
   useEffect(() => {
@@ -512,16 +509,10 @@ const WorkspaceInner = ({
 const WorkspaceContent = () => {
   const location = useLocation();
   const initialPaletteFromRoute = location?.state?.initialPalette || null;
-  const [projectPalette, setProjectPalette] = useState<ColorPalette | null>(
-    null,
-  );
-
-  // Determine which palette to use: project palette (for existing projects) or route palette (for new projects)
-  const activePalette = projectPalette || initialPaletteFromRoute;
 
   return (
-    <ColorPaletteProvider initialPalette={activePalette}>
-      <WorkspaceInner setProjectPalette={setProjectPalette} />
+    <ColorPaletteProvider initialPalette={initialPaletteFromRoute}>
+      <WorkspaceInner />
     </ColorPaletteProvider>
   );
 };
