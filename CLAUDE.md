@@ -146,3 +146,4 @@ make tools
 - **OpenAI**: LLM integration for animation generation
 - **MongoDB**: User and project data storage
 - **Remotion**: Video composition and rendering engine
+- the openapi spec that is shared between frontend and backend is @shared/api.yaml
