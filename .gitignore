@@ -36,7 +36,7 @@ playwright/.cache/*
 
 
 # generated code
-# src/client/*
+frontend/src/client/*
 .env.*
 
 ## Backend ##
