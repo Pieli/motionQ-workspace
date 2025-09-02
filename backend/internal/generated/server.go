@@ -753,3 +753,90 @@ func (s Server) PatchApiUsersMeProjectsProjectIdName(ctx context.Context, reques
 
 	return PatchApiUsersMeProjectsProjectIdName200JSONResponse(updatedProject), nil
 }
+
+func (s Server) PatchApiUsersMeProjectsProjectIdColorScheme(ctx context.Context, request PatchApiUsersMeProjectsProjectIdColorSchemeRequestObject) (PatchApiUsersMeProjectsProjectIdColorSchemeResponseObject, error) {
+	projectsColl := s.userStorage.db.Collection("projects")
+	userColl := s.userStorage.Collection()
+	uid := ctx.Value("uid").(string)
+
+	// Get user ID from UID
+	user, err := util.GetGenericUID[UserResponse](uid, userColl, ctx)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return PatchApiUsersMeProjectsProjectIdColorScheme404JSONResponse{NotFoundJSONResponse{
+				Error:   "User not found",
+				Message: "The user with the specified ID does not exist.",
+			}}, nil
+		}
+		return PatchApiUsersMeProjectsProjectIdColorScheme500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to get user information.",
+		}}, nil
+	}
+
+	// Validate project ID format
+	_, err = primitive.ObjectIDFromHex(request.ProjectId)
+	if err != nil {
+		return PatchApiUsersMeProjectsProjectIdColorScheme400JSONResponse{BadRequestJSONResponse{
+			Error:   "Invalid project ID",
+			Message: "The provided project ID is not valid.",
+		}}, nil
+	}
+
+	// Get the project using generic function to verify it exists and belongs to user
+	project, err := util.GetGeneric[Project](request.ProjectId, projectsColl, ctx)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return PatchApiUsersMeProjectsProjectIdColorScheme404JSONResponse{NotFoundJSONResponse{
+				Error:   "Project not found",
+				Message: "The project with the specified ID does not exist.",
+			}}, nil
+		}
+		return PatchApiUsersMeProjectsProjectIdColorScheme500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to retrieve project.",
+		}}, nil
+	}
+
+	// Verify the project belongs to the current user
+	if project.UserId != user.Id {
+		return PatchApiUsersMeProjectsProjectIdColorScheme404JSONResponse{NotFoundJSONResponse{
+			Error:   "Project not found",
+			Message: "The project with the specified ID does not exist or does not belong to you.",
+		}}, nil
+	}
+
+	// Update the project color scheme using generic function
+	updateData := struct {
+		ColorScheme *ColorPalette `bson:"colorScheme"`
+		Metadata    struct {
+			UpdatedAt time.Time `bson:"updatedAt"`
+		} `bson:"metadata"`
+	}{
+		ColorScheme: &request.Body.ColorScheme,
+		Metadata: struct {
+			UpdatedAt time.Time `bson:"updatedAt"`
+		}{
+			UpdatedAt: time.Now(),
+		},
+	}
+
+	err = util.UpdateGeneric(request.ProjectId, updateData, projectsColl, ctx)
+	if err != nil {
+		return PatchApiUsersMeProjectsProjectIdColorScheme500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to update project color scheme.",
+		}}, nil
+	}
+
+	// Fetch and return the updated project
+	updatedProject, err := util.GetGeneric[Project](request.ProjectId, projectsColl, ctx)
+	if err != nil {
+		return PatchApiUsersMeProjectsProjectIdColorScheme500JSONResponse{InternalServerErrorJSONResponse{
+			Error:   err.Error(),
+			Message: "Failed to retrieve updated project.",
+		}}, nil
+	}
+
+	return PatchApiUsersMeProjectsProjectIdColorScheme200JSONResponse(updatedProject), nil
+}
