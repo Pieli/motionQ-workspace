@@ -839,7 +839,7 @@ components:
       properties:
         role:
           type: string
-          enum: [user, agent]
+          enum: [user, assistant, developer]
           description: Message sender role
           example: user
         content:
@@ -859,7 +859,7 @@ components:
           example: msg_123456
         role:
           type: string
-          enum: [user, agent]
+          enum: [user, assistant, developer]
           description: Message sender role
           example: user
         content:

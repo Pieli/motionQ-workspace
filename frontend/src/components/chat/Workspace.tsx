@@ -80,13 +80,16 @@ const WorkspaceInner = () => {
   // Prevent duplicate project creation in React StrictMode
   const projectCreationRef = useRef<boolean>(false);
   const chatBoxPanelRef = useRef<{
-    generate: (prompt?: string) => Promise<void>;
+    generate: (
+      prompt?: string,
+      role?: "user" | "assistant" | "developer",
+    ) => Promise<void>;
   } | null>(null);
 
   const handleApplyPalette = React.useCallback(
     async (palettePrompt: string) => {
       if (chatBoxPanelRef.current) {
-        await chatBoxPanelRef.current.generate(palettePrompt);
+        await chatBoxPanelRef.current.generate(palettePrompt, "developer");
       }
     },
     [],

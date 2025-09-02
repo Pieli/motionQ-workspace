@@ -78,22 +78,20 @@ export const ChatBoxPanel = React.forwardRef<
   }, [setIsGenerating]);
 
   const generate = React.useCallback(
-    async (promptArg?: string) => {
-      let usedPrompt = prompt.trim();
+    async (promptArg?: string, role?: "user" | "assistant" | "developer") => {
+      const usedPrompt = promptArg?.trim() ?? prompt.trim();
+      const usedRole = role ?? "user";
 
-      if (promptArg !== undefined) {
-        usedPrompt = promptArg.trim();
-      }
+      // clear prompt as fast as possible
+      setPrompt("");
 
       if (usedPrompt.length == 0) {
         setIsGenerating(false);
         return;
       }
 
-      const userMessage = createChatMessage("user", usedPrompt);
+      const userMessage = createChatMessage(usedRole, usedPrompt);
       await addMessage(userMessage);
-      const currentPrompt = usedPrompt;
-      setPrompt("");
       setIsGenerating(true);
 
       if (usedPrompt === "#dev") {
@@ -103,7 +101,7 @@ export const ChatBoxPanel = React.forwardRef<
 
       try {
         const response = await llm.generateCompositions(
-          currentPrompt,
+          usedPrompt,
           history,
           compositions,
           currentPalette,
@@ -141,7 +139,7 @@ export const ChatBoxPanel = React.forwardRef<
         setCompositions(null);
         // In case of error, you might also want to add an error message to history
         const errorMessage = createChatMessage(
-          "agent",
+          "assistant",
           "An error occurred during generation.",
         );
         await addMessage(errorMessage);

@@ -38,13 +38,19 @@ const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({
 };
 
 // ChatHistory component for rendering the chat history with a scrollbar
-export const ChatHistory: React.FC<{ history: ChatMessage[] }> = ({ history }) => {
+export const ChatHistory: React.FC<{ history: ChatMessage[] }> = ({
+  history,
+}) => {
+  // include agent for compatablity issues
+  const allowedKeys = ["user", "assistant", "developer", "agent"];
   return (
     <ScrollArea className="h-[calc(100vh-130px)] w-full">
       <div className="p-4 space-y-3 pb-14">
-        {history.map((message) => (
-          <ChatMessageComponent key={message.id} message={message} />
-        ))}
+        {history
+          .filter((message) => allowedKeys.includes(message.role))
+          .map((message) => (
+            <ChatMessageComponent key={message.id} message={message} />
+          ))}
       </div>
     </ScrollArea>
   );

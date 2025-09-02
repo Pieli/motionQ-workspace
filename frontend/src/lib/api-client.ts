@@ -213,7 +213,7 @@ export async function createProject(
 export async function addToProjectHistory(
   firebaseUser: User,
   projectId: string,
-  role: "user" | "agent",
+  role: "user" | "assistant" | "developer",
   message: string,
 ): Promise<boolean> {
   try {

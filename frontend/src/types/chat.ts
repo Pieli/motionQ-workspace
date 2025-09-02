@@ -4,7 +4,7 @@
  */
 export interface ChatMessage {
   id: string;
-  role: "user" | "agent";
+  role: "user" | "assistant" | "developer";
   content: string;
   timestamp: string;
 }
@@ -20,7 +20,7 @@ export function generateChatMessageId(): string {
  * Utility to create a new chat message
  */
 export function createChatMessage(
-  role: "user" | "agent",
+  role: "user" | "assistant" | "developer",
   content: string,
   id?: string,
 ): ChatMessage {
@@ -42,12 +42,11 @@ export function createAgentMessageFromResponse(
   id?: string,
 ): ChatMessage {
   const content = JSON.stringify({
-    type: "llm_response",
     fullResponse,
     displayComment,
   });
-  
-  return createChatMessage("agent", content, id);
+
+  return createChatMessage("assistant", content, id);
 }
 
 /**
@@ -64,7 +63,7 @@ export function extractMessageContent(message: ChatMessage): {
 
   try {
     const parsed = JSON.parse(message.content);
-    if (parsed.type === "llm_response") {
+    if (message.role === "assistant") {
       return {
         displayContent: parsed.displayComment,
         fullResponse: parsed.fullResponse,
@@ -73,6 +72,7 @@ export function extractMessageContent(message: ChatMessage): {
   } catch {
     // Fallback for old format messages
   }
-  
+
+  // finally and dev message
   return { displayContent: message.content };
 }
