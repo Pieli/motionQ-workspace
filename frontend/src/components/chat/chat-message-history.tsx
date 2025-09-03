@@ -65,6 +65,7 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
   );
   
   // Debug logging
+  /* 
   console.log("Developer message:", {
     messageContent: messageContent.substring(0, 100),
     isColorPaletteUpdate,
@@ -72,6 +73,7 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
     colorPalette: message.metadata?.colorPalette,
     metadata: message.metadata
   });
+  */
   
   if (isColorPaletteUpdate) {
     const colorPalette = message.metadata?.colorPalette;
@@ -98,7 +100,7 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
             )}
           </div>
           {colorPalette && (
-            <div className="text-xs text-muted-foreground mt-2">
+            <div className="text-xs text-muted-foreground mt-2 text-right">
               {colorPalette.name}
             </div>
           )}
