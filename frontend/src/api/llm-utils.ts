@@ -4,10 +4,7 @@ import type { ColorPalette } from "@/lib/ColorPaletteContext";
 
 export function convertChatHistoryToOpenAI(chatHistory: ChatMessage[]) {
   return chatHistory.map((message) => ({
-    role:
-      message.role == "agent"
-        ? "assistant"
-        : (message.role as "user" | "assistant"),
+    role: message.role,
     content:
       typeof message.content === "string"
         ? message.content

@@ -121,7 +121,6 @@ const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({
     case "user":
       return <UserMessageComponent message={message} />;
     case "assistant":
-    case "agent":
       return <AgentMessageComponent message={message} />;
     case "developer":
       return <DeveloperMessageComponent message={message} />;
@@ -134,8 +133,7 @@ const ChatMessageComponent: React.FC<{ message: ChatMessage }> = ({
 export const ChatHistory: React.FC<{ history: ChatMessage[] }> = ({
   history,
 }) => {
-  // include agent for compatablity issues
-  const allowedKeys = ["user", "assistant", "developer", "agent"];
+  const allowedKeys = ["user", "assistant", "developer"];
   return (
     <ScrollArea className="h-[calc(100vh-130px)] w-full">
       <div className="p-4 space-y-3 pb-14">

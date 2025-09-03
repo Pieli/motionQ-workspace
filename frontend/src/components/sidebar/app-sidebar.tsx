@@ -30,6 +30,7 @@ import {
 
 import { AssetBar } from "@/components/sidebar/asset-bar";
 import { ColorPalettePanel } from "@/components/sidebar/color-palette-panel";
+import type { ColorPalette } from "@/client";
 
 // This is sample data
 const data = {
@@ -76,7 +77,7 @@ export const AppSidebar: React.FC<{
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
   sidebarTab: string;
-  onApplyPalette?: (colors: string[]) => void;
+  onApplyPalette?: (colorPalette: ColorPalette) => void;
 }> = ({ setSidebarOpen, sidebarOpen, sidebarTab, onApplyPalette }) => {
   const { compositions, selectedItem } = useComposition();
   const [activeItem, setActiveItem] = useState(() => {

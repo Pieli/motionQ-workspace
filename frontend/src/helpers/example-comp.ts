@@ -33,7 +33,7 @@ export const exampleHistory: ChatMessage[] = [
   },
   {
     id: "example_msg_2",
-    role: "agent",
+    role: "assistant",
     content: "done so sire",
     timestamp: "2024-01-01T00:01:00Z",
   },
