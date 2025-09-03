@@ -215,6 +215,7 @@ export async function addToProjectHistory(
   projectId: string,
   role: "user" | "assistant" | "developer",
   message: string,
+  metadata?: { [key: string]: any },
 ): Promise<boolean> {
   try {
     const idToken = await firebaseUser.getIdToken();
@@ -229,6 +230,7 @@ export async function addToProjectHistory(
       body: {
         role: role,
         content: message,
+        metadata,
       },
     });
 

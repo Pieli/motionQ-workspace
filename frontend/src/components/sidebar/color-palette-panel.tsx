@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreatePalette } from "@/components/sidebar/create-palette";
 import { useColorPalette } from "@/lib/ColorPaletteContext";
 import { Palette, Wand2, Trash2 } from "lucide-react";
+import type { ColorPalette } from "@/client";
 
 type Palette = {
   name: string;
@@ -34,7 +35,7 @@ const PREMADE_PALETTES: Palette[] = [
 ];
 
 interface ColorPalettePanelProps {
-  onApplyPalette?: (colors: string[]) => void;
+  onApplyPalette?: (colorPanel: ColorPalette) => void;
 }
 
 export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({
@@ -120,7 +121,7 @@ export const ColorPalettePanel: React.FC<ColorPalettePanelProps> = ({
 
   const handleApplyNow = async () => {
     if (currentPalette && onApplyPalette) {
-      onApplyPalette(currentPalette.colors);
+      onApplyPalette(currentPalette);
     }
   };
 

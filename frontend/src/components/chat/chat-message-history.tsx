@@ -2,7 +2,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CollapsibleText } from "@/components/ui/collapsible-text";
 import { extractMessageContent } from "@/types/chat";
 import type { ChatMessage } from "@/types/chat";
-import { useColorPalette } from "@/lib/ColorPaletteContext";
 
 // User message component
 const UserMessageComponent: React.FC<{ message: ChatMessage }> = ({
@@ -64,31 +63,45 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
   const isColorPaletteUpdate = messageContent.startsWith(
     "Please adjust the current animations to use the new color palette:",
   );
-  console.log(messageContent);
-
+  
+  // Debug logging
+  console.log("Developer message:", {
+    messageContent: messageContent.substring(0, 100),
+    isColorPaletteUpdate,
+    hasMetadata: !!message.metadata,
+    colorPalette: message.metadata?.colorPalette,
+    metadata: message.metadata
+  });
+  
   if (isColorPaletteUpdate) {
-    const { currentPalette } = useColorPalette();
-    console.log("bla", currentPalette)
+    const colorPalette = message.metadata?.colorPalette;
     return (
       <li className="flex justify-center">
-        <div className="w-1/1 rounded-lg  border-2 border-muted px-4 py-4 text-left max-w-full">
-          <div className="flex justify-between">
-          <span className="block text-xs font-semibold mb-1">
-            Changed color palette:
-          </span>
-          {currentPalette && (
-                <div className="flex gap-1">
-                  {currentPalette.colors.map((color, index) => (
-                    <div
-                      key={index}
-                      className="w-4 h-4 rounded-full border border-gray-300"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              )}
-
-        </div>
+        <div className="w-full rounded-lg border-2 border-muted px-4 py-4 text-left max-w-full">
+          <div className="flex justify-between items-center">
+            <span className="block text-xs font-semibold mb-1">
+              🎨 Changed color palette:
+            </span>
+            {colorPalette ? (
+              <div className="flex gap-1">
+                {colorPalette.colors.map((color, index) => (
+                  <div
+                    key={index}
+                    className="w-4 h-4 rounded-full border border-gray-300"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-xs text-red-500">No color palette data</div>
+            )}
+          </div>
+          {colorPalette && (
+            <div className="text-xs text-muted-foreground mt-2">
+              {colorPalette.name}
+            </div>
+          )}
         </div>
       </li>
     );

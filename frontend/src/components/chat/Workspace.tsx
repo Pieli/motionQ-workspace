@@ -83,17 +83,22 @@ const WorkspaceInner = () => {
     generate: (
       prompt?: string,
       role?: "user" | "assistant" | "developer",
+      metadata?: ChatMessage["metadata"],
     ) => Promise<void>;
   } | null>(null);
 
   const handleApplyPalette = React.useCallback(
-    async (colors: string[]) => {
+    async (colorPalette: ColorPalette) => {
+      // TODO remove colors input
       if (chatBoxPanelRef.current) {
-        const palettePrompt = `Please adjust the current animations to use the new color palette: ${colors.join(", ")}. Keep the same content and timing but update the colors to match this palette while ensuring good contrast and readability.`;
-        await chatBoxPanelRef.current.generate(palettePrompt, "developer");
+        const palettePrompt = `Please adjust the current animations to use the new color palette: ${colorPalette.colors.join(", ")}. Keep the same content and timing but update the colors to match this palette while ensuring good contrast and readability.`;
+        const metadata = {
+          colorPalette: colorPalette,
+        };
+        await chatBoxPanelRef.current.generate(palettePrompt, "developer", metadata);
       }
     },
-    [],
+    [currentPalette],
   );
 
   const generateProjectName = React.useCallback((): string => {
@@ -113,6 +118,7 @@ const WorkspaceInner = () => {
             targetProjectId,
             queuedMessage.role,
             queuedMessage.content,
+            queuedMessage.metadata,
           );
         } catch (error) {
           console.error("Failed to save queued message to backend:", error);
@@ -140,6 +146,7 @@ const WorkspaceInner = () => {
             effectiveProjectId,
             message.role,
             message.content,
+            message.metadata,
           );
         } catch (error) {
           console.error("Failed to save message to backend:", error);

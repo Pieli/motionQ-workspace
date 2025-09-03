@@ -34,7 +34,11 @@ interface ChatBoxPanelProps {
 }
 
 export interface ChatBoxPanelRef {
-  generate: (prompt?: string) => Promise<void>;
+  generate: (
+    prompt?: string,
+    role?: "user" | "assistant" | "developer",
+    metadata?: ChatMessage["metadata"],
+  ) => Promise<void>;
 }
 
 export const ChatBoxPanel = React.forwardRef<
@@ -78,7 +82,11 @@ export const ChatBoxPanel = React.forwardRef<
   }, [setIsGenerating]);
 
   const generate = React.useCallback(
-    async (promptArg?: string, role?: "user" | "assistant" | "developer") => {
+    async (
+      promptArg?: string,
+      role?: "user" | "assistant" | "developer",
+      metadata?: ChatMessage["metadata"],
+    ) => {
       const usedPrompt = promptArg?.trim() ?? prompt.trim();
       const usedRole = role ?? "user";
 
@@ -90,7 +98,7 @@ export const ChatBoxPanel = React.forwardRef<
         return;
       }
 
-      const userMessage = createChatMessage(usedRole, usedPrompt);
+      const userMessage = createChatMessage(usedRole, usedPrompt, undefined, metadata);
       await addMessage(userMessage);
       setIsGenerating(true);
 

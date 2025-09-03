@@ -1,3 +1,5 @@
+import type { ColorPalette } from "@/client";
+
 /**
  * Stable frontend ChatMessage interface
  * This interface is owned by the frontend and won't break if backend generated types change
@@ -7,6 +9,10 @@ export interface ChatMessage {
   role: "user" | "assistant" | "developer";
   content: string;
   timestamp: string;
+  metadata?: {
+    colorPalette?: ColorPalette;
+    [key: string]: any;
+  };
 }
 
 /**
@@ -23,12 +29,14 @@ export function createChatMessage(
   role: "user" | "assistant" | "developer",
   content: string,
   id?: string,
+  metadata?: ChatMessage["metadata"],
 ): ChatMessage {
   return {
     id: id || generateChatMessageId(),
     role,
     content,
     timestamp: new Date().toISOString(),
+    metadata,
   };
 }
 
