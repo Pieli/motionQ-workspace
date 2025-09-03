@@ -5,6 +5,7 @@ import {
   Folders,
   ListMusic,
   Palette,
+  PanelRightClose,
 } from "lucide-react";
 import React, { useMemo, useState, useEffect } from "react";
 
@@ -217,6 +218,17 @@ export const AppSidebar: React.FC<{
             <div className="flex w-full items-center justify-between">
               <div className="text-foreground text-md font-semibold tracking-tight">
                 {activeItem?.title}
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="bg-muted text-muted-foreground px-2 py-1 rounded text-xs font-mono">
+                  Ctrl+B
+                </div>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="hover:bg-muted rounded-md p-1 transition-colors"
+                >
+                  <PanelRightClose className="h-4 w-4" />
+                </button>
               </div>
             </div>
           </SidebarHeader>
