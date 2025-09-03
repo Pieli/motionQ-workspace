@@ -556,7 +556,7 @@ func (s Server) PostApiUsersMeProjectsProjectIdChat(ctx context.Context, request
 		Role:      ChatMessageRole(request.Body.Role),
 		Content:   request.Body.Content,
 		Timestamp: time.Now(),
-		Metadata:  nil,
+		Metadata:  request.Body.Metadata,
 	}
 
 	// Add message to project's chat history
