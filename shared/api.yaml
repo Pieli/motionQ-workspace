@@ -846,6 +846,10 @@ components:
           type: string
           description: Message content
           example: Can you help me create a bouncing ball animation?
+        metadata:
+          type: object
+          description: Additional message metadata
+          additionalProperties: true
       required:
         - role
         - content
