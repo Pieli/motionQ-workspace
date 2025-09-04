@@ -1,7 +1,24 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CollapsibleText } from "@/components/ui/collapsible-text";
+import type { ColorPalette} from "@/lib/ColorPaletteContext";
+
 import { extractMessageContent } from "@/types/chat";
 import type { ChatMessage } from "@/types/chat";
+
+const ColorPaletteComp: React.FC<{palette: ColorPalette}> = ({ palette}) => {
+    return (
+      <div className="flex gap-1">
+        {palette.colors.map((color, index) => (
+          <div
+            key={index}
+            className="w-4 h-4 rounded-full border border-gray-300"
+            style={{ backgroundColor: color }}
+            title={color}
+          />
+        ))}
+      </div>
+    )
+}
 
 // User message component
 const UserMessageComponent: React.FC<{ message: ChatMessage }> = ({
@@ -23,7 +40,12 @@ const UserMessageComponent: React.FC<{ message: ChatMessage }> = ({
           maxLength={346}
           style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
         />
-      </div>
+        {message?.metadata?.colorPalette && (
+            <div className="flex pt-2 pb-1 justify-end">
+                <ColorPaletteComp palette={message?.metadata?.colorPalette}/>
+            </div>
+        )} 
+        </div>
     </li>
   );
 };
@@ -84,20 +106,10 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
             <span className="block text-xs font-semibold mb-1">
               🎨 Changed color palette:
             </span>
-            {colorPalette ? (
-              <div className="flex gap-1">
-                {colorPalette.colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className="w-4 h-4 rounded-full border border-gray-300"
-                    style={{ backgroundColor: color }}
-                    title={color}
-                  />
-                ))}
-              </div>
-            ) : (
+            {colorPalette ? 
+              <ColorPaletteComp palette={colorPalette} /> : 
               <div className="text-xs text-red-500">No color palette data</div>
-            )}
+            }
           </div>
           {colorPalette && (
             <div className="text-xs text-muted-foreground mt-2 text-right">

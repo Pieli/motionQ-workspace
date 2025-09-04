@@ -13,7 +13,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-import { ChatBoxPanel } from "@/components/chat/chatBoxPanel";
+import { ChatBoxPanel, type ChatBoxPanelRef } from "@/components/chat/chatBoxPanel";
 import { Navbar } from "@/components/navbar/navbar";
 import { ProjectTitle } from "@/components/navbar/project-title";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
@@ -79,13 +79,7 @@ const WorkspaceInner = () => {
 
   // Prevent duplicate project creation in React StrictMode
   const projectCreationRef = useRef<boolean>(false);
-  const chatBoxPanelRef = useRef<{
-    generate: (
-      prompt?: string,
-      role?: "user" | "assistant" | "developer",
-      metadata?: ChatMessage["metadata"],
-    ) => Promise<void>;
-  } | null>(null);
+  const chatBoxPanelRef = useRef<ChatBoxPanelRef | null>(null);
 
   const handleApplyPalette = React.useCallback(
     async (colorPalette: ColorPalette) => {
@@ -95,7 +89,9 @@ const WorkspaceInner = () => {
         const metadata = {
           colorPalette: colorPalette,
         };
-        await chatBoxPanelRef.current.generate(palettePrompt, "developer", metadata);
+
+        const msg = await chatBoxPanelRef.current.registerMessage("developer", palettePrompt,  metadata)
+        msg && await chatBoxPanelRef.current.generate(msg);
       }
     },
     [currentPalette],
@@ -283,12 +279,19 @@ const WorkspaceInner = () => {
         // console.log("Processing initial prompt:", initialPrompt.slice(0, 30));
         initialPromptProcessedRef.current = initialPrompt;
         setInitialPrompt(""); // Clear immediately to prevent re-processing
-        await chatBoxPanelRef.current.generate(initialPrompt);
+
+        let metadata = undefined;
+        if (currentPalette) {
+          metadata = {colorPalette: currentPalette}
+        }
+
+        const msg = await chatBoxPanelRef.current.registerMessage("user", initialPrompt,  metadata)
+        msg && await chatBoxPanelRef.current.generate(msg);
       }
     };
 
     processInitialPrompt();
-  }, [initialPrompt, projectLoading]);
+  }, [initialPrompt, projectLoading, currentPalette]);
 
   // Update project when compositions or palette change - history is handled separately via chat endpoint
   useEffect(() => {

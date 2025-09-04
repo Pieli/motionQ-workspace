@@ -17,19 +17,16 @@ import { Palette } from "lucide-react";
 const StartPageContent: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [showPaletteSelector, setShowPaletteSelector] = useState(false);
-  const { currentPalette, updatePalette, formatPaletteForPrompt } =
+  const { currentPalette, updatePalette } =
     useColorPalette();
   const navigate = useNavigate();
 
   const handleSend = () => {
     if (!prompt.trim()) return;
 
-    const palettePrompt = formatPaletteForPrompt();
-    const fullPrompt = palettePrompt ? `${prompt}\n\n${palettePrompt}` : prompt;
-
     navigate("/workspace", {
       state: {
-        initialPrompt: fullPrompt,
+        initialPrompt: prompt,
         initialPalette: currentPalette,
       },
     });
