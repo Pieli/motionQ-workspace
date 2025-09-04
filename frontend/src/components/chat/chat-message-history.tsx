@@ -1,24 +1,24 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CollapsibleText } from "@/components/ui/collapsible-text";
-import type { ColorPalette} from "@/lib/ColorPaletteContext";
+import type { ColorPalette } from "@/lib/ColorPaletteContext";
 
 import { extractMessageContent } from "@/types/chat";
 import type { ChatMessage } from "@/types/chat";
 
-const ColorPaletteComp: React.FC<{palette: ColorPalette}> = ({ palette}) => {
-    return (
-      <div className="flex gap-1">
-        {palette.colors.map((color, index) => (
-          <div
-            key={index}
-            className="w-4 h-4 rounded-full border border-gray-300"
-            style={{ backgroundColor: color }}
-            title={color}
-          />
-        ))}
-      </div>
-    )
-}
+const ColorPaletteComp: React.FC<{ palette: ColorPalette }> = ({ palette }) => {
+  return (
+    <div className="flex gap-1">
+      {palette.colors.map((color, index) => (
+        <div
+          key={index}
+          className="w-4 h-4 rounded-full border border-gray-300"
+          style={{ backgroundColor: color }}
+          title={color}
+        />
+      ))}
+    </div>
+  );
+};
 
 // User message component
 const UserMessageComponent: React.FC<{ message: ChatMessage }> = ({
@@ -41,11 +41,11 @@ const UserMessageComponent: React.FC<{ message: ChatMessage }> = ({
           style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
         />
         {message?.metadata?.colorPalette && (
-            <div className="flex pt-2 pb-1 justify-end">
-                <ColorPaletteComp palette={message?.metadata?.colorPalette}/>
-            </div>
-        )} 
-        </div>
+          <div className="flex pt-2 pb-1 justify-end">
+            <ColorPaletteComp palette={message?.metadata?.colorPalette} />
+          </div>
+        )}
+      </div>
     </li>
   );
 };
@@ -85,18 +85,7 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
   const isColorPaletteUpdate = messageContent.startsWith(
     "Please adjust the current animations to use the new color palette:",
   );
-  
-  // Debug logging
-  /* 
-  console.log("Developer message:", {
-    messageContent: messageContent.substring(0, 100),
-    isColorPaletteUpdate,
-    hasMetadata: !!message.metadata,
-    colorPalette: message.metadata?.colorPalette,
-    metadata: message.metadata
-  });
-  */
-  
+
   if (isColorPaletteUpdate) {
     const colorPalette = message.metadata?.colorPalette;
     return (
@@ -104,12 +93,13 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
         <div className="w-full rounded-lg border-2 border-muted px-4 py-4 text-left max-w-full">
           <div className="flex justify-between items-center">
             <span className="block text-xs font-semibold mb-1">
-              🎨 Changed color palette:
+              🎨 Changed colors
             </span>
-            {colorPalette ? 
-              <ColorPaletteComp palette={colorPalette} /> : 
+            {colorPalette ? (
+              <ColorPaletteComp palette={colorPalette} />
+            ) : (
               <div className="text-xs text-red-500">No color palette data</div>
-            }
+            )}
           </div>
           {colorPalette && (
             <div className="text-xs text-muted-foreground mt-2 text-right">
@@ -122,7 +112,10 @@ const DeveloperMessageComponent: React.FC<{ message: ChatMessage }> = ({
   }
 
   // Render as user message for other developer messages
-  return <UserMessageComponent message={message} />;
+  // return <UserMessageComponent message={message} />;
+
+  // ignore other dev instructions
+  return <></>;
 };
 
 // ChatMessage component using switch statement

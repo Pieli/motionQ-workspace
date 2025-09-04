@@ -13,7 +13,10 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-import { ChatBoxPanel, type ChatBoxPanelRef } from "@/components/chat/chatBoxPanel";
+import {
+  ChatBoxPanel,
+  type ChatBoxPanelRef,
+} from "@/components/chat/chatBoxPanel";
 import { Navbar } from "@/components/navbar/navbar";
 import { ProjectTitle } from "@/components/navbar/project-title";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
@@ -56,7 +59,8 @@ const WorkspaceInner = () => {
   const { user } = useAuth();
   const { compositions, setCompositions, selectedItem, setSelectedItem } =
     useComposition();
-  const { currentPalette, setCurrentPalette } = useColorPalette();
+  const { currentPalette, setCurrentPalette, formatPaletteForPrompt } =
+    useColorPalette();
 
   // Project state
   const [project, setProject] = useState<Project | null>(null);
@@ -90,8 +94,12 @@ const WorkspaceInner = () => {
           colorPalette: colorPalette,
         };
 
-        const msg = await chatBoxPanelRef.current.registerMessage("developer", palettePrompt,  metadata)
-        msg && await chatBoxPanelRef.current.generate(msg);
+        const msg = await chatBoxPanelRef.current.registerMessage(
+          "developer",
+          palettePrompt,
+          metadata,
+        );
+        msg && (await chatBoxPanelRef.current.generate(msg));
       }
     },
     [currentPalette],
@@ -149,7 +157,10 @@ const WorkspaceInner = () => {
         }
       } else if (user) {
         // Queue message if project not ready yet
-        // console.log( "Queueing message until project is ready:", message.content.slice(0, 30),);
+        console.log(
+          "Queueing message until project is ready:",
+          message.content.slice(0, 30),
+        );
         setMessageQueue((prev) => [...prev, message]);
       }
     },
@@ -282,11 +293,20 @@ const WorkspaceInner = () => {
 
         let metadata = undefined;
         if (currentPalette) {
-          metadata = {colorPalette: currentPalette}
+          metadata = { colorPalette: currentPalette };
+          await chatBoxPanelRef.current.registerMessage(
+            "developer",
+            formatPaletteForPrompt(),
+            metadata,
+          );
         }
 
-        const msg = await chatBoxPanelRef.current.registerMessage("user", initialPrompt,  metadata)
-        msg && await chatBoxPanelRef.current.generate(msg);
+        const msg = await chatBoxPanelRef.current.registerMessage(
+          "user",
+          initialPrompt,
+          metadata,
+        );
+        msg && (await chatBoxPanelRef.current.generate(msg));
       }
     };
 

@@ -34,12 +34,12 @@ interface ChatBoxPanelProps {
 }
 
 export interface ChatBoxPanelRef {
-    generate: (msg: ChatMessage) => Promise<void>;
-    registerMessage: (
-          role: "user" | "assistant" | "developer",
-          prompt: string,
-          metadata?: ChatMessage["metadata"],
-      )  => Promise<ChatMessage | null>;
+  generate: (msg: ChatMessage) => Promise<void>;
+  registerMessage: (
+    role: "user" | "assistant" | "developer",
+    prompt: string,
+    metadata?: ChatMessage["metadata"],
+  ) => Promise<ChatMessage | null>;
 }
 
 export const ChatBoxPanel = React.forwardRef<
@@ -81,38 +81,36 @@ export const ChatBoxPanel = React.forwardRef<
     setIsGenerating(false);
     toast.info("Agent call interrupted");
   }, [setIsGenerating]);
-  
 
-  async function registerMessage (
-      role: "user" | "assistant" | "developer",
-      prompt: string,
-      metadata?: ChatMessage["metadata"],
+  async function registerMessage(
+    role: "user" | "assistant" | "developer",
+    prompt: string,
+    metadata?: ChatMessage["metadata"],
   ) {
-      const usedPrompt = prompt.trim();
-      if (usedPrompt.length == 0) {
-        return null;
-      }
+    const usedPrompt = prompt.trim();
+    if (usedPrompt.length == 0) {
+      return null;
+    }
 
-      const msg = createChatMessage(role, usedPrompt, undefined, metadata);
-      await addMessage(msg);
-      return msg
+    const msg = createChatMessage(role, usedPrompt, undefined, metadata);
+    await addMessage(msg);
+    return msg;
   }
 
   async function generateCurrentPrompt() {
-      const msg = await registerMessage("user", prompt)
-      //
-      // clear prompt as fast as possible
-      setPrompt("");
-      if (!msg){
-          return null;
-      }
-      await generate(msg)
+    const msg = await registerMessage("user", prompt);
+    //
+    // clear prompt as fast as possible
+    setPrompt("");
+    if (!msg) {
+      return null;
+    }
+    await generate(msg);
   }
 
   const generate = React.useCallback(
     async (msg: ChatMessage) => {
-
-     setIsGenerating(true);
+      setIsGenerating(true);
       if (msg.content === "#dev") {
         devMode();
         return;
@@ -181,7 +179,7 @@ export const ChatBoxPanel = React.forwardRef<
 
   // Expose generate function to parent component
   React.useImperativeHandle(ref, () => ({
-    generate, 
+    generate,
     registerMessage,
   }));
 
@@ -190,7 +188,7 @@ export const ChatBoxPanel = React.forwardRef<
     if (initialHistory.length > 0 && history.length === 0) {
       setHistory(initialHistory);
     }
-  }, [initialHistory, history.length]);
+  }, []);
 
   return (
     <div className="flex flex-col h-full w-full px-2 bg-background relative">
